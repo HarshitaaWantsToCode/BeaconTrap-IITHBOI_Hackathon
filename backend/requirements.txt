@@ -21,3 +21,4 @@ google-generativeai
 ollama
 neo4j
 web3
+aiosqlite
