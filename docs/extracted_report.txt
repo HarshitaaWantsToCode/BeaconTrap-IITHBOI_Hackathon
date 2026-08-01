@@ -1,0 +1,1131 @@
+PSB's Cybersecurity, Fraud &
+Artificial Intelligence Hackathon 2026
+in collaboration with IIT Hyderabad
+PROJECT REPORT
+Cybersecurity, Fraud & Artificial Intelligence
+Harnessing Generative AI for Automated Reverse Engineering, Static and Dynamic Analysis, and Risk Scoring of
+Fraudulent Mobile Applications (APKs) and Malwares
+BeaconTrap
+
+
+Index
+
+
+Introduction and Problem Background
+The Mobile Threat Landscape
+How Fraudulent APKs Work
+Distribution and Scale
+Why Manual Analysis Fails
+Literature Review
+Evolution of Detection Approaches
+Generative AI and LLMs
+Limitations
+Existing Solutions and Their Limitations
+VirusTotal
+MobSE (Mobile Security Framework)
+AndroBugs and QARK
+Commercial Sandboxes (Hybrid Analysis, Joe Sandbox)
+ML Classifiers (Drebin MaMaDroid)
+Summary of Gaps
+Problem Statement Summary
+Proposed Solution
+Overview
+Objectives
+Solution Workflow
+Key Deliverables
+Expected Benefits
+Tech Stack
+Programming languages
+Frontend & Visualisation
+Backend, API & Orchestration
+Data & Storage Tier
+Blockchain Integration
+Malware Analysis Sandbox
+Artificial intelligence & LLMs
+DevOps, Security & Monitoring
+Ingestion & API Layer
+
+Task Queue & Orchestration
+Static Analysis Engine
+Dynamic Analysis Sandbox
+GenAI Multi-Agent Orchestration Layer
+Data & Storage Layer
+Frontend & Visualisation
+Infrastructure & Deployment
+System Architecture
+High-Level Architecture Diagram
+Data Flow – End-to-End
+Agent State Machine (LangGraph)
+Unified Operational Data Flow
+Core Features
+Multi-Source APK Ingestion
+APK Metadata Extraction Engine
+Indicator of Compromise (IOC) Extraction
+Secure Case Management
+Permission Risk Profiling
+DEX Decompilation and AI-Assisted Code Intelligence
+Obfuscation and Evasion Detection
+Certificate and Signing Intelligence
+Accessibility Service Abuse Detection
+SMS Interception and OTP Theft Monitoring
+Command-and-Control Communication Mapping
+Anti-Analysis and Sandbox Evasion Detection
+Natural Language Threat Interpretation
+Cross-Layer Signal Fusion
+threat Family Classification and Attribution
+Adaptive Risk Scoring Engine
+Unique Selling Propositions
+Explainable AI Malware Intelligence Engine
+Explainable Risk Scoring Framework
+Cross-Layer Signal Fusion Framework
+Multi-Lingual AI Investigation Reports
+Blockchain-Based Evidence Integrity Framework
+
+Governance, Risk and Compliance (GRC) Intelligence Engine
+Dual-Persona Adaptive Reporting Engine
+Citizen Impact Assessment Module
+Campaign DNA Relationship Analysis
+Prototype Demonstration and Real-World Deployment Details
+Limitations and Mitigation Strategies
+Advanced Obfuscation and Code Concealment
+Sandbox Evasion and Anti-Analysis Techniques
+AI Hallucination and Interpretation Errors
+Emerging Zero-Day and Novel Malware Threats
+Computational and Infrastructure Requirements
+Dependency on External Threat Intelligence Sources
+Blockchain Storage and Scalability Constraints
+Evolution of AI-Generated and Polymorphic Malware
+Conclusion and Summary
+Key Achievements End-to-End Investigation Pipeline
+Expected Impacts
+Innovation Summary
+Future Scope
+
+Introduction and Problem Background
+The proliferation of malicious Android applications (APKs) distributed through social engineering channels such as WhatsApp, SMS, email, and phishing links has emerged as one of the most pressing cybersecurity challenges facing the financial sector. Fraudsters deploy these applications to harvest customer credentials, intercept authentication codes, and execute unauthorized financial transactions — often operating faster than human analysts can respond. Traditional approaches to APK analysis, whether signature-based detection, manual reverse engineering, or conventional static and dynamic tools, are increasingly inadequate in the face of sophisticated obfuscation techniques, polymorphic code, and the sheer scale of malicious application distribution.
+Our goal is to build a case for a new kind of solution: one powered by Generative AI, capable of automatically analysing suspicious APK files, recognizing malicious patterns, assigning risk scores, and generating clear investigation reports — all with minimal human intervention and at the speed required to protect banks and their customers in real time.
+
+The Mobile Threat Landscape
+
+Android's open ecosystem — which allows app installation from outside the official Play Store — gives fraudsters a direct channel to push malicious APKs to users. The threat has grown sharply: in 2025, Kaspersky detected over 255,000 mobile banking trojan installation packages, a several-fold increase over prior years, with cybercriminals averaging 1.17 million attacks per month on mobile devices globally. Banking trojans, credential-harvesting apps, and fraudulent utilities are specifically engineered to target bank customers — stealing login details, intercepting OTPs, and in advanced cases giving attackers real-time control over the victim's device.
+
+How Fraudulent APKs Work
+
+Fraudulent APKs disguise themselves as legitimate banking apps, government services, or utilities. Once installed, they typically carry out one or more of the following attacks:
+Credential Overlay: A fake login screen is overlaid on top of a real banking app to capture credentials.
+OTP Interception: SMS permissions are abused to silently forward one-time passwords to attacker-controlled channels.
+Remote Access (RAT): Attackers gain live control of the victim's device to initiate transactions directly.
+Delayed Activation: The app behaves normally at first, then activates malicious behaviour later via remote updates — bypassing pre-installation scans.
+Distribution and Scale
+
+Fraudulent APKs are spread through WhatsApp, SMS, phishing sites, and fake Telegram channels rather than official app stores. The rise of Malware-as-a-Service (MaaS) has lowered the technical barrier for attackers, increasing both the volume and variety of malicious APKs in circulation.
+Malware families targeting banking applications grew by 200% year-on-year in 2025, with 36% of all malware incidents directed specifically at banks.
+
+Why Manual Analysis Fails
+
+Banks rely on skilled analysts to examine suspicious APKs — a process that cannot scale. Static analysis (examining code without executing it) is fast but blind to obfuscation. Dynamic analysis (running the APK in a sandbox) is more thorough but slow, resource-heavy, and can be defeated by malware that detects test environments. Neither method alone is sufficient, and combining both still demands significant expert effort that cannot match the speed at which fraudulent APKs are distributed.
+Literature Review
+
+Evolution of Detection Approaches
+Android malware detection has advanced through several generations, each addressing the gaps of the last:
+Signature-Based Detection: Fast and widely used, but purely reactive — unable to catch new or modified malware not yet in the database.
+Permission-Based Analysis: Used app permission requests as ML features, but suffered high false positive rates since benign and malicious apps often request the same permissions.
+Static ML Classifiers (Drebin, MaMaDroid): Achieved strong accuracy using API call sequences and code-flow graphs, but required constant retraining and were vulnerable to adversarial repackaging.
+Dynamic Analysis: Observed runtime behaviour in sandboxes, overcoming obfuscation but slow and evadable by sandbox-aware malware.
+Hybrid Analysis: Combined static and dynamic methods for better coverage, but retained their speed and resource limitations.
+Deep Learning: Models using CNNs and GNNs pushed detection accuracy above 94%, but remain black-box classifiers — they flag malware without explaining why.
+Generative AI and LLMs
+
+Large Language Models (LLMs) represent a step-change in what automated analysis can do. Unlike classifiers that produce only a verdict, LLMs can read decompiled code, explain what suspicious functions do, map behaviour to threat frameworks like MITRE ATT&CK, and generate plain-language reports with actionable recommendations. Recent research has demonstrated LLMs being applied to code interpretation, semantic behaviour auditing, automated threat report generation, and multi-signal risk scoring — all directly relevant to banking fraud analysis.
+
+Limitations
+
+LLMs can hallucinate — producing confident but incorrect code interpretations — requiring validation against deterministic tools. They also struggle with heavily obfuscated APKs using dynamic class loading or control-flow flattening. And since threat actors are now using AI to generate new malware variants, detection systems must continuously evolve.
+
+Existing Solutions and Their Limitations
+VirusTotal
+Aggregates 60+ anti-virus engines to scan files. Useful for known threats but fundamentally signature-dependent — novel or obfuscated APKs frequently pass undetected. Produces no fraud-specific risk scores or actionable recommendations.
+
+MobSF (Mobile Security Framework)
+
+A popular open-source static and dynamic analysis framework. Uses syntax-based scanning that cannot trace actual data flows, generating many false positives. Built for general app security, not banking fraud — lacks contextual risk scoring or intelligent reporting.
+AndroBugs and QARK
+Pattern-matching tools for finding known vulnerabilities in Android apps. Easily bypassed by obfuscation and not designed for adversarial malware detection or fraud intelligence.
+Commercial Sandboxes (Hybrid Analysis, Joe Sandbox)
+Run APKs in instrumented environments and record detailed behavioural telemetry. Richer than static tools but slow, resource-intensive, and evadable. Output is raw technical data that still requires expert human interpretation.
+ML Classifiers (Drebin, MaMaDroid)
+Strong in research benchmarks but classify without explanation. In a banking context, knowing an APK is malicious is not enough — analysts need to understand what it does and how to respond.
+Summary of Gaps
+
+
+
+Problem Statement Summary
+The challenge is not simply detecting whether an APK is malicious — existing tools do this adequately for known threats. The real gap is doing so at scale, for novel and obfuscated APKs, and producing output that fraud analysts can immediately act on. Banks need a system that can automatically analyse a suspicious APK end-to-end: extracting indicators, interpreting obfuscated code, classifying the threat in a banking context, assigning a risk score, and generating a clear investigation report — without depending on scarce expert analysts for every case. The proposed Generative AI-based system is designed to close exactly this gap.
+
+Proposed Solution
+Generative AI-Powered Automated Malware Analysis and Fraud Intelligence Platform
+Overview
+The proposed solution is a Generative AI-Powered Automated Malware Analysis and Fraud Intelligence Platform specifically engineered to detect, analyze, classify, and assess the threat posed by fraudulent Android applications (APKs) targeting banking customers across India. The platform directly addresses the critical limitations of conventional malware detection approaches by converging seven distinct analytical and intelligence disciplines into a single, cohesive investigation ecosystems.
+Unlike traditional security tools that produce only a binary verdict – malicious or benign – this platform performs a complete end-to-end investigation of every suspicious APK it receives. Through automated reverse engineering, behavioural sandboxing, threat intelligence correlation, and Generative AI-driven interpretation, the platform transforms raw technical artefacts into structured, actionable fraud intelligence that investigations, compliance officers, and banking leadership can immediately act upon.
+Core Design Philosophy: Speed, explainability, auditability, and fraud-centric intelligence are not optional features – they are architectural requirements for any tool operating within the Indian banking sector’s regulatory and operational environment.
+Integrated Platform Components
+The platform brings together seven interdependent components, each addressing a specific gap in the current threat response lifecycle:
+Static Analysis
+Deep structured inspection of APK files – permissions, certificates, decompiled code, and embedded resources – without executing the application.
+Dynamic Analysis
+Controlled execution of the APK inside and isolated Android sandbox to capture real-time behavioural telemetry including network traffic, API calls, and file system activity.
+Threat Intelligent Correlation
+
+Real-time enrichment of extracted Indicators of Compromise (IOCs) against external threat intelligence feeds, known malware databases, and campaign attribution repositories.
+Generative AI Intelligence Engine
+Multi-agent LLM orchestration layer that interprets decompiled code, correlates cross-layer signals, generates human-readable threat narratives, and maps findings to MITRE ATT&CK Mobile techniques.
+Explainable Risk Scoring
+A multi-factor, evidence-based scoring that produces a transparent 0-100 Threat Index with full reasoning, enabling analysts to understand exactly why a specific risk level was assigned.
+GRC Intelligence Engine
+Automatic mapping of detected malware behaviours to RBI guidelines, the Digital Personal Data Protection (DPDP) Act 2023, and the IT ACT 2000 – translating cybersecurity findings into compliance and governance language.
+Blockchain-Based Evidence Integrity
+Cryptographic anchoring of all investigation artefacts on a distributed ledger, ensuring tamper-proof, legally defensible evidence chains suitable for regulatory submissions and law enforcement use.
+
+
+Objectives
+The platform is designed to achieve four interconnected strategic objectives, each addressing a documented deficiency in the current state of banking fraud defense.
+Objective 1 – Automated End-to-End APK Investigations
+One of the most pressing operational challenges in banking cybersecurity is the dependency on highly specialized manual malware analysts. The conventional investigation workflow – decompiling the APK, manually reviewing thousands of lines of obfuscated source code, correlating permissions, documenting network communications, and preparing formal reports – is both time-intensive and impossible to scale against the volume of fraudulent APKs currently in circulation.
+Reduce Dependency on Manual Malware Analysis
+The platform automates every repeatable step of the investigation lifecycle: code extraction and decompilation, IOC identification, behavioural classification, risk scoring, and report generation. Analysts are no longer required to interact with raw, obfuscated bytecode or interpret thousands of lines of decompiled Java. Instead, they receive structured, AI-generated intelligence summaries that can be acted upon within minutes of submission.
+Minimize Investigation Turnaround Time
+Fraudulent APKs can reach and infect thousands of customers within hours of their initial distribution via WhatsApp, SMS, or phishing channels. Every hour of investigation delay directly translates into increased fraud exposure. The platform compresses the full investigation cycle – from APK submission to final report delivery – from several analyst-hours to a matter of minutes, enabling banks to act on fraud threats at the speed they propagate.
+Handle High-Volume Suspicious APK Submissions
+
+Banking institutions receive suspicious APKs through multiple simultaneous channels: customer fraud reporting portals, cybersecurity team submissions, threat intelligence feeds, and regulatory notifications. The platform is architected around a decoupled asynchronous processing pipeline using message queues and containerized workers, enabling it to process large numbers of APK submissions in parallel without degradation in analysis quality or throughput.
+Objective 2 – detect Advanced Fraudulent Android Applications
+Modern banking-targeted Android malware has evolved significantly beyond simple credential-stealing applications. Threat actors now deploy sophisticated tools that employ layered obfuscation, sandbox evasion, delayed activation, and abuse of legitimate Android system services to evade detection. The platform is specifically engineered to identify the full spectrum of threats targeting the Indian banking ecosystem.
+Banking Trojan Detection
+Banking trojans represent the most prevalent and financially damaging category of mobile malware targeting Indian banks. These applications are designed to monitor device activity, intercept user sessions with legitimate banking applications, display fraudulent overlay screens to capture credentials, and transmit stolen data to attacker-controlled infrastructure. The platform detects banking trojans through a combination of permission combination analysis, accessibility service monitoring, overlay attack detection, and network communication profiling.
+OTP Interception and SMS Theft Detection
+Fraudsters exploit SMS access permissions to silently intercept one-time passwords dispatched by banks for transaction authentication, effectively bypassing multi-factor authentication controls. The platform actively monitors SMS-related API invocations, OTP extraction logic within decompiled code, outbound message forwarding behaviour, and suspicious communications patterns that indicate active interception attempts. Detecting such capabilities in an APK triggers immediate elevated risk scoring.
+Remote Access Trojan (RAT) Detection
+Remote Access Trojans grant attackers live, real-time control over a victim’s device, enabling them to initiate banking transactions, access stored credentials, intercept screen content, and conduct fraudulent operations while the device owner remains unaware. Through dynamic sandbox execution combined with network traffic analysis, the platform identifies RAT command-and-control communication channels, remote command execution patterns, and live session hijacking capabilities embedded within submitted applications.
+Credential Harvester Detection
+Credential harvesting applications capture banking usernames, passwords, PINs, and other authentication material through phishing overlays, fake login interfaces, screen recording, and keylogging mechanisms. The platform identifies these attack vectors through static code analysis of overlay stack implementations, runtime monitoring of screen-capture API usage, cross-referencing of network destinations against known phishing infrastructure.
+Advanced Obfuscation Technique Identification
+
+Malware developers routinely employ sophisticated obfuscations techniques – string encryption, reflection-based dynamic loading, current flow flattening, and native code execution – specifically to evade automated security scanners. The platform’s obfuscation detection module quantifies the level and type of concealment applied to each APK, using this as a direct risk indicator while simultaneously deploying AI-assisted de-obfuscation agents to recover functional intent from otherwise unreadable code.
+Objective 3 – Generate Explainable, Actionable Intelligence
+The most significant operational gap in existing malware analysis tooling is not the ability to detect threats – it is the inability to explain them in terms that non-technical stakeholders can understand and act upon. A security verdict without explanation has limited operational utility. The platform bridges this gap through structured AI-generated intelligence that is tailored for stakeholder in the fraud response chain.
+Convert Technical Findings into Human-Readable Threat Narratives
+Generative AI agents process the raw outputs of static and dynamic analysis – decompiled code, network packet captures, API call logs, permission profiles – and synthesis these inputs into clear, structured prose narratives. A fraud investigator with no background in reverse engineering can read the platform’s output and immediately understand what the malware does, how it operates, who it targets, and what fraud scenarios it enables.
+Explain Malware Behaviour in Operational Context
+Rather than merely cataloguing technical indicators, the platform contextualizes each malware capability within the operational realities of Indian banking fraud. An OTP interception capability, for example, is not just flagged – it is explained in terms of which transaction authentication flows it bypasses, which customer segments are most exposed, and what immediate countermeasures are appropriate.
+Provide Evidence-Backed, Auditable Assessments
+Every threat classification, risk score, and recommendation is issued by the platform is grounded in specific. Traceable evidence gathered during the investigation. Analysts can drill down to the exact permission combinations, code segments, network communications, or runtime behaviours that contributed to a particular finding. This transparency builds investigator confidence and ensures that all conclusions are defensible in regulatory and legal contexts.
+Objective 4 – Strengthen and Accelerate Banking Fraud Response
+Effective fraud defense requires more than threat detection – it demands rapid, coordinated, and contextually appropriate response across multiple banking function simultaneously. The platform is designed to directly support operational fraud response workflows rather than merely supplying technical data.
+Prioritise Threats Through Explainable Risk Scoring
+Not all detected threats demand the same urgency of response. The platform’s Adaptive Risk Scoring Engine assigns every analysed APK a comprehensive Threat Index from 0 to 100, calculated across multiple weighted dimensions. This score, accompanied by transparent reasoning, enables
+
+security teams to immediately triage submissions and allocate investigations resources to the most dangerous threats first – rather than processing cases in order of submission.
+Enable Rapid, Coordinated Fraud Response
+The platform delivers role-specific reports simultaneously to cybersecurity analysts, fraud investigators, compliance officers, and executive leadership. This parallel delivery ensures that response activities – technical mitigation, customer communication, regulatory notification, and incident escalation – can commence in concert rather than sequentially, dramatically reducing the window of customer exposure.
+Improve Customer Protection Through Proactive Intelligence
+The Citizen Impact Assessment Module estimates the number and demographic profile of customers likely to be affected by each detected threat. This intelligence enables banks to move beyond reactive fraud response into proactive customer protection – issuing targeted advisories, activating enhanced monitoring for vulnerable segments, and deploying countermeasures calibrated to the specific fraud risk posed by each identified APK.
+Solution Workflow
+The platform executes a structured, multi-layered investigation pipeline consisting of five sequential yet interdependent stages. Each stage builds upon the outputs of its predecessors, enabling progressive intelligence enrichment from raw APK ingestion through to final report delivery. The pipeline is fully automated – human intervention is required only for high-stakes decision points where the platform explicitly escalates findings for review.
+Pipeline Design Principle: Every stage is independently scalable and fault-tolerant. If any individual analysis component encounters an error, the pipeline continues with available data rather than halting entirely, ensuring consistent output even under adverse conditions.
+Stage 1: APK Ingestion and Secure Case Creation
+Multi-channel intake, integrity validation, and evidence chain initialization
+The investigation lifecycle begins the moment a suspicious APK enters the platform. Recognizing that banking fraud analysts receive suspicious applications through diverse, often informal channels, the platform is designed to accept APKs from every relevant intake source without requiring manual pre-processing or format conversion.
+Accepted Intake Channels
+The platform supports the following submission vectors, each of which is handled through automated channel identification and source attribution:
+Direct upload through the analyst web dashboard
+Automated ingestion from bank fraud reporting portals via API integration
+URL-based download of APKs distributed through phishing links or suspicious domains
+Email attachment extraction from fraud investigation mailboxes
+WhatsApp-shared APK files forwarded by customers or field teams
+Threat intelligence feed integration (CBI/CID notifications, RBI advisories, CERT-In alerts)
+Automated Integrity and Pre-screening
+
+Upon receipt, the platform immediately validates file integrity and performs a rapid pre-screening operation. The APK’s SHA-256 cryptographic hash is computed and checked against VirusTotal API and a locally maintained malware hash cache. If the hash is already known-malicious, a fast-path report is generated within seconds without requiring full analysis pipeline execution. This optimization significantly reduces processing load for previously identified threats.
+Case Record Initialization
+Every accepted APK is assigned a unique, non-guessable Case ID and a complete investigation record is created in the platform’s relational database. This record captures the submission timestamp, source channel, submitting user identity, APK hash, initial file metadata, and analysis status. The case record serves as the immutable anchor for subsequent findings, ensuring complete traceability from initial intake to final report delivery.
+
+
+Stage 2: Static Analysis
+Deep structural inspection without application execution
+Static Analysis examines the internal architecture of the APK in a completely non-executing state. This stage provides rapid initial intelligence on the application’s structure, intent, and malicious capability indicators before any runtime behaviour is observed. The four primary static analysis modules execute in parallel, with their combined outputs forming the foundational evidence base for all subsequent analysis stages.
+Permission Profiling and Combination Risk Analysis
+The platform extracts the complete permission manifest from the APK and evaluates permissions not as isolated declarations, but as a combined risk profile. Individual permissions such as READ_SMS or BIND_ACCESSIBILITY_SERVICE are common across both legitimate and malicious applications. However, specific combinations of permissions – particularly those pairing communication access with device control capabilities – are highly characteristic of banking
+malware. The platform’s permission risk engine applies a weighted combination scoring model aligned with OWASP Mobile Top 10 and RBI advisory threat models to identify permission profiles that match known banking trojan, RAT, and credential harvester signatures. A permission risk score is computed and fed directly into the Adaptive Risk Scoring Engine.
+DEX Decompilation and AI-Powered Code Interpretation
+The APK’s Dalvik Executable (DEX) files – which contain the application’s compiled logic – are extracted and decompiled into readable Java or Kotlin source code using JADX-CLI. This recovered
+
+source code is then processed through the platform’s De-Obfuscation AI Agent, which is powered by locally-hosted CodeLIama-7B model. The agent analyses the code for suspicious functional patterns including OTP interception routines, accessibility service registration and abuse, credential capture logic, screen overlay implementations, data exfiltration functions, and command-and-control communication handlers. Rather than requiring a skilled reverse engineer to manually audit potentially thousands of lines of complex code, the AI agent produces a structured behavioral summary written in plain language – identifying what the application is designed to do, how it operates, and what fraud objectives it serves.
+IOC Extraction and Threat Intelligence Enrichment
+The platform systemically scans decompiled source code, resource files, and embedded assets to extract Indicators of Compromise. These include hardcoded URLs, domains, IP addresses, API endpoints, email addresses, Telegram and Discord channel identifiers, cryptocurrency wallet addresses, and command-and-control server references. Extracted IOCs are immediately submitted to threat intelligence correlation, where they are matched against known malware families, and previously investigated attacker infrastructure.
+Obfuscation Detection and Quantification
+The platform analyses the structural characteristics of decompiled codebase to detect and quantify obfuscation techniques. Key detection signals include: single-character or randomized class and method names, encrypted or encoded string constants, use of Java Reflection to dynamically invoke methods at runtime, dynamic class loading from remote or local encrypted sources, and control flow obfuscation that produces logically equivalent but structurally convoluted code. The aggregate obfuscation level is quantified as a source that contributes directly to the overall Threat Index – with high obfuscation levels treated as a significant risk indicator in the absence of legitimate explanations.
+Certificate and Signing Analysis
+Application certificates are extracted and subjected to multi-dimensional analysis to identify impersonation attempts and certificate-based fraud campaign indicators. The platform verifies certificate validity periods, checks for self-signed certificates (which are atypical of legitimate banking applications), computes certificate fingerprints and compares them against databases of certificates associated with known malicious applications, and analyses package names for character-level similarity to legitimate banking app identifiers.
+Stage 2 Output Summary: Permission Risk Profile | AI-Generated Behavioural Code Summary | Structured IOC Catalogue | Obfuscation Analysis Report | Certificate Intelligence Report
+Stage 3: Dynamic Analysis
+Controlled execution in an isolated Android sandbox environment
+Dynamic Analysis executes the APK within a purpose-built, gVisor-isolated Android sandbox environment (Android API level 30) to observe its real-time behaviour under controlled conditions. This stage is critical for identifying threats that deliberately conceal their malicious malware distributed through organized fraud campaigns.
+
+Sandbox Environment: Every APK executes in a fresh, ephemeral Docker with gVisor kernel sandboxing. Malware cannot access or compromise the host operating system even if it successfully escapes the Android emulator layer. Each container is destroyed and rebuilt after every analysis job.
+Accessibility Service Abuse Detection
+Android’s Accessibility Services framework, originally designed to support users with disabilities, is systematically abused by banking trojans to monitor all on-screen activity, capture text from any application, simulate user touch inputs, and interact with the device on behalf of attackers. The platform instruments the Android emulator with Frida hooks that capture all Accessibility Service registration events, screen content access attempts, user interaction recordings, and privilege abuse patterns. Detection of accessibility abuse is treated as a high-confidence malware indicator malware indicator, as legitimate applications have very narrow justifications for such capabilities.
+SMS Interception and OTP Theft Monitoring
+The platform deploys runtime monitoring hooks on all SMS-related Android API calls to track message access, control reading, and outbound transmission of SMS data. When the application reads incoming SMS messages – particularly those matching OTP or transaction notification pattern – and subsequently initiates network communication, the platform captures this complete event chain as evidence of active OTP interception. Detected interception behaviour is correlated with network destination analysis to identify the exfiltration endpoint receiving stolen authentication codes.
+Command-and-Control Communication Mapping
+All network traffic generated by the executing APK is captured through a combination of mitmproxy (for decrypted HTTPS traffic, following automatic SSL pinning bypass via Frida hooks) and tcpdump (for raw packet-level capture). The platform analyses these captures to identify command-and-control server communications, data exfiltration activity, remote payload download attempts, and suspicious DNS resolution patterns. All identified external infrastructure – domains, IP addresses, URLs – is extracted as IOCs and fed into the threat intelligence correlation pipeline and Campaign DNA Graph.
+Anti-Analysis and Sandbox Evasion Detection
+Advanced banking malware frequently implements environment detection routines that check for the presence of emulators, virtual devices, or analysis tooling before activating malicious functionality. These checks may include inspection of device hardware properties, battery status, sensor availability, screen density, I stalled application lists, and system property strings that differ between real devices and emulated environments. The platform specifically monitors for these environment-checking behaviours – and the detection of such evasion attempts is itself treated as a strong malware confidence signal, since legitimate applications have no operational reason to inspect their runtime environment in this manner.
+Stage 3 Output Summary: Runtime Behavioural Intelligence Report | Network Intelligence Report with Mapped IOCs | Malware Execution Evidence Package | Anti-Analysis Detection Report
+Stage 4: Generative AI Intelligence Core
+Multi-agent LLM orchestration for threat interpretation and classification
+
+The GenAI Intelligence Core represents the most differential component of the platform. Acting as the decision-making and synthesis layer, it receives the complete forensic artefact package from Stage 1-3 and deploys a coordinated ensemble of specialized AI agents – orchestrated through LangGraph state machine – to transform raw technical findings into structured, actionable threat intelligence. Each agent is assigned a specific responsibility, and their outputs are sequentially integrated to produce progressively richer intelligence.
+Cross-Layer Signal Fusion
+Before individual agents begin their analysis, the platform consolidates all findings from static and dynamic analysis into a unified Forensic Context object. This data structure captures the complete investigative picture – permission profiles, decompiled code summaries, IOC catalogues, runtime, runtime behavioural observations, and network traffic analysis – in a structured format that can be consumed by each downstream agent. The signal fusion process also performs initial correlation, identifying where static indicators are confirmed by dynamic behaviour (for example, where a suspicious SMS permission detected statically corresponds to observed SMS interception activity at runtime). Confirmed multi-layer signals generate significantly higher confidence scores than single-layer findings.
+AI-Powered Threat Narrative Generation
+The De-Obfuscation and Threat Interpretation agents produce a comprehensive natural language explanation of the malware’s operation. This narrative describes – in clear, non-technical prose – what the application is designed to do, which user or banking operations it targets, how it executes its attack, what data it steals or transmits, and what fraud outcomes it enables. This output is directly incorporated into the analyst and officer-facing investigation reports, eliminating the need for manual report writing and ensuring consistent intelligence quality across every investigation.
+Example AI-Generated Narrative: “This application registers an Accessibility Service that becomes active when the user opens any application matching a list of 14 Indian banking package names.
+Upon activation, it captures the device screen, overlays a fraudulent login interface that visually
+replicates the target bank’s authentication screen, harvests entered credentials, intercepts the OTP dispatched by the bank via SMS, and transmits both to a remote server hosted at [C2 domain]. The malware employs string encryption and reflection-based loading to conceal its payload from static scanners.”
+Malware Family Classification and Attribution
+The threat Classification Agent compares the observed behavioural profile of the analysed APK against documented malware family patterns maintained in the platform’s knowledge base. The
+agent produces a classification with an associated score, supporting evidence list, and behavioural characteristics summary. Classification categories include Banking Trojan, Remote Access Trojan, Credential Harvester, SMS Forwarder Spyware, Screen Recorder, and Hybrid Malware. Where a high-confidence family classification is achieved, the platform also surfaces known variants, historical campaign data. And attributable infrastructure associated with that malware family.
+MITRE ATT&CK Mobile Technology Mapping
+The MITRE Mapping Agent systematically maps each detected malware behaviour to the corresponding MITRE ATT&CK Mobile framework technique. This structured mapping enables
+
+security teams to communicate threat findings using standardized industry terminology, integrate platform outputs directly into SIEM and SOAR platforms, and align incident response activities with established frameworks. Example mappings include T1412 (Capture SMS Messages), T1636 (Protected User Data), T1418 (Software Discovery), and T1417 (Input Capture).
+GRC Compliance Impact Analysis
+The Compliance Agent maps detected threats and their potential consequences to specific clauses of the regulatory frameworks applicable to Indian banking: RBI Master Directions on IT Governance (2023), the Digital Personal Data Protection Act 2023, and the Information Technology Act 2000. For each applicable regulatory provision, the agent identifies the nature of the potential violation, the bank's reporting and notification obligations, and recommended control implementation actions. This output enables compliance officers to assess regulatory exposure and prepare appropriate escalation or notification documentation without requiring cybersecurity expertise.
+Stage 4 Output Summary: Human-Readable Threat Narrative | Unified Threat Profile | Malware Family Classification Report | MITRE ATT&CK Technique Mapping (structured JSON) | GRC Compliance Impact Assessment
+Stage 5: Adaptive Risk Scoring Engine
+Multi-factor, evidence-backed Threat Index computation
+The final stage of the investigation pipeline consolidates all findings from every preceding stage into a single, comprehensive Threat Index — a numeric score from 0 to 100 that quantifies the overall fraud risk posed by the analysed application. The score is computed through a multi-factor weighted model, with each contributing factor sourced from specific evidence gathered during the investigation. Critically, the platform does not merely report the score — it provides a complete, transparent breakdown of every factor that contributed to the final assessment, enabling investigators to verify the reasoning and build confidence in the conclusion.
+Scoring Factors and Weighting Rationale
+The Threat Index is calculated across nine independently assessed dimensions:
+Permission Combination Risk
+Weighted score based on presence of dangerous permission combinations, calibrated against OWASP Mobile Top 10 and RBI advisory threat profiles
+Obfuscation Level
+Quantified obfuscation score reflecting the degree to which malicious functionality has been concealed; high obfuscation contributes significantly in the absence of legitimate justification
+Runtime Behavioural Severity
+Composite score derived from dynamic analysis findings including accessibility abuse, SMS interception, C2 communication, and anti-analysis evasion
+Threat Intelligence Match Confidence
+Score elevation based on number and severity of IOC matches against external threat intelligence feeds and known malicious infrastructure databases
+Malware Family Similarity
+Score contribution from classified malware family designation and historical severity profile of that family
+
+Certificate Reputation
+Risk adjustment based on certificate validity, self-signing status, package name spoofing detection, and certificate database reputation
+App Impersonation Indicators
+Elevated risk scoring triggered by package names, application icons, or certificates designed to mimic legitimate banking applications
+C2 Infrastructure Reputation
+Risk contribution from threat intelligence assessments of identified command-and-control destinations
+Campaign Exposure Level
+Score elevation when Campaign DNA analysis identifies the APK as part of an active, previously documented fraud campaign targeting Indian banking customers
+
+Risk Classification and Response Guidance
+
+
+Score Explainability and Evidence Traceability
+For every Threat Index score, the platform generates a structured scoring explanation document that identifies each contributing factor, the evidence supporting that factor's contribution, and the weight applied to it. This transparency serves multiple operational purposes: it enables analysts to verify that the score accurately reflects the actual threat profile, it supports escalation decisions by providing documented justification, and it provides auditable evidence of the analytical basis for any subsequent regulatory notifications or law enforcement referrals.
+Stage 5 Output Summary: Threat Index Score (0–100) | Risk Category Classification | Factor-Level Score Breakdown | Evidence Attribution Map | Prioritised Response Recommendations
+Key Deliverables
+The platform generates a comprehensive suite of investigation outputs structured across two delivery tracks — technical deliverables for cybersecurity professionals and business deliverables for operational, compliance, and customer-facing functions. All deliverables are generated from a single analysis pipeline, ensuring consistency and eliminating the manual effort of translating technical findings into business-readable formats.
+
+Technical Deliverables
+
+
+Business Deliverables
+
+
+
+Expected Benefits
+The platform delivers measurable operational improvements across three primary stakeholder groups: banks and their internal security operations, banking customers, and regulatory authorities.
+For Banking Institutions
+Dramatic reduction in investigation turnaround time — from analyst-hours to minutes — enabling fraud response at the speed threats propagate
+Significant reduction in dependence on scarce, specialist malware analysts, enabling existing security teams to scale investigation capacity
+Comprehensive, multi-layer threat visibility that extends beyond known-malware signature detection to identify novel and zero-day threats
+Structured, role-specific intelligence delivery that accelerates coordinated response across security, fraud, compliance, and customer functions
+Audit-ready, blockchain-verified investigation records that satisfy regulatory evidence integrity requirements
+Proactive fraud prevention through early identification and customer notification before widespread financial harm occurs
+
+For Banking Customers
+Earlier identification of fraudulent applications targeting their banking services, reducing the window of financial exposure
+Clear, actionable advisory communications in regional languages, enabling customers to protect themselves regardless of technical literacy
+Improved account security through faster deployment of countermeasures against specific identified threats
+Enhanced fraud awareness through contextual, threat-specific guidance rather than generic security advisories
+
+For Regulatory Authorities
+Tamper-proof, auditable investigation records enabling transparent review of bank fraud response activities
+Consistent, structured reporting format aligned with RBI and CERT-In notification requirements
+Sector-wide threat intelligence aggregation potential, enabling correlation of fraud campaigns across multiple banking institutions
+
+Demonstrable evidence of proactive, technology-enabled fraud defence supporting regulatory compliance assessments
+
+
+For Regulatory Authorities
+The platform introduces seven distinct innovations that collectively differentiate it from all existing malware analysis tools available to the Indian banking sector. These innovations are not incremental improvements — they represent architectural and capability advances that address fundamental gaps in the current state of banking fraud defence.
+
+
+
+
+
+
+
+These seven innovations collectively elevate the platform from a conventional malware detection tool into a comprehensive fraud intelligence ecosystem – purpose-built for the operational, regulatory, and customer protection requirements of the Indian banking sector.
+Tech Stack
+
+Programming Languages
+Frontend & Visualisation
+Backend, API & Orchestration
+Data & Storage Tier
+
+Blockchain Integration
+Smart contract written in Solidity on Remix IDE
+Ethereum used via Sepolia network on MetaMask
+
+Malware Analysis Sandbox Static Analysis
+
+
+Dynamic Analysis
+
+
+
+Artificial Intelligence & LLMs Frameworks
+
+LangGraph — Multi-agent orchestration (directed acyclic graph state machine)
+
+Primary API Models (via OpenRouter / Google API)
+
+
+Backup Models (via Local Ollama)
+
+
+LLM Fallback Architecture
+
+
+
+DevOps, Security & Monitoring
+
+
+Detailed Tech Stack
+
+Ingestion & API Layer
+Task Queue & Orchestration
+
+Static Analysis Engine
+
+
+
+Dynamic Analysis Sandbox
+
+GenAI Multi-Agent Orchestration Layer
+Data & Storage Layer
+
+Frontend & Visualisation
+
+Infrastructure & Deployment
+
+System Architecture
+
+High-Level Architecture Diagram
+The platform operates on a five-layer decoupled asynchronous pipeline. Each layer communicates via defined interfaces, enabling independent scaling and replacement of components.
+
+
+
+Data Flow — End to End
+
+Agent State Machine (LangGraph)
+The GenAI orchestration layer is implemented as a directed acyclic graph using LangGraph. Each node is a specialised agent; edges carry typed context objects between agents.
+
+
+
+Unified Operational Data Flow
+The following diagram illustrates end-to-end telemetry from initial APK ingestion to finalised intelligence reporting.
+
+
+
+Core Features
+Core Features Overview
+The proposed solution is a comprehensive AI-driven fraudulent APK investigation and fraud intelligence platform specifically designed for banking and financial ecosystems. The platform combines automated APK ingestion, metadata intelligence extraction, static and dynamic malware analysis, Generative AI-powered threat interpretation, and explainable risk scoring into a unified investigation workflow.
+
+Unlike conventional malware analysis solutions that focus solely on technical detection, the platform delivers end-to-end fraud intelligence by transforming raw malware artefacts into actionable insights for cybersecurity teams, fraud investigators, compliance officers, banking operations personnel, law enforcement agencies, and regulatory stakeholders. Through a layered analytical framework, the system enables rapid identification, classification, prioritization, and investigation of banking trojans, credential harvesters, OTP interception malware, remote access trojans, spyware, and other financially motivated threats targeting digital banking customers.
+Layer 1: Ingestion and Preprocessing Layer
+The Ingestion and Preprocessing Layer serves as the entry point of the platform and is responsible for securely collecting, validating, normalizing, and registering suspicious APK samples before analysis begins.
+Multi-Source APK Ingestion
+The platform supports the acquisition of suspicious APKs from multiple channels commonly encountered during banking fraud investigations and cybercrime reporting.
+Supported Sources
+Manual APK Uploads
+Suspicious APK URLs
+Email Attachments
+WhatsApp Shared Files
+Telegram Shared Files
+Bank Fraud Reporting Portals
+Threat Intelligence Feeds
+Law Enforcement Agencies
+Internal Security Operations Teams Key Capabilities
+Automated Source Identification
+APK Validation and Integrity Verification
+SHA-256 Hash Generation
+Timestamp Logging
+Secure Evidence Registration
+Automated Case Creation Output
+Validated APK sample linked to a unique investigation record.
+APK Metadata Extraction Engine
+
+The Metadata Extraction Engine performs deep inspection of APK files without requiring execution. It extracts structural, behavioral, and security-related information that forms the foundation of downstream threat analysis.
+Extracted Information Application Intelligence
+Application Name
+Package Name
+Version Information
+Build Details
+SDK Information Security Intelligence
+Certificate Information
+Signature Details
+Permission Inventory
+Security Configurations Component Intelligence
+Activities
+Services
+Broadcast Receivers
+Content Providers Infrastructure Intelligence
+Embedded URLs
+Domains
+IP Addresses
+API Endpoints Advanced Security Indicators
+Native Libraries
+Reflection Usage
+Dynamic Code Loading
+Obfuscation Indicators Output
+A structured metadata intelligence profile used by all subsequent analytical layers.
+Indicator of Compromise (IOC) Extraction
+
+The IOC Extraction Engine automatically identifies suspicious artefacts embedded within APK resources, source code, configuration files, and network references.
+Extracted Indicators
+URLs
+Domains
+IP Addresses
+Email Addresses
+API Endpoints
+Telegram Links
+Discord Links
+Hardcoded Credentials
+Cryptocurrency Wallet Addresses
+Command-and-Control Infrastructure Threat Intelligence Functions
+IOC Reputation Analysis
+Threat Feed Correlation
+Infrastructure Clustering
+Campaign Mapping
+Threat Actor Attribution Output
+An enriched IOC intelligence profile containing extracted indicators, reputation assessments, and campaign associations.
+Secure Case Management
+Every submitted APK is automatically assigned a secure investigation record to ensure complete traceability and auditability throughout the analysis lifecycle.
+Stored Information
+Case ID
+APK Hash
+Upload Source
+Timestamp
+Analysis Status
+Risk Score
+Generated Reports
+
+Output
+A secure and auditable investigation trail supporting forensic and regulatory requirements.
+Layer 2: Static Analysis Layer
+The Static Analysis Layer investigates application behavior without execution by examining permissions, source code, certificates, APIs, resources, and application structure.
+Permission Risk Profiling
+The platform evaluates permissions individually and collectively to identify combinations commonly associated with banking malware and financial fraud.
+Detection Areas
+Accessibility Abuse
+SMS Access Abuse
+Overlay with Permission Abuse
+Device Administration Abuse
+Contact and Call Log Access
+Background Execution Privileges Output
+Permission-based risk profile and behavioral threat indicators.
+DEX Decompilation and AI-Assisted Code Intelligence
+The platform reverse-engineers DEX files and applies Generative AI to transform decompiled code into actionable behavioral intelligence.
+Detection Capabilities
+OTP Interception Logic
+Credential Theft Mechanisms
+Banking Overlay Attacks
+Accessibility Service Abuse
+Session Hijacking
+Device Fingerprinting
+Data Exfiltration Routines
+Remote Command Execution
+Hidden Malicious Logic Output
+AI-generated malware behavior report explaining attack objectives, execution flow, and potential fraud impact.
+
+Obfuscation and Evasion Detection
+Advanced malware frequently employs code obfuscation techniques to conceal malicious functionality and evade detection.
+Detection Areas
+String Encryption
+Reflection Usage
+Dynamic Code Loading
+Native Code Concealment
+Runtime Decryption
+Control Flow Manipulation
+Code Packing Techniques Output
+Obfuscation assessment report with evasion indicators and confidence scoring.
+Certificate and Signing Intelligence
+This module validates application authenticity and identifies impersonation attempts targeting legitimate banking applications.
+Analysis Areas
+Certificate Validation
+Signature Verification
+Certificate Reputation Assessment
+Package Spoofing Detection
+Banking Application Impersonation
+Certificate Reuse Analysis Output
+Certificate intelligence report containing trust indicators and impersonation findings.
+Layer 3: Dynamic Analysis Layer
+The Dynamic Analysis Layer executes APKs within an isolated Android sandbox environment to observe real-world runtime behavior and uncover threats hidden during static inspection.
+Accessibility Service Abuse Detection
+Accessibility Services represent one of the most frequently abused Android features leveraged by banking trojans.
+Detection Areas
+Fake Banking Overlays
+
+Screen Monitoring
+Credential Capture
+User Interface Manipulation
+Automated User Actions
+Remote Device Control Output
+Accessibility abuse intelligence report.
+SMS Interception and OTP Theft Monitoring
+This module identifies attempts to bypass multi-factor authentication mechanisms through malicious SMS access.
+Detection Areas
+OTP Harvesting
+SMS Reading
+SMS Forwarding
+Verification Bypass
+Message Extraction
+Transaction Authentication Abuse Output
+OTP theft and SMS abuse assessment report.
+Command-and-Control Communication Mapping
+The platform continuously monitors network activity generated by the APK. Detection Areas
+Command-and-Control Servers
+Malicious Domains
+Suspicious IP Addresses
+Data Exfiltration Channels
+Remote Payload Downloads
+Encrypted Communications Output
+Network intelligence and attacker infrastructure report.
+Anti-Analysis and Sandbox Evasion Detection
+Sophisticated malware frequently attempts to detect analysis environments before activating malicious functionality.
+
+Detection Areas
+Emulator Detection
+Virtual Machine Detection
+Sensor Verification
+Device Fingerprinting
+Environment Awareness
+Delayed Payload Execution Output
+Sandbox evasion intelligence report.
+Layer 4: GenAI Intelligence Core
+The GenAI Intelligence Core serves as the platform's decision-making and interpretation layer, transforming technical findings into explainable intelligence and actionable recommendations.
+Natural Language Threat Interpretation
+The platform converts complex technical findings into understandable threat narratives. Capabilities
+Malware Behavior Explanation
+Attack Workflow Reconstruction
+Fraud Impact Analysis
+Target Asset Identification
+Threat Severity Interpretation Output
+Human-readable threat intelligence report.
+Cross-Layer Signal Fusion
+Findings from all analytical layers are correlated to generate a unified threat assessment. Correlated Sources
+Metadata Analysis
+IOC Intelligence
+Static Analysis
+Dynamic Analysis
+Threat Intelligence Feeds Output
+Consolidated evidence-backed threat profile.
+Threat Family Classification and Attribution
+
+The platform automatically classifies malware into established threat categories. Supported Categories
+Banking Trojan
+Remote Access Trojan (RAT)
+Spyware
+Credential Harvester
+SMS Forwarder
+Screen Recorder
+Hybrid Malware Output
+Threat family classification report with confidence scores and supporting evidence.
+Adaptive Risk Scoring Engine
+A dynamic and explainable Threat Index is generated using technical, behavioral, and intelligence indicators collected throughout the investigation pipeline.
+Scoring Factors
+Permission Abuse
+Obfuscation Level
+Accessibility Abuse
+OTP Interception
+Network Reputation
+Malware Similarity
+Certificate Reputation
+Campaign Exposure Risk Categories
+Safe
+Low Risk
+Medium Risk
+High Risk
+Critical Risk Output
+Evidence-backed risk assessment with recommended mitigation actions.
+Core Features Summary
+
+The platform's core capabilities collectively establish a comprehensive end-to-end malware investigation pipeline purpose-built for the banking and financial sector. Beginning with secure APK acquisition and evidence registration, the system automates every stage of the investigation lifecycle, including metadata extraction, IOC discovery, static code analysis, dynamic behavioral monitoring, AI-powered threat interpretation, malware classification, and explainable risk assessment.
+Unlike conventional malware analysis solutions that operate as isolated technical tools, the platform integrates multiple analytical disciplines into a unified investigation workflow. Static analysis uncovers hidden malicious logic, permission abuse, and code-level threats; dynamic sandbox execution reveals real-world behavioral patterns such as OTP interception, accessibility abuse, and command-and-control communication; while the GenAI Intelligence Core correlates findings across all layers to generate actionable, evidence-backed threat intelligence.
+The result is a scalable and automated investigation framework capable of detecting banking trojans, credential harvesters, remote access trojans, spyware, SMS forwarding malware, and emerging fraud-enablement applications targeting digital banking customers. By transforming complex forensic artefacts into understandable intelligence and prioritized risk assessments, the platform significantly reduces investigation turnaround time, improves detection accuracy, and enables financial institutions to respond to threats at the speed at which modern fraud campaigns operate.
+Collectively, these core features transform APK analysis from a specialist reverse-engineering activity into an operational fraud intelligence capability that can be consumed by cybersecurity teams, fraud investigators, compliance officers, banking operations personnel, and regulatory stakeholders alike.
+Unique Selling Propositions
+USP Overview
+The platform introduces a set of differentiated innovations specifically designed to address the operational, regulatory, and customer-protection challenges associated with mobile banking fraud. While existing malware analysis solutions focus primarily on technical detection, the proposed platform extends the scope of investigation to include explainable intelligence generation, evidence-backed risk assessment, campaign-level fraud attribution, compliance impact analysis, multilingual stakeholder communication, and citizen-centric risk modelling.
+These innovations are not incremental enhancements to traditional malware analysis workflows; rather, they represent a shift from malware detection to fraud intelligence. By combining Generative AI, blockchain-backed evidence integrity, graph-based campaign analysis, governance-risk-compliance intelligence, adaptive reporting, and customer impact assessment within a single investigation ecosystem, the platform bridges the gap between technical cybersecurity operations and business-level decision making.
+The result is a solution capable of supporting multiple stakeholders simultaneously—from security analysts and fraud investigators to banking leadership, compliance teams, law enforcement agencies, and regulatory authorities—while maintaining a single source of investigative truth.
+Collectively, the platform's innovations establish a scalable, transparent, explainable, and audit-ready framework for combating fraudulent Android applications targeting the Indian banking sector.
+Explainable AI Malware Intelligence Engine
+
+Traditional malware analysis platforms generate technical artefacts such as decompiled code, network logs, runtime traces, and Indicators of Compromise that require specialist expertise to interpret. This creates a significant operational bottleneck during fraud investigations.
+The platform introduces an Explainable AI Malware Intelligence Engine that leverages Large Language Models (LLMs) to automatically interpret findings generated across all analytical layers. Rather than presenting raw technical outputs, the system generates structured, evidence-backed threat narratives explaining malware objectives, attack workflows, targeted assets, persistence mechanisms, and fraud-enablement capabilities.
+Technical Innovations
+LLM-Based Threat Interpretation
+Automated Attack Chain Reconstruction
+Explainable AI Reasoning
+Context-Aware Behavior Analysis
+Human-Readable Threat Narratives
+Strategic Value
+Enables fraud investigators, compliance officers, banking personnel, and management teams to understand sophisticated threats without requiring reverse-engineering expertise.
+Explainable Risk Scoring Framework
+Most malware analysis tools provide opaque verdicts without explaining how a risk assessment was derived.
+The platform introduces an Explainable Risk Scoring Framework where every Threat Index score is supported by a transparent, factor-level evidence breakdown.
+Technical Innovations
+Multi-Dimensional Threat Index
+Evidence-Based Scoring
+Confidence-Based Assessment
+Transparent Risk Attribution
+Auditable Escalation Logic
+Strategic Value
+Eliminates black-box decision making and enables confident, defensible, and regulator-ready escalation decisions.
+Cross-Layer Signal Fusion Framework
+Traditional security tools evaluate static analysis, dynamic analysis, and threat intelligence independently.
+The platform correlates findings from all analytical layers to generate a unified threat assessment.
+
+Technical Innovations
+Multi-Layer Evidence Correlation
+Context-Aware Threat Validation
+Behavioral Confidence Amplification
+Automated Pattern Recognition
+False Positive Reduction Mechanisms
+Strategic Value
+Improves detection accuracy and uncovers threats that single-layer tools frequently miss.
+Multi-Lingual AI Investigation Reports
+Cybersecurity reporting remains inaccessible to many stakeholders due to language barriers.
+The platform automatically generates investigation reports, customer advisories, executive summaries, and law-enforcement briefs in multiple Indian languages.
+Supported Languages
+English
+Hindi
+Telugu
+Tamil
+Kannada
+Malayalam
+Technical Innovations
+AI-Powered Translation
+Context Preservation
+Cybersecurity Terminology Adaptation
+Stakeholder-Specific Report Generation
+Strategic Value
+Enables coordinated fraud response across India's diverse banking ecosystem.
+Blockchain-Based Evidence Integrity Framework
+The platform establishes a tamper-proof evidence preservation mechanism through blockchain-backed forensic verification.
+Protected Artefacts
+APK Samples
+Investigation Reports
+IOC Profiles
+
+Risk Assessments
+Audit Logs
+Evidence Packages
+Technical Innovations
+SHA-256 Hash Anchoring
+Hyperledger Fabric Integration
+Immutable Evidence Ledger
+Digital Chain-of-Custody Tracking
+Blockchain Timestamping
+Strategic Value
+Provides forensic-grade evidence suitable for audits, legal proceedings, regulatory submissions, and law enforcement investigations.
+Governance, Risk and Compliance (GRC) Intelligence Engine
+The platform automatically translates cybersecurity findings into governance, compliance, and business-risk language.
+Assessment Areas
+RBI Regulatory Requirements
+DPDP Act 2023 Compliance
+IT Act 2000 Implications
+Customer Data Exposure
+Financial Fraud Risk
+Internal Control Failures
+Technical Innovations
+Threat-to-Regulation Mapping
+Automated Compliance Assessment
+Regulatory Exposure Analysis
+Business Impact Quantification
+Strategic Value
+Bridges the gap between technical threat detection and regulatory action.
+Dual-Persona Adaptive Reporting Engine
+Different stakeholders require different levels of technical detail during investigations.
+The platform dynamically generates stakeholder-specific intelligence views from a single investigation pipeline.
+
+Security Analyst View
+Technical Findings
+IOC Intelligence
+Network Analysis
+MITRE ATT&CK Mapping
+Threat Hunting Recommendations
+Banking Operations View
+Fraud Severity Assessment
+Customer Impact Analysis
+Escalation Recommendations
+Customer Communication Guidance
+Incident Response Actions
+Strategic Value
+Improves collaboration across security, fraud, compliance, and operational teams.
+Citizen Impact Assessment Module
+Most malware analysis platforms focus exclusively on technical indicators and fail to quantify customer harm.
+The platform introduces a Citizen Impact Assessment Module that estimates the potential human and financial impact of identified threats.
+Assessment Parameters
+Age Demographics
+Transaction Behavior
+Banking Product Usage
+UPI Dependency
+Geographic Distribution
+Digital Literacy Levels
+Customer Risk Segmentation
+Strategic Value
+Enables institutions to prioritize response efforts based on citizen harm and financial exposure rather than technical severity alone.
+Campaign DNA Relationship Analysis
+The platform uses graph-based intelligence to identify relationships between multiple malicious APKs and uncover coordinated fraud campaigns.
+
+Using a Neo4j-powered relationship graph, the system correlates APK samples, signing certificates, command-and-control infrastructure, developer artefacts, domains, IP addresses, and behavioral fingerprints to construct a campaign-level view of attacker activity.
+Technical Innovations
+Graph-Based Threat Intelligence
+Infrastructure Clustering
+Malware Lineage Analysis
+Campaign Discovery
+Threat Actor Attribution
+Variant Detection
+Strategic Value
+Transforms isolated malware investigations into coordinated fraud intelligence operations, enabling banks and regulators to identify, monitor, and disrupt entire fraud ecosystems rather than individual malicious applications.
+Innovation Summary
+The platform introduces nine distinct innovations that collectively differentiate it from conventional malware analysis solutions available today. By combining Explainable AI Malware Intelligence, Explainable Risk Scoring, Cross-Layer Signal Fusion, Multilingual Investigation Reporting, Blockchain-Based Evidence Integrity, Governance-Risk-Compliance Intelligence, Dual-Persona Adaptive Reporting, Citizen Impact Assessment, and Campaign DNA Relationship Analysis, the platform extends malware detection into a comprehensive fraud intelligence ecosystem.
+These innovations collectively transform APK analysis from a technical security function into a strategic decision-support capability capable of serving cybersecurity teams, fraud investigators, compliance officers, banking leadership, law enforcement agencies, and regulatory authorities simultaneously. The result is a scalable, explainable, auditable, multilingual, compliance-aware, and citizen-centric framework specifically designed to address the evolving threat landscape of mobile banking fraud in India.
+Prototype Demonstration and Real-World Deployment Details
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Prototype Development and Real-World Deployment Summary
+A functional prototype of the AI-powered Fraudulent APK Investigation Platform, BeaconTrap has been successfully developed, demonstrating an end-to-end workflow encompassing APK ingestion, metadata extraction, static and dynamic malware analysis, AI-driven threat interpretation, malware classification, and explainable risk assessment.
+The prototype validates the feasibility of transforming complex malware analysis into actionable fraud intelligence through an integrated investigation dashboard and automated reporting capabilities.
+Designed for real-world deployment, the platform adopts a scalable cloud-native architecture capable of supporting banks, financial institutions, cybercrime units, and regulatory agencies.
+Through integration with existing security and fraud monitoring ecosystems, blockchain-backed evidence preservation, and AI-powered threat intelligence generation, the solution enables faster investigations, improved fraud detection accuracy, enhanced regulatory compliance, and proactive identification of large-scale malicious APK campaigns targeting digital banking customers.
+Limitations and Mitigation Strategies
+Overview
+Although the proposed platform significantly advances automated APK investigation capabilities, certain technical and operational challenges remain. These limitations are common across advanced malware analysis systems and stem from the constantly evolving nature of cyber threats. The platform incorporates multiple mitigation mechanisms to reduce operational risk and maintain long-term resilience. Acknowledging these challenges honestly — alongside deliberate architectural responses
+— reflects the rigour expected of a production-grade banking security system.
+Design Principle: Mitigation strategies are first-class architectural requirements embedded in every layer of the platform's design — not afterthoughts applied after the fact.
+Advanced Obfuscation and Code Concealment
+Malware hiding malicious intent through layered code transformation techniques
+
+Modern banking malware employs sophisticated techniques to defeat static analysis — including dynamic code loading, reflection-based invocation, string encryption, native code execution via JNI, control flow flattening, and multi-layer packing. These techniques conceal malicious payloads from decompilers while preserving full runtime functionality, and are now accessible even to low-skill threat actors through Malware-as-a-Service toolkits.
+
+
+Sandbox Evasion and Anti-Analysis Techniques
+Malware detecting the analysis environment and suppressing all behaviour
+Sophisticated banking malware routinely checks whether it is running on a genuine device or inside an analysis sandbox — inspecting system properties, hardware sensor availability, battery status, installed application lists, and root or developer mode indicators. Upon detecting a virtual environment, the application behaves entirely benignly or terminates silently, directly undermining the value of dynamic analysis.
+
+
+
+AI Hallucination and Interpretation Errors
+LLMs generating confident but factually inaccurate outputs
+The platform's Generative AI agents perform its most differentiating functions — code interpretation, threat narrative generation, MITRE ATT&CK mapping, and compliance assessment. However, LLMs are probabilistic systems that can produce confident but incorrect outputs. In a banking security context, an inaccurate threat interpretation carries direct consequences: miscalibrated risk scores, inappropriate escalation decisions, and potential erosion of analyst trust.
+
+
+Emerging Zero-Day and Novel Malware Threats
+
+Threats with no prior signatures, profiles, or intelligence feed coverage
+Cybercriminals continuously develop novel malware variants engineered to evade all existing detection signatures and threat intelligence feeds. In the Indian banking context, organised fraud syndicates have demonstrated the capability to build custom trojans targeting specific bank apps and UPI workflows — bespoke malware that global intelligence feeds may not document for weeks or months after initial deployment.
+
+
+Computational and Infrastructure Requirements
+Resource-intensive pipeline with significant scaling demands at production volume
+Running a full-stack investigation — APK decompilation, gVisor-isolated Android emulation, Frida instrumentation, mitmproxy SSL interception, network capture, multi-agent LLM inference, graph database querying, and blockchain transaction submission — is substantially more resource-intensive than a conventional signature scan. At the scale of a major Indian bank receiving hundreds of daily submissions, capacity planning and intelligent workload distribution become essential operational requirements.
+
+
+
+Dependency on External Threat Intelligence Sources
+IOC enrichment quality constrained by feed coverage and freshness
+The platform's IOC correlation and campaign attribution capabilities draw partly on external feeds — VirusTotal, CERT-In advisories, RBI notifications, and commercial providers. These vary considerably in their coverage of India-specific banking malware and in the speed with which newly discovered attacker infrastructure is documented. Freshly registered C2 domains or newly provisioned phishing infrastructure may not appear in any feed for days or weeks after active deployment.
+
+
+Blockchain Storage and Scalability Constraints Distributed ledger unsuited for bulk forensic artefact storage
+
+Blockchain technology provides the platform's tamper-proof evidence integrity guarantee — critical for regulatory submissions and legal proceedings. However, distributed ledgers are optimised for small transactional records, not bulk data storage. Storing complete APK files, PCAP captures, and PDF reports directly on-chain would introduce prohibitive transaction costs and performance degradation that would make production operation economically unviable.
+
+
+Evolution of AI-Generated and Polymorphic Malware
+Adversarial weaponisation of Generative AI to accelerate malware development
+Organised fraud syndicates now use the same LLM capabilities that power defensive security tools to accelerate malware development, generate novel obfuscation schemes, create polymorphic variants that evade known signatures, and rapidly rotate command-and-control infrastructure. The pace of malware evolution is no longer constrained by developer availability — it is constrained only by AI inference speed, representing a qualitative shift in the threat landscape that demands adaptive, behaviour-centric detection rather than signature maintenance.
+
+
+
+Conclusion on Platform Resilience
+The eight limitations documented here represent genuine frontier challenges shared across the entire field of automated malware analysis — not weaknesses unique to this platform. What distinguishes this system is the depth and deliberateness of the countermeasures deployed against each one. These mitigation strategies are mutually reinforcing: dynamic analysis compensates for obfuscation; cross-agent validation addresses hallucination risk; behavioural detection bridges zero-day gaps; and continuous retraining counters AI-generated malware evolution. Resilience derives from the redundancy of these overlapping defensive layers, not from any single technique in isolation.
+Conclusion and Summary
+The rapid proliferation of fraudulent Android applications distributed through WhatsApp, SMS, phishing links, and email attachments has emerged as one of the most operationally damaging cybersecurity challenges facing the Indian banking sector today. Fraudsters deploy these applications to harvest customer credentials, intercept one-time passwords, execute unauthorised financial transactions, and in advanced cases, gain complete real-time control over victim devices — often operating faster than human analysts can respond. With banking malware families growing by 200% year-on-year in 2025 and 36% of all malware incidents directed specifically at financial institutions, the inadequacy of traditional, manual, signature-dependent analysis approaches is no longer a theoretical concern — it is a documented operational reality.
+The proposed Generative AI-Powered Automated Malware Analysis and Fraud Intelligence Platform was designed specifically to close this gap. By converging static analysis, dynamic behavioural sandboxing, threat intelligence correlation, multi-agent Generative AI orchestration, explainable risk scoring, GRC compliance intelligence, and blockchain-backed evidence integrity into a single unified investigation ecosystem, the platform transforms what was previously a slow, expert-dependent, manually intensive process into a rapid, scalable, and transparent fraud intelligence operation.
+Key Achievements of the Proposed Solution
+Automated End-to-End Investigation Pipeline
+The platform eliminates the dependency on manual malware analysis by automating the complete APK investigation lifecycle — from multi-channel intake and secure case creation through static
+
+analysis, dynamic sandbox execution, AI-powered interpretation, and final report generation. Investigation turnaround time is compressed from analyst-hours to minutes, enabling banks to process large volumes of suspicious submissions simultaneously without requiring proportionate increases in specialist staffing.
+Advanced Threat Detection Across the Full Attack Spectrum
+The platform detects the full range of banking-focused mobile threats — Banking Trojans, Remote Access Trojans, OTP interception applications, Credential Harvesters, SMS Forwarders, and Hybrid Malware — through a combination of permission combination analysis, DEX decompilation and AI code interpretation, runtime behavioural monitoring, and network traffic analysis. Critically, it does so even when malware employs sophisticated obfuscation, delayed activation, or sandbox evasion techniques specifically designed to defeat conventional tools.
+Explainable, Human-Readable Intelligence
+Rather than producing raw technical outputs that require specialist interpretation, the platform's Generative AI Intelligence Core converts every investigation into structured, plain-language threat narratives. Fraud analysts, compliance officers, bank management, and customer-facing staff each receive role-specific reports that explain what the malware does, how it operates, which customers are at risk, and what actions to take — without requiring cybersecurity expertise to interpret. The Dual-Persona Adaptive Reporting Engine ensures that the same investigation simultaneously serves every stakeholder in the fraud response chain.
+Explainable and Evidence-Backed Risk Scoring
+The Adaptive Risk Scoring Engine assigns every analysed APK a transparent Threat Index from 0 to 100, calculated across nine weighted dimensions including permission risk, obfuscation level, runtime behaviour, threat intelligence matches, malware family similarity, and certificate reputation. Critically, every score is accompanied by a full factor-level breakdown — enabling investigators to understand exactly why a specific risk level was assigned, and providing the auditable evidence base required for regulatory escalation decisions.
+Governance, Risk, and Compliance Intelligence
+The GRC Intelligence Engine automatically maps detected threats to specific provisions of RBI Master Directions, the Digital Personal Data Protection Act 2023, and the IT Act 2000 — translating cybersecurity findings directly into compliance and governance language. Banks no longer need to manually bridge the gap between a technical malware analysis finding and its regulatory implications. The platform delivers both simultaneously, enabling compliance officers to assess regulatory exposure and prepare notification documentation without requiring deep technical expertise.
+Blockchain-Backed Evidence Integrity
+Every investigation artefact — APK hashes, analysis reports, forensic evidence packages — is cryptographically anchored on a Hyperledger Fabric ledger, creating a tamper-proof, timestamped audit trail. This ensures that no investigation finding can be altered after generation, providing the evidentiary standard required for regulatory submissions, internal audits, and law enforcement referrals. The platform does not merely detect fraud — it produces legally defensible evidence of that detection.
+
+Citizen Impact Assessment
+Beyond technical detection, the Citizen Impact Assessment Module estimates the number and demographic profile of banking customers likely to be affected by each identified threat — segmenting exposure by age group, transaction frequency, geographic distribution, digital literacy level, and device usage patterns. This transforms individual APK investigations into customer-centric risk intelligence, enabling banks to proactively protect the most vulnerable customer segments rather than reacting after financial harm has occurred.
+Expected Impact
+Deployed across Indian banking operations, the platform is expected to deliver measurable improvements across three dimensions:
+For Banks — Faster malware investigations, reduced fraud losses, improved threat visibility, lower operational burden on specialist security teams, and stronger regulatory compliance posture through audit-ready investigation records and automated compliance mapping.
+For Customers — Earlier identification of fraudulent applications targeting their banking services, proactive advisory communications in regional languages, reduced window of financial exposure, and improved account protection through faster countermeasure deployment.
+For Regulators — Transparent, tamper-proof investigation records that satisfy evidentiary requirements, consistent structured reporting aligned with RBI and CERT-In notification frameworks, and demonstrable evidence of proactive, technology-enabled fraud defence across the banking sector.
+Innovation Summary
+The platform introduces seven distinct innovations that collectively differentiate it from every existing malware analysis tool available to the Indian banking sector:
+AI-Powered Malware Interpretation — Generative AI converts decompiled code and runtime telemetry into plain-language threat narratives accessible to non-technical stakeholders
+Explainable Risk Scoring — Every Threat Index score is supported by a transparent, factor-level evidence breakdown enabling auditable escalation decisions
+Cross-Layer Signal Fusion — Static analysis, dynamic behaviour, and threat intelligence are correlated into a unified assessment, dramatically reducing false positives
+Multilingual Investigation Reports — Outputs in English, Hindi, Telugu, Malayalam, Kannada, and Tamil remove the language barrier between central security teams and regional fraud officers
+Blockchain-Based Evidence Integrity — Cryptographic hash anchoring on Hyperledger Fabric provides tamper-proof, legally defensible investigation records
+GRC Intelligence Engine — Automated mapping of cybersecurity findings to RBI, DPDP Act, and IT Act provisions bridges the gap between technical detection and compliance action
+
+Campaign DNA Relationship Analysis — Graph-based intelligence connects APK samples, certificates, domains, and IP addresses to surface coordinated fraud campaigns operating across multiple banking institutions
+Future Scope
+While the current platform provides a comprehensive fraud intelligence foundation, several enhancements are planned for future development iterations:
+Real-Time APK Monitoring — Continuous scanning of emerging APK distribution channels for proactive threat identification before customer exposure occurs
+AI-Powered Fraud Campaign Prediction — Predictive modelling to anticipate emerging fraud campaign patterns based on historical intelligence and attacker behaviour trends
+Federated Threat Intelligence Sharing — Secure, privacy-preserving sharing of anonymised threat indicators across banking institutions to build sector-wide defensive intelligence
+SIEM and SOAR Integration — Direct integration with Security Information and Event Management and Security Orchestration platforms for automated incident response workflows
+Advanced Zero-Day Detection — Enhanced AI models trained specifically on behavioural anomaly patterns to improve detection confidence for previously unseen malware variants
+Mobile Threat Hunting Automation — Proactive, automated hunting for malware indicators across known distribution channels, fraud reporting databases, and threat intelligence feeds
+Final Statement
+The proposed solution goes beyond conventional malware detection. It transforms the technical process of APK analysis into a comprehensive, end-to-end fraud intelligence operation — one that is automated, explainable, auditable, multilingual, compliance-aware, and designed from the ground up for the specific operational, regulatory, and customer protection requirements of the Indian banking sector.
+By combining Generative AI, behavioural analytics, multi-layer threat intelligence, adaptive risk assessment, compliance mapping, citizen impact quantification, and blockchain-backed evidence integrity, the platform delivers a scalable, transparent, and future-ready defence mechanism against the growing threat of mobile banking fraud.
+The proposed solution represents a significant and deliberate step toward intelligent, automated, and proactive cybersecurity operations — not merely protecting banks from today's threats, but building the analytical infrastructure required to stay ahead of tomorrow's.
+Member 1 Name- K S Harshitaa Institute Name- Manipal Institute of Technology, Blr Institute Enrolment No. 245891100 Email ID- harshitaa.mitblr2024@learner.manipal.edu | Member 2 Name- Kim Mathur Institute Name- Manipal Institute of Technology, Blr Institute Enrolment No. 245805044 Email ID- kim.mitblr2024@learner.manipal.edu
+Member 3 Name- Garima Sharma Institute Name- Manipal Institute of Technology, Blr Institute Enrolment No. 245891036 Email ID- garima.mitblr2024@learner.manipal.edu | Member 4 Name- Dixha Bharti Institute Name- Manipal Institute of Technology, Blr Institute Enrolment No. 245819034 Email ID- dixha.mitblr2024@learner.manipal.edu
+Dimension | Gap
+Novel Threat Detection | Signature tools miss obfuscated or zero-day APKs
+Explainability | No reasoning behind verdicts
+Banking-Specific Intelligence | Output is generic, not fraud-focused
+Risk Quantification | No scored, evidence-backed risk assessment
+Automated Reporting | Raw output requires expert interpretation
+Scalability | Dynamic analysis cannot handle high volumes
+Recommendations | No fraud response or customer protection guidance
+Stage Output | Description
+Unique Case ID | Globally unique identifier linking all investigation artefacts throughout the analysis lifecycle
+Timestamp Log | Millisecond-precision record pf submission time for audit trail and SLA tracking
+Source Attribution | Documented intake channel enabling campaign correlation across multiple submissions
+APK Hash Record | SHA-256 fingerprint stored in blockchain ledger as the initial chain-of-custody anchor
+Score Range | Risk Level | Recommended Action
+81-100 | Critical Risk | Immediate escalation, regulatory notification, incident response activation
+61-80 | High Risk | Priority investigation, customer alerts, fraud team notification
+41-60 | Medium Risk | Detailed analysis, monitoring, advisory preparation
+21-40 | Low Risk | Watchlist, periodic review, awareness measures
+0-20 | Safe | No immediate action required, archive for baseline reference
+Deliverable | Description
+Malware Analysis Report | Comprehensive technical investigation document covering all static and dynamic findings, decompiled code analysis, IOC catalogue, MITRE ATT&CK mapping, and behavioural interpretation. Designed for cybersecurity analysts and incident response teams.
+IOC Intelligence Report | Structured, export-ready catalogue of all identified Indicators of Compromise including domains, IP addresses, URLs, certificates, API endpoints, and C2 infrastructure references. Available in JSON/STIX format for SIEM integration.
+Threat Classification Report | Detailed malware family designation with confidence scoring, supporting behavioural evidence, attack objective analysis, and comparison against documented malware variants and historical campaign data.
+Risk Assessment Report | Complete Threat Index analysis with factor-level scoring breakdown, evidence attribution for each contributing dimension, confidence bands, and prioritised response recommendations calibrated to the assigned risk category.
+Deliverable | Description
+Executive Summary | Concise, jargon-free intelligence briefing designed for banking leadership and senior management. Communicates the nature of the threat, estimated customer exposure, regulatory implications, and recommended executive actions.
+Customer Advisory | Plain-language advisory document for distribution to affected or at-risk customer segments, explaining the nature of the threat, indicators that a device may be compromised, recommended protective actions, and bank contact information.
+Compliance Impact Assessment | Regulatory analysis mapping detected threats to applicable RBI, DPDP Act, and IT Act provisions, identifying reporting obligations,
+ | control failures, and recommended governance actions.
+Fraud Investigation Summary | Consolidated fraud intelligence package supporting formal incident response, internal investigations, law enforcement referrals, and regulatory notifications. Includes blockchain-verified evidence integrity certificates.
+AI-Powered Malware Interpretation Generative AI transforms decompiled code and runtime telemetry into structured, plain-language threat narratives — enabling fraud analysts without reverse engineering expertise to immediately understand and act on investigation findings. | Explainable Risk Scoring Every Threat Index score is supported by a factor-level evidence breakdown. Investigators can trace each point of the score to a specific observed indicator, eliminating black-box verdicts and enabling confident, auditable escalation decisions.
+Cross-Layer Signal Fusion Static analysis, dynamic behavioural observations, threat intelligence enrichment, and AI interpretation are correlated into a unified threat assessment — dramatically reducing false positives and surfacing confirmed threats that single-layer tools miss entirely. | Investigation Reports Generative AI automatically produces investigation outputs in English, Hindi, Telugu, Malayalam, Kannada, and Tamil — removing the language barrier between central cybersecurity teams and regional fraud officers, law enforcement, and banking customers.
+Blockchain-Based Evidence Integrity Cryptographic hashes of all investigation artefacts are anchored on a Hyperledger Fabric ledger, creating tamper-proof, timestamped evidence records that meet the evidentiary standards required for regulatory submissions and legal proceedings. | GRC Intelligence Engine Detected threats are automatically mapped to specific provisions of RBI directives, the DPDP Act 2023, and the IT Act 2000 — translating cybersecurity findings into compliance language and directly informing regulatory notification obligations.
+Language | Primary Use
+Python | Backend logic, AI orchestration, and analysis scripting
+TypeScript / JavaScript | Frontend framework and interactive data visualisation
+SQL & Cypher | Relational and graph database querying
+Category | Technology
+Frameworks & UI | React 18, Tailwind CSS, shadcn/ui
+Data & Graph Visualisation | Recharts, D3.js, Sigma.js / react-force-graph
+Category | Technology
+API Gateway | FastAPI, Nginx (Reverse Proxy)
+Authentication & Validation | OAuth2, JWT, Pydantic
+Task Queues & Brokers | RabbitMQ, Celery, Redis
+Category | Technology
+Relational Database | PostgreSQL 16
+Graph Database | Neo4j Community
+Category | Technology
+Object Storage | MinIO (S3-compatible)
+Tool | Purpose
+JADX-CLI | APK decompilation to readable Java source
+Androguard | Manifest parsing, permission extraction, call graph generation
+Semgrep | Detects vulnerable code patterns in decompiled source
+ClamAV | Pre-screens APKs for known malware signatures
+Tool | Purpose
+Android Emulator (AVD API 30) | Runtime emulation environment for APK execution
+Frida | JavaScript hooks injected at runtime; bypasses root/SSL detection
+mitmproxy | SSL decryption proxy for HTTPS traffic capture
+tcpdump | Raw packet capture for DNS queries and C2 detection
+Scapy | PCAP parsing to extract destination IPs and data volumes
+inotifywait | Filesystem event monitoring during app runtime
+Model | Provider | Role
+Gemini 1.5 Flash | Google API / OpenRouter | Network intelligence agent; primary for large decompiled codebases
+GPT-4o-mini | OpenRouter | GRC compliance agent
+Llama-3-70B | Groq / OpenRouter | De-obfuscation fallback
+Model | Role
+CodeLlama-7B (Q4_K_M) | De-obfuscation — renames variables, writes code narrative
+Mistral-7B-Instruct | MITRE ATT&CK mapping agent
+Priority | Model / Provider | Rationale
+Primary | Gemini 1.5 Flash + OpenRouter (GPT-4o-mini, Claude Haiku) | Primary API layer via OpenRouter/Google API; broadest model coverage and 1M context window for large decompiled codebases
+Secondary | Groq API (Llama-3-70B) | ~500 tokens/sec; free tier sufficient for hackathon demo volume
+Backup | Local Ollama (CodeLlama-7B, Mistral-7B) | Zero latency, zero cost fallback; data never leaves the server
+Category | Technology | Justification
+Containerisation & Isolation | Docker, Docker Compose, gVisor | Single-command full-stack spin-up; gVisor kernel sandbox prevents malware escape
+Category | Technology | Justification
+Monitoring | Prometheus, Grafana | Real-time dashboards for APK throughput, agent latency, queue depth
+Component | Technology | Version | Justification
+API Gateway | FastAPI | 0.111+ | Async-native Python framework; auto-generates OpenAPI schema for bank IT integration. Pydantic v2 handles strict APK metadata validation at ingestion.
+File Validation | python-magic + clamd | Latest | MIME-type validation prevents non-APK upload attacks; ClamAV pre-screens for known signatures before deep analysis.
+Authentication | OAuth2 + JWT (role claims) | RFC 6749 | Role claim in JWT payload ('analyst' vs 'officer') drives the dual-persona report rendering engine downstream.
+Rate Limiting | Redis + slowapi | Latest | Prevents abuse of the compute-intensive sandbox pipeline; bank-grade upload quotas enforced per API key.
+Hash Deduplication | VirusTotal API v3 + local cache | v3 | SHA-256 hash checked against VT before spawning full analysis — known-malicious hashes generate a fast-path report in seconds.
+Component | Technology | Version | Justification
+Message Broker | RabbitMQ | 3.13+ | AMQP protocol with durable queues. APK analysis jobs survive server restart — critical for bank-grade reliability SLAs.
+Task Workers | Celery | 5.4+ | Concurrent static + dynamic analysis tracks run as separate Celery task chains. Beat scheduler handles batch processing during off-peak hours.
+Component | Technology | Version | Justification
+Task Monitoring | Flower (Celery Monitor) | 2.0+ | Real-time worker monitoring dashboard. Bank ops team can see analysis queue depth and worker health without touching the backend.
+State Management | Redis (broker + result backend) | 7.2+ | Sub-millisecond task state reads. Analysis progress polled by frontend via WebSocket subscription to Redis pub/sub channels.
+Component | Technology | Version | Justification
+APK Decompilation | JADX-CLI | 1.5+ | Produces readable Java source from DEX bytecode. CLI mode allows programmatic invocation from Celery worker with stdout capture.
+Manifest & DEX Parsing | Androguard | 3.3.5 | Python-native library for AndroidManifest.xml parsing, permission extraction, and call graph generation. Output feeds directly into the risk scoring matrix.
+Permission Risk Matrix | Custom weighted scoring engine | In-house | Danger-combination rules (e.g., RECEIVE_SMS + BIND_ACCESSIBILITY_SERVICE = OTP- intercept) scored against OWASP Mobile Top 10 and RBI advisory threat models.
+IOC Extraction | Custom Regex + Semgrep | Latest | Hardcoded URLs, API keys, Base64 blobs, and crypto keys extracted via regex. Semgrep rules detect insecure HTTP and hardcoded credentials in decompiled source.
+Certificate Analysis | apksigner + keytool | SDK tools | Signing certificate fingerprint extracted for Campaign DNA graph node creation. Self-signed or expired certs auto-flagged as risk indicators.
+Component | Technology | Version | Justification
+String Decryption | CodeLlama-7B (via Ollama) | Q4_K_M | Obfuscated string constants and XOR-encrypted config blobs passed to local LLM for speculative decryption and intent labelling.
+Component | Technology | Version | Justification
+Emulation | Android Emulator (AVD) — API 30 | SDK 34 | API 30 (Android 11) covers the majority of devices used in active fraud campaigns per RBI threat reports.
+Runtime Instrumentation | Frida + frida-tools | 16.3+ | JavaScript hooks injected into app process at runtime. Pre-built scripts bypass root detection, SSL pinning, and emulator detection used by sophisticated malware.
+SSL Decryption Proxy | mitmproxy | 10.x | All HTTPS traffic routed through mitmproxy after SSL pinning bypass. Decrypted request/response pairs captured as structured JSON for network analysis agent.
+Network Capture | tcpdump + Scapy | Latest | Raw packet capture runs in parallel. Scapy parses PCAP to extract DNS queries, destination IPs, and data volumes — fed into the C2 detection agent.
+Filesystem Monitoring | inotifywait + ADB shell | Latest | File creation, modification, and deletion events captured during app runtime. Detects credential dumps to local storage, SQLite exfiltration, and contact harvesting.
+Sandbox Isolation | Docker (gVisor runtime) | Latest | Dynamic analysis container uses gVisor kernel sandbox. Malware cannot escape to host filesystem. Each analysis runs in a fresh, ephemeral container per job.
+Agent | Model / Framework | Task
+De-Obfuscation Agent | Groq API (Llama-3-70B) via OpenRouter Backup: CodeLlama-7B via Ollama (local) | Receives obfuscated bytecode variable names and control flow. Renames variables to functional intent labels. Produces human-readable code summary.
+MITRE ATT&CK Mapping Agent | OpenRouter API (GPT-4o-mini) Backup: Mistral-7B-Instruct via Ollama | Maps extracted behaviours to MITRE ATT&CK Mobile TTPs (e.g., T1412 — Capture SMS Messages). Outputs structured TTP JSON.
+Network Intelligence Agent | Gemini 1.5 Flash (via Google API / OpenRouter) Backup: Phi-3-mini via Ollama | Analyses mitmproxy + tcpdump output. Identifies C2 communication patterns, data exfiltration volumes, and anomalous DNS behaviour.
+GRC Compliance Agent | GPT-4o-mini via OpenRouter Backup: Mistral-7B via Ollama | Maps each IOC to relevant RBI, DPDP Act, and IT Act clauses. Outputs compliance violation list with recommended bank action items.
+Risk Scoring Agent | Rule engine + LLM narrative layer | Combines permission weight score, dynamic anomaly score, and TTP severity into a 0–100 composite Threat Index. LLM layer writes the executive summary narrative.
+Report Generation Agent | Jinja2 templating + LLM WeasyPrint for PDF render | Selects report template based on JWT role claim. Populates with all upstream agent outputs. Renders to PDF (analyst) or simplified HTML dashboard (officer).
+Component | Technology | Justification
+Relational Store | PostgreSQL 16 | APK metadata, job records, user accounts, role assignments, audit logs. JSONB columns store flexible IOC payloads without schema migrations.
+Component | Technology | Justification
+Graph Database | Neo4j Community 5.x | Campaign DNA mapper. Nodes: APK, Domain, IP, SigningCert, DeveloperString. Edges: COMMUNICATES_WITH, SHARES_CERT_WITH, REUSES_DOMAIN. Cypher queries find cross-campaign links in O(1) graph traversal.
+Cache & Queue | Redis 7.2 | Celery broker, result backend, WebSocket pub/sub, VirusTotal hash cache (TTL: 24h), session store for JWT refresh tokens.
+Object Storage | MinIO (S3-compatible) | Raw APK file storage, generated PDF reports, PCAP dumps. S3-compatible API enables trivial migration to AWS S3 or bank's private object store in production.
+Blockchain Anchor | Hyperledger Fabric (testnet) / Polygon Mumbai | SHA-256 of every generated report committed as an on-chain transaction. Report timestamp and hash stored in PostgreSQL for retrieval. Provides legal non-repudiation for RBI submissions.
+Component | Technology | Justification
+Web Framework | React 18 + TypeScript | Type-safe component architecture. Role-based rendering driven by JWT claims decoded client-side.
+UI Component Library | shadcn/ui + Tailwind CSS | Accessible, production-ready components. Dark mode for analyst dashboard; clean light mode for officer view.
+Data Visualisation | Recharts + D3.js | Spider/radar charts for multi-dimensional risk score, pie charts for permission breakdown, timeline charts for dynamic behaviour sequence.
+Graph Visualisation | Sigma.js / react-force-graph | Interactive Campaign DNA graph. Nodes coloured by entity type; edge thickness by link strength. Click-to-expand APK family trees.
+Component | Technology | Justification
+Real-time Updates | WebSocket (native browser API + FastAPI) | Analysis progress streamed live — users see static analysis complete → dynamic sandbox launching → AI agents processing — without polling.
+Report Export | WeasyPrint (PDF) + xlsx (Excel IOC export) | Analyst PDF includes all technical sections. STIX/TAXII JSON export for SIEM integration. Excel IOC sheet for bank IT teams.
+Component | Technology | Justification
+Containerisation | Docker + Docker Compose | All services (API, workers, Neo4j, Redis, MinIO, Ollama) defined as Compose services. Single command brings up full stack — critical for hackathon demo reliability.
+Reverse Proxy | Nginx | SSL termination, rate limiting at network layer, WebSocket upgrade support, static file serving.
+Process Isolation | gVisor (runsc) for sandbox containers | Malware execution containers use gVisor kernel sandbox — host OS cannot be compromised even if malware escapes the Android emulator.
+Monitoring | Prometheus + Grafana | APK analysis throughput, agent latency, Redis queue depth, and sandbox CPU/memory tracked in real-time dashboards.
+Step | Action | Component Responsible
+1 | Analyst uploads APK via browser. JWT role claim validated at API gateway. | Nginx + FastAPI + Redis session
+2 | File hash (SHA-256) checked against VirusTotal API and local Redis cache. Known-malicious APKs get instant fast-path report. | FastAPI + Redis + VT API
+3 | APK stored in MinIO. Analysis job created in PostgreSQL. Task dispatched to RabbitMQ queue. | FastAPI + MinIO + PostgreSQL + RabbitMQ
+4 | Static Worker pulls job. JADX decompiles APK. Androguard extracts manifest, permissions, and call graph. Semgrep scans source. Regex extracts IOCs. | Celery Static Worker
+5 | Dynamic Worker launches gVisor-isolated Android emulator. Frida hooks injected. SSL pinning bypassed. mitmproxy captures HTTPS. tcpdump captures raw packets. | Celery Dynamic Worker + gVisor
+6 | Both workers push raw forensic artifacts (JSON) to MinIO and update job state in Redis. | Workers + MinIO + Redis
+7 | LangGraph orchestrator reads artifacts. Agents execute in sequence: De-Obfuscation → MITRE Mapping → Network Intel → GRC Compliance → Risk Scoring. | LangGraph + Ollama / API LLMs
+8 | Campaign DNA Agent queries Neo4j for matching IOC nodes. New nodes/edges upserted. Cross-campaign links surfaced. | Neo4j Graph DB
+9 | Citizen Impact Assessment module cross-references APK behaviour with mock demographic dataset. | Custom Python module + PostgreSQL
+10 | Report Generation Agent selects template by JWT role. Populates template with all agent outputs. WeasyPrint renders PDF. | Jinja2 + LLM + WeasyPrint
+Step | Action | Component Responsible
+11 | Report SHA-256 hashed and committed to Hyperledger Fabric. Hash + timestamp stored in PostgreSQL. | Hyperledger Fabric SDK
+12 | Completed report stored in MinIO. Redis pub/sub notifies frontend WebSocket. User sees report. | MinIO + Redis + FastAPI WebSocket
+Potential Impact | Mitigation Strategies
+Reduced	static	visibility	into	malware functionality and attack objectives | Hybrid Analysis Pipeline: Dynamic behavioural monitoring compensates — runtime behaviour cannot be obfuscated away regardless of code transformation
+Incomplete IOC extraction from obfuscated strings and hardcoded endpoints | AI De-Obfuscation Agent: CodeLlama-7B infers developer intent from encrypted string patterns and obfuscated variables even without full decryption
+Delayed family classification and lower AI narrative confidence for heavily obfuscated samples | Frida Runtime Instrumentation: API hooks capture plaintext method parameters at runtime after all in-app decryption has occurred
+Elevated false-negative risk for novel obfuscation variants | Obfuscation as Risk Signal: High obfuscation scores are treated as an independent risk indicator — legitimate apps have no reason to hide their functionality Continuous Rule Updates: Semgrep patterns and heuristics are updated as new obfuscation techniques are documented
+Potential Impact | Mitigation Strategies
+False negatives — malware classified benign due to suppressed runtime behaviour | Anti-Evasion Detection as Signal: Environment-checking behaviour is itself flagged as a high-confidence malware indicator — the evasion attempt is evidence of malicious intent
+Incomplete behavioural telemetry from evasion-capable samples | Realistic Device Simulation: Sandbox hardware profiles, sensor data, and app lists are configured to match real Indian banking customer device profiles
+Reduced dynamic analysis confidence for advanced malware families | Frida Bypass Hook Scripts: Pre-built scripts actively bypass root detection, SSL pinning, and emulator checks at the API level before the app can evaluate them Automated User Behaviour: Scripted taps, form entries, and navigation simulate genuine sessions to trigger time-delayed or interaction-gated payloads Multi-Profile Execution: Evasion-detecting apps are re-executed across multiple sandbox configurations to maximise activation probability
+Potential Impact | Mitigation Strategies
+Incorrect threat narratives reducing investigator trust and platform credibility | Evidence-Grounded Reasoning: Agents are architecturally prevented from producing findings unsupported by collected forensic artefacts
+Malware family misclassification affecting incident response prioritisation | Cross-Agent Validation: Each agent's output is validated against independent findings from other agents — inconsistencies reduce confidence scores automatically
+Inaccurate compliance assessments with potential regulatory consequences | Explicit Confidence Scoring: Every AI output carries a calibrated confidence score; low-confidence findings are flagged for mandatory analyst review
+Overconfident risk narratives in the absence of strong corroborating evidence | Deterministic Cross-Verification: Key conclusions are cross-validated against non-AI tools (Androguard, Semgrep, certificate analysis) before finalisation Human-in-the-Loop Escalation: Critical and high-risk cases automatically trigger an expert analyst review flag
+Potential Impact | Mitigation Strategies
+Delayed identification of genuinely novel attack techniques | Behaviour-First Detection: Detection anchors to what the app does at runtime — its interaction with banking APIs and SMS functions — making novel variants detectable by intent not signature
+Lower detection confidence for first-encounter variants | AI Anomaly Scoring: Behaviours deviating statistically from legitimate app baselines are flagged even without any signature match
+Reduced intelligence context for campaigns using entirely fresh infrastructure | Multi-Source Intelligence Enrichment: Continuous integration of VirusTotal, CERT-In, RBI advisories, and commercial feeds minimises zero-day exposure windows
+Potential risk underestimation for bespoke, bank-specific malware | Continuous Model Retraining: Detection models are updated on a defined cadence using newly collected samples Campaign DNA Early Detection: Novel APKs frequently reuse certificates, domains, or developer strings from prior campaigns — graph analysis surfaces these links even for code-level zero-days
+Potential Impact | Mitigation Strategies
+Elevated infrastructure costs at high submission volumes | Cloud-Native Microservices: All components are containerised and independently scalable based on real-time queue depth metrics
+Processing delays during unexpected peak workload periods | Queue-Based Distribution: RabbitMQ distributes analysis jobs across worker nodes
+ | with automatic backpressure and load balancing
+GPU dependency for local LLM inference at production throughput | Priority-Based Scheduling: High-risk submissions are processed immediately; lower-risk submissions are batched for off-peak execution
+Storage accumulation from forensic artefacts and PCAP files | Tiered LLM Fallback: Local Ollama → Groq API → OpenRouter routing ensures consistent throughput even when local GPU is saturatedElastic Resource Provisioning: Cloud deployment enables dynamic GPU allocation aligned with real-time workload intensity
+Potential Impact | Mitigation Strategies
+Incomplete attribution for campaigns using undocumented infrastructure | Multi-Source Aggregation: Intelligence drawn from multiple independent providers simultaneously — no single feed's gaps create a systematic blind spot
+Reduced context for emerging fraud operations targeting specific Indian banks | Internal Repository via Neo4j: Every IOC discovered through the platform's investigations is stored locally, building an institution-specific database that improves with use
+Detection gaps for threat actors operating entirely fresh, unreported infrastructure | Automated Feed Validation: Incoming intelligence is continuously cross-referenced, deduplicated, and validated for freshness Campaign DNA First-Party Discovery: Graph analysis surfaces campaign links through certificate and domain reuse even when individual IOCs lack external feed coverage
+Potential Impact | Mitigation Strategies
+Direct on-chain artefact storage is economically impractical at production scale | Hash-Only Anchoring: Only the SHA-256 cryptographic hash of each artefact is stored on-chain — providing tamper detection without bulk data storage
+Transaction throughput constraints could delay evidence anchoring under high submission bursts | Encrypted Off-Chain Storage: Actual artefacts are maintained in MinIO S3-compatible encrypted object storage with access controls and audit logging
+Storage costs would scale unsustainably if used for full artefact persistence | On-Demand Integrity Verification: Any retrieved artefact can be re-hashed and compared against the immutable blockchain record instantly Batched Transactions: Multiple artefact hashes are batched into single Hyperledger Fabric transactions to amortise overhead across high investigation volumes
+Potential Impact | Mitigation Strategies
+Rapid obsolescence of signature-based detection against AI-generated variant flooding | Behaviour-Intent Detection: Detection anchors to runtime intent — interaction with banking APIs and device control functions — making AI-generated variants detectable regardless of code structure
+Novel programmatic obfuscation patterns absent from any current training data | Adaptive Anomaly Scoring: ML models flag statistical deviations from legitimate app behaviour profiles without requiring prior documentation of the specific variant
+Compressed detection windows as attacker iteration cycles accelerate | Continuous Retraining: Detection models are updated on a defined cadence using newly collected AI-generated malware samples
+Potential adversarial prompt injection targeting the platform's own AI agents | Red Team and Adversarial Testing: Regular structured assessments simulate AI-generated attack scenarios targeting the platform's detection and AI interpretation layers Multi-Agent Cross-Validation: Independent agents running different models reduce the effectiveness of prompt injection — manipulating one agent does not compromise the consensus output
