@@ -30,13 +30,38 @@ async def get_cases(
     offset = (page - 1) * limit
     return await service.list_cases(skip=offset, limit=limit)
 
-@router.get("/{case_id}", response_model=CaseResponse)
+@router.get("/{case_id}")
 async def get_case(case_id: UUID, db: AsyncSession = Depends(get_db)):
+    # Check artifact storage for saved payload
+    from backend.app.services.artifact_service import ArtifactService
+    art_service = ArtifactService()
+    try:
+        if art_service.use_fallback:
+            import os, json
+            path = os.path.join("local_artifacts", str(case_id), "case_payload.json")
+            if os.path.exists(path):
+                with open(path, "r", encoding="utf-8") as f:
+                    return json.load(f)
+    except Exception:
+        pass
+
     service = CaseService(db)
     case_obj = await service.get_case(case_id)
     if not case_obj:
         raise HTTPException(status_code=404, detail="Case not found")
-    return case_obj
+        
+    if case_obj.evidence_json and isinstance(case_obj.evidence_json, dict) and "full_payload" in case_obj.evidence_json:
+        return case_obj.evidence_json["full_payload"]
+
+    return {
+        "id": str(case_obj.id),
+        "case_number": case_obj.case_number,
+        "sha256": case_obj.sha256,
+        "filename": case_obj.filename,
+        "status": case_obj.status,
+        "created_at": case_obj.created_at.isoformat() if case_obj.created_at else None
+    }
+
 
 @router.post("/{case_id}/reanalyze")
 async def reanalyze_case(case_id: UUID, db: AsyncSession = Depends(get_db)):

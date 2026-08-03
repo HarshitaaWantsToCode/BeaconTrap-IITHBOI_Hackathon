@@ -3,6 +3,8 @@
 import React from "react";
 import { Sparkles, User } from "lucide-react";
 import { CopilotMessage } from "@/types/copilot";
+import { MultiSpeakerNarrator } from "./MultiSpeakerNarrator";
+
 
 interface ChatMessageProps {
   message: CopilotMessage;
@@ -108,8 +110,9 @@ export default function ChatMessage({ message }: ChatMessageProps) {
         }`}
       >
         {!isUser && (
-          <div className="text-[8px] font-mono text-primary uppercase tracking-widest font-bold mb-1.5">
-            BeaconTrap Copilot
+          <div className="flex items-center justify-between text-[8px] font-mono text-primary uppercase tracking-widest font-bold mb-1.5">
+            <span>BeaconTrap Copilot</span>
+            <MultiSpeakerNarrator textToRead={message.content} />
           </div>
         )}
         <div className="space-y-0.5">{renderContent(message.content)}</div>
@@ -123,3 +126,4 @@ export default function ChatMessage({ message }: ChatMessageProps) {
     </div>
   );
 }
+

@@ -83,13 +83,16 @@ app.add_middleware(
 # Include Routers
 app.include_router(auth.router, prefix=f"{settings.API_V1_STR}/auth", tags=["Authentication"])
 app.include_router(cases.router, prefix=f"{settings.API_V1_STR}/cases", tags=["Cases"])
+app.include_router(cases.router, prefix="/api/cases", tags=["Cases Legacy"])
 app.include_router(uploads.router, prefix=f"{settings.API_V1_STR}/uploads", tags=["Uploads"])
 app.include_router(reports.router, prefix=f"{settings.API_V1_STR}/reports", tags=["Reports"])
 app.include_router(campaigns.router, prefix=f"{settings.API_V1_STR}/campaigns", tags=["Campaigns"])
 app.include_router(system.router, prefix=f"{settings.API_V1_STR}/system", tags=["System"])
 app.include_router(ai.router, prefix=f"{settings.API_V1_STR}/ai", tags=["AI"])
+app.include_router(ai.router, prefix="/api/copilot", tags=["AI Copilot Direct"])
 app.include_router(risk.router, prefix=f"{settings.API_V1_STR}/risk", tags=["Risk"])
 app.include_router(investigation.router, prefix=f"{settings.API_V1_STR}/investigation", tags=["Investigation"])
+
 
 # WebSocket Manager
 class ConnectionManager:

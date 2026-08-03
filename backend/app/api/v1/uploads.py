@@ -28,17 +28,18 @@ async def upload_apk(file: UploadFile = File(...), db: AsyncSession = Depends(ge
     service = CaseService(db)
     new_case = await service.create_case(filename=file.filename, sha256=sha256_hash)
     
-    # Upload binary file to MinIO object storage tier
+    # Save file locally for analysis
+    import os
+    local_dir = os.path.join("local_artifacts", "apks")
+    os.makedirs(local_dir, exist_ok=True)
+    local_file_path = os.path.join(local_dir, f"{new_case.id}.apk")
+    with open(local_file_path, "wb") as f:
+        f.write(file_bytes)
+
+    # Try uploading to MinIO object storage tier
     artifact_service = ArtifactService()
     object_key = f"apks/{new_case.id}.apk"
-    
-    if artifact_service.use_fallback:
-        import os
-        path = os.path.join("local_artifacts", "apks")
-        os.makedirs(path, exist_ok=True)
-        with open(os.path.join(path, f"{new_case.id}.apk"), "wb") as f:
-            f.write(file_bytes)
-    else:
+    if not artifact_service.use_fallback:
         try:
             artifact_service.client.put_object(
                 "artifacts",
@@ -47,15 +48,10 @@ async def upload_apk(file: UploadFile = File(...), db: AsyncSession = Depends(ge
                 length=len(file_bytes),
                 content_type="application/vnd.android.package-archive"
             )
-        except Exception as e:
-            # Fallback
-            import os
-            path = os.path.join("local_artifacts", "apks")
-            os.makedirs(path, exist_ok=True)
-            with open(os.path.join(path, f"{new_case.id}.apk"), "wb") as f:
-                f.write(file_bytes)
+        except Exception:
+            pass
 
-    # Publish job to RabbitMQ queue with binary storage reference
+    # Publish job to RabbitMQ queue if available
     job_payload = {
         "case_id": str(new_case.id),
         "filename": file.filename,
@@ -63,11 +59,23 @@ async def upload_apk(file: UploadFile = File(...), db: AsyncSession = Depends(ge
         "storage_path": object_key
     }
     publish_job("static_analysis", job_payload)
+
+    # Perform real APK static extraction & AI analysis
+    from backend.app.services.apk_analysis_runner import ApkAnalysisRunner
+    case_payload = await ApkAnalysisRunner.analyze_apk(
+        db=db,
+        case_id=new_case.id,
+        file_path=local_file_path,
+        filename=file.filename,
+        sha256_hash=sha256_hash
+    )
     
     return {
         "case_id": str(new_case.id),
         "sha256": sha256_hash,
         "storage_path": object_key,
-        "status": "queued"
+        "status": "completed",
+        "case_data": case_payload
     }
+
 

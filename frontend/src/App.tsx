@@ -241,7 +241,8 @@ import { MultiSpeakerNarrator } from '@/components/copilot/MultiSpeakerNarrator'
 import { useTranslation } from 'react-i18next';
 
 function MainAppShell() {
-  const { casesAnalyzed, appendNewCase, language, setLanguage } = useAnalysis();
+  const { triggerAnalysis, casesAnalyzed, language, setLanguage } = useAnalysis();
+
   const { t } = useTranslation();
   const [activeView, setActiveView] = useState<"DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB">("DASHBOARD");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -273,14 +274,20 @@ function MainAppShell() {
     }
   };
 
-  const startUpload = () => {
+  const startUpload = async () => {
     if (!uploadFile) return;
-    setUploadStatus("Uploading to sandbox orchestration queue...");
-    appendNewCase(uploadFile);
-    setTimeout(() => {
-      setUploadStatus("Ingestion complete. Analysis queued with ID BC-3891!");
-    }, 2000);
+    setUploadStatus("Uploading & analyzing target APK with static and AI pipeline...");
+    try {
+      await triggerAnalysis(uploadFile);
+      setUploadStatus(`Analysis complete for ${uploadFile.name}! Redirecting to Analysis Lab...`);
+      setTimeout(() => {
+        setActiveView("ANALYSIS_LAB");
+      }, 800);
+    } catch (err: any) {
+      setUploadStatus(`Analysis failed: ${err?.message || "Sandbox analysis error"}`);
+    }
   };
+
 
   return (
     <div className="flex h-screen overflow-hidden bg-background text-text-primary">
