@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 export interface UserSession {
   username: string;
   name: string;
-  role: "ANALYST" | "BANK_OFFICER" | "AUDITOR" | "ADMIN";
+  role: "ANALYST" | "BANK_OFFICER" | "CITIZEN" | "AUDITOR" | "ADMIN";
   organization: string;
   clearanceLevel: string;
   jwtToken: string;
@@ -15,8 +15,8 @@ interface AuthContextType {
   user: UserSession;
   token: string | null;
   role: string | null;
-  login: (token: string, role: "ANALYST" | "BANK_OFFICER" | "AUDITOR" | "ADMIN", name?: string) => void;
-  updateRole: (newRole: "ANALYST" | "BANK_OFFICER" | "AUDITOR" | "ADMIN") => void;
+  login: (token: string, role: "ANALYST" | "BANK_OFFICER" | "CITIZEN" | "AUDITOR" | "ADMIN", name?: string) => void;
+  updateRole: (newRole: "ANALYST" | "BANK_OFFICER" | "CITIZEN" | "AUDITOR" | "ADMIN") => void;
   logout: () => void;
 }
 
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(localStorage.getItem("token") || DEFAULT_USER.jwtToken);
   const [user, setUser] = useState<UserSession>(DEFAULT_USER);
 
-  const login = (jwt: string, userRole: "ANALYST" | "BANK_OFFICER" | "AUDITOR" | "ADMIN", name?: string) => {
+  const login = (jwt: string, userRole: "ANALYST" | "BANK_OFFICER" | "CITIZEN" | "AUDITOR" | "ADMIN", name?: string) => {
     const updatedUser: UserSession = {
       ...DEFAULT_USER,
       name: name || DEFAULT_USER.name,
@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(updatedUser);
   };
 
-  const updateRole = (newRole: "ANALYST" | "BANK_OFFICER" | "AUDITOR" | "ADMIN") => {
+  const updateRole = (newRole: "ANALYST" | "BANK_OFFICER" | "CITIZEN" | "AUDITOR" | "ADMIN") => {
     localStorage.setItem("role", newRole);
     setUser(prev => ({ ...prev, role: newRole }));
   };

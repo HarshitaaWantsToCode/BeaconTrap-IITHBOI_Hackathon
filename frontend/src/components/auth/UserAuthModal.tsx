@@ -103,7 +103,8 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
           <div className="grid grid-cols-2 gap-2">
             {[
               { id: "ANALYST", label: "SOC Analyst", desc: "Technical APK Decompilation & Forensics" },
-              { id: "BANK_OFFICER", label: "Bank Officer", desc: "GRC & Executive Risk Management" },
+              { id: "BANK_OFFICER", label: "Bank Officer", desc: "GRC Compliance & Risk Management" },
+              { id: "CITIZEN", label: "Citizen / Public", desc: "Threat Advisory & Safety Summary" },
               { id: "AUDITOR", label: "Legal Auditor", desc: "Blockchain Chain of Custody Proofs" },
               { id: "ADMIN", label: "Sys Administrator", desc: "Heuristics & C2 System Config" }
             ].map((roleSpec) => {

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import SidebarNav from "./components/layout/SidebarNav";
 import SocCommandCenter from "./components/dashboard/SocCommandCenter";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { WebSocketProvider } from "./context/WebSocketContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
@@ -113,6 +113,7 @@ const mockDashboardData: SocDashboardPayload = {
 
 function AnalysisLabWorkspace() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const {
     caseData,
     campaignGraph,
@@ -121,9 +122,27 @@ function AnalysisLabWorkspace() {
     language
   } = useAnalysis();
 
+  const currentRole = user?.role || "ANALYST";
+
+  // Determine initial active sub-tab based on user role
+  const defaultSubTab = useMemo(() => {
+    if (currentRole === "BANK_OFFICER") return "officer";
+    if (currentRole === "CITIZEN") return "citizen";
+    return "analyst";
+  }, [currentRole]);
+
   const [activeSubTab, setActiveSubTab] = useState<
     "analyst" | "officer" | "citizen" | "campaign" | "timeline" | "ledger"
-  >("analyst");
+  >(defaultSubTab);
+
+  // Sync tab if user switches role dynamically via IAM modal
+  useEffect(() => {
+    if (currentRole === "BANK_OFFICER" && activeSubTab === "analyst") {
+      setActiveSubTab("officer");
+    } else if (currentRole === "CITIZEN" && (activeSubTab === "analyst" || activeSubTab === "officer")) {
+      setActiveSubTab("citizen");
+    }
+  }, [currentRole]);
 
   if (!caseData) {
     return (
@@ -137,6 +156,18 @@ function AnalysisLabWorkspace() {
     );
   }
 
+  // Filter available tabs according to RBAC constraints
+  const allTabs = [
+    { id: "analyst", label: t('security_analyst'), icon: Cpu, roles: ["ANALYST", "ADMIN"] },
+    { id: "officer", label: t('bank_officer'), icon: Briefcase, roles: ["ANALYST", "BANK_OFFICER", "ADMIN"] },
+    { id: "citizen", label: t('citizen_impact'), icon: Globe, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] },
+    { id: "campaign", label: t('campaign_dna'), icon: Network, roles: ["ANALYST", "BANK_OFFICER", "ADMIN"] },
+    { id: "timeline", label: t('timeline'), icon: Clock, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] },
+    { id: "ledger", label: t('evidence_ledger'), icon: Fingerprint, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] }
+  ];
+
+  const allowedTabs = allTabs.filter(tab => tab.roles.includes(currentRole));
+
   return (
     <div className="space-y-6 max-w-[1600px] mx-auto animate-fadeIn">
       {/* Target APK Identification Header */}
@@ -144,11 +175,13 @@ function AnalysisLabWorkspace() {
         <div className="space-y-2">
           <div className="flex items-center gap-3">
             <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">
-              {t('upload_new') /* reuse or something similar, actually let's just leave CRITICAL RISKS as is, or use t() */}
               CRITICAL RISKS TARGET DETECTED
             </span>
             <span className="text-xs font-mono text-text-muted">
               PKG: {caseData.packageName} v{caseData.versionCode}
+            </span>
+            <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+              PERSONA: {currentRole}
             </span>
           </div>
           <h2 className="text-2xl font-extrabold tracking-tight text-text-primary">
@@ -187,25 +220,18 @@ function AnalysisLabWorkspace() {
         </div>
       </div>
 
-      {/* Main Tab Deck Header */}
+      {/* Main Tab Deck Header - Role Filtered */}
       <div className="flex border-b border-card-border pb-3 mb-6 gap-2 overflow-x-auto">
-        {[
-          { id: "analyst", label: t('security_analyst'), icon: Cpu },
-          { id: "officer", label: t('bank_officer'), icon: Briefcase },
-          { id: "citizen", label: t('citizen_impact'), icon: Globe },
-          { id: "campaign", label: t('campaign_dna'), icon: Network },
-          { id: "timeline", label: t('timeline'), icon: Clock },
-          { id: "ledger", label: t('evidence_ledger'), icon: Fingerprint }
-        ].map((tab) => {
+        {allowedTabs.map((tab) => {
           const TabIcon = tab.icon;
           const isSelected = activeSubTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border rounded-lg transition-all duration-200 shrink-0 ${
+              className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border rounded-lg transition-all duration-200 shrink-0 cursor-pointer ${
                 isSelected
-                  ? "bg-primary/10 text-primary border-primary/40 shadow-sm"
+                  ? "bg-primary/10 text-primary border-primary/40 shadow-sm font-bold"
                   : "bg-transparent border-transparent text-text-secondary hover:text-text-primary hover:bg-primary/10"
               }`}
             >
@@ -218,10 +244,10 @@ function AnalysisLabWorkspace() {
 
       {/* Sub-panel Content switches */}
       <div className="bg-card border border-card-border rounded-xl p-6 backdrop-blur-md min-h-[500px]">
-        {activeSubTab === "analyst" && <SecurityAnalystPanel />}
-        {activeSubTab === "officer" && <GrcCompliancePanel />}
+        {activeSubTab === "analyst" && currentRole !== "BANK_OFFICER" && currentRole !== "CITIZEN" && <SecurityAnalystPanel />}
+        {activeSubTab === "officer" && currentRole !== "CITIZEN" && <GrcCompliancePanel />}
         {activeSubTab === "citizen" && <CitizenImpactPanel />}
-        {activeSubTab === "campaign" && <CampaignDnaPanel />}
+        {activeSubTab === "campaign" && currentRole !== "CITIZEN" && <CampaignDnaPanel />}
         {activeSubTab === "timeline" && <TimelinePanel />}
         {activeSubTab === "ledger" && <BlockchainEvidencePanel />}
       </div>
