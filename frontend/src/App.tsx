@@ -25,8 +25,11 @@ import {
 import ExecutiveReportPrintView from "./components/ExecutiveReportPrintView";
 import AICopilot from "./components/copilot/AICopilot";
 import { SocDashboardPayload } from "./types/dashboard";
-import { AnalysisProvider, useAnalysis, mockCriticalCaseData } from "./context/AnalysisContext";
 import ThreatCorrelationGraph from "./components/ThreatCorrelationGraph";
+import { LandingPage } from "./components/landing/LandingPage";
+import { AnalysisProvider, useAnalysis } from "./context/AnalysisContext";
+
+
 
 // Modular Lab Components
 import SecurityAnalystPanel from "./components/lab/SecurityAnalystPanel";
@@ -244,7 +247,7 @@ function MainAppShell() {
   const { triggerAnalysis, casesAnalyzed, language, setLanguage } = useAnalysis();
 
   const { t } = useTranslation();
-  const [activeView, setActiveView] = useState<"DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB">("DASHBOARD");
+  const [activeView, setActiveView] = useState<"LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB">("LANDING");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>("");
   const [headerNotify, setHeaderNotify] = useState<string | null>(null);
@@ -266,7 +269,6 @@ function MainAppShell() {
       })
       .catch(err => console.error("Failed to load briefing for narrator", err));
   }, []);
-
 
   const showNotification = (msg: string) => {
     setHeaderNotify(msg);
@@ -294,7 +296,6 @@ function MainAppShell() {
       setUploadStatus(`Analysis failed: ${err?.message || "Sandbox analysis error"}`);
     }
   };
-
 
   return (
     <div className="flex h-screen overflow-hidden bg-background text-text-primary">
@@ -363,7 +364,14 @@ function MainAppShell() {
         </header>
 
         {/* View Switches & Dynamic Content */}
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+          {activeView === "LANDING" && (
+            <LandingPage
+              onLaunchDashboard={() => setActiveView("DASHBOARD")}
+              onUploadApk={() => setActiveView("UPLOAD")}
+            />
+          )}
+
           {activeView === "DASHBOARD" && (
             <SocCommandCenter
               data={{
@@ -376,6 +384,7 @@ function MainAppShell() {
               onNavigateToUpload={() => setActiveView("UPLOAD")}
             />
           )}
+
 
           {activeView === "UPLOAD" && (
             <div className="max-w-2xl mx-auto space-y-8 py-12">

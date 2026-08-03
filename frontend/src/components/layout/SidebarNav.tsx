@@ -1,16 +1,17 @@
 "use client";
 
 import React from "react";
-import { LayoutDashboard, Upload, FlaskConical, AlertTriangle, ShieldCheck } from "lucide-react";
+import { LayoutDashboard, Upload, FlaskConical, AlertTriangle, ShieldCheck, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface SidebarNavProps {
-  activeView: "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB";
-  onViewChange: (view: "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB") => void;
+  activeView: "LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB";
+  onViewChange: (view: "LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB") => void;
 }
 
 export default function SidebarNav({ activeView, onViewChange }: SidebarNavProps) {
   const { t } = useTranslation();
+  const isLandingActive = activeView === "LANDING";
   const isDashboardActive = activeView === "DASHBOARD";
   const isUploadActive = activeView === "UPLOAD";
   const isLabActive = activeView === "ANALYSIS_LAB";
@@ -20,7 +21,19 @@ export default function SidebarNav({ activeView, onViewChange }: SidebarNavProps
       <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-widest text-[var(--sidebar-text)]" style={{ opacity: 0.7 }}>
         {t('operations')}
       </div>
-      
+
+      <button
+        onClick={() => onViewChange("LANDING")}
+        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border text-left ${
+          isLandingActive
+            ? "text-[var(--sidebar-text-active)] bg-[var(--sidebar-active-bg)] border-[var(--sidebar-border)] shadow-[var(--sidebar-active-shadow)] font-bold"
+            : "text-[var(--sidebar-text)] hover:text-[var(--sidebar-text-active)] hover:bg-[var(--sidebar-item-hover)] border-transparent hover:border-[var(--sidebar-border)]"
+        }`}
+      >
+        <Sparkles className="w-4 h-4 text-cyan-400" />
+        <span>Platform Overview</span>
+      </button>
+
       <button
         onClick={() => onViewChange("DASHBOARD")}
         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border text-left ${
@@ -40,6 +53,7 @@ export default function SidebarNav({ activeView, onViewChange }: SidebarNavProps
         <LayoutDashboard className="w-4 h-4 text-primary" />
         <span>{t('soc_dashboard')}</span>
       </button>
+
 
       <button
         onClick={() => onViewChange("UPLOAD")}

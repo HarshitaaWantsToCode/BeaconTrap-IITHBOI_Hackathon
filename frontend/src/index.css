@@ -141,42 +141,44 @@
 }
 
 :root.light {
-  --background: #F5F3FF;
-  --foreground: #0F0D1A;
+  --background: #FFFFFF;
+  --foreground: #0F172A;
   --card: #FFFFFF;
-  --card-border: #C7BDFF;
-  --primary: #7C3AED;
-  --primary-glow: rgba(124, 58, 237, 0.15);
-  --primary-hover: #6d28d9;
-  --critical: #F87171;
-  --high: #FB923C;
-  --medium: #FCD34D;
-  --low: #34D399;
-  --safe: #38BDF8;
+  --card-border: #E2E8F0;
+  --primary: #65A30D;
+  --primary-glow: rgba(132, 204, 22, 0.25);
+  --primary-hover: #4D7C0F;
+  --critical: #EF4444;
+  --high: #F97316;
+  --medium: #EAB308;
+  --low: #10B981;
+  --safe: #06B6D4;
 
   /* Layout-specific variables for Light Mode */
-  --bg-page: #F5F3FF;
-  --bg-sidebar: linear-gradient(180deg, #3B1FA3 0%, #5B35C9 60%, #7C4AE8 100%);
-  --sidebar-border: rgba(255, 255, 255, 0.15);
-  --sidebar-text: rgba(255, 255, 255, 0.75);
-  --sidebar-text-active: #FFFFFF;
-  --sidebar-item-hover: rgba(255, 255, 255, 0.1);
-  --sidebar-active-bg: rgba(255, 255, 255, 0.18);
-  --sidebar-active-border: none;
-  --sidebar-active-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  --bg-page: #FFFFFF;
+  --bg-sidebar: #F8FAFC;
+  --sidebar-border: #E2E8F0;
+  --sidebar-text: #64748B;
+  --sidebar-text-active: #4D7C0F;
+  --sidebar-item-hover: rgba(226, 232, 240, 0.6);
+  --sidebar-active-bg: rgba(132, 204, 22, 0.12);
+  --sidebar-active-border: #65A30D;
+  --sidebar-active-shadow: 0 2px 8px rgba(101, 163, 13, 0.12);
   
   --bg-header: #FFFFFF;
-  --header-border: #C7BDFF;
+  --header-border: #E2E8F0;
   
-  --bg-main: #F5F3FF;
-  --briefing-bg: linear-gradient(to right, #FFFFFF, #FAF9FF, #FFFFFF);
+  --bg-main: #FFFFFF;
+  --briefing-bg: linear-gradient(to right, #F8FAFC, #F1F5F9, #F8FAFC);
   
-  --text-primary: #0F0D1A;
-  --text-secondary: #3A3657;
-  --text-muted: #5C5880;
+  --text-primary: #0F172A;
+  --text-secondary: #334155;
+  --text-muted: #64748B;
   
-  --card-bg-secondary: #FAF9FF;
-  --card-dot-color: #7C3AED;
+  --card-bg-secondary: #F8FAFC;
+  --card-dot-color: #65A30D;
+  --accent-glow: rgba(132, 204, 22, 0.3);
+
   
   --shadow-card: 0 4px 20px rgba(124, 58, 237, 0.12);
   --radius-card: 16px;
