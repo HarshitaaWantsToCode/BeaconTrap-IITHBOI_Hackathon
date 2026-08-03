@@ -28,6 +28,11 @@ import { SocDashboardPayload } from "./types/dashboard";
 import ThreatCorrelationGraph from "./components/ThreatCorrelationGraph";
 import { LandingPage } from "./components/landing/LandingPage";
 import { AnalysisProvider, useAnalysis } from "./context/AnalysisContext";
+import { ThemeToggleSwitch } from "./components/ThemeToggleSwitch";
+import { UserAuthModal } from "./components/auth/UserAuthModal";
+import { SystemSettingsModal } from "./components/settings/SystemSettingsModal";
+import { ServerTelemetryModal } from "./components/server/ServerTelemetryModal";
+
 
 
 
@@ -251,6 +256,12 @@ function MainAppShell() {
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>("");
   const [headerNotify, setHeaderNotify] = useState<string | null>(null);
+  
+  // Modals state
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isServerOpen, setIsServerOpen] = useState(false);
+
   const [copilotBriefingText, setCopilotBriefingText] = useState<Record<string, string>>({
     en: "Active campaigns detected targeting mobile banking applications via OTP interception and accessibility abuse. Immediate review of high-risk cases recommended.",
     hi: "ओटीपी इंटरसेप्शन और एक्सेसिबिलिटी दुरुपयोग के माध्यम से बैंकिंग अनुप्रयोगों को लक्षित करने वाले सक्रिय अभियानों का पता चला है। उच्च जोखिम वाले मामलों की तत्काल समीक्षा की सिफारिश की जाती है।",
@@ -299,6 +310,11 @@ function MainAppShell() {
 
   return (
     <div className="flex h-screen overflow-hidden bg-background text-text-primary">
+      {/* Interactive Modals */}
+      <UserAuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      <SystemSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+      <ServerTelemetryModal isOpen={isServerOpen} onClose={() => setIsServerOpen(false)} />
+
       {/* Sidebar Section */}
       <aside className="w-64 bg-card border-r border-card-border flex flex-col">
         <div className="p-6 border-b border-card-border flex items-center gap-3">
@@ -332,11 +348,12 @@ function MainAppShell() {
             </div>
           )}
 
-          <div className="flex items-center gap-6 text-text-muted">
+          <div className="flex items-center gap-4 text-text-muted">
             <MultiSpeakerNarrator 
               langCode={language} 
               textToRead={copilotBriefingText[language] || copilotBriefingText.en || ""} 
             />
+
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
@@ -348,20 +365,37 @@ function MainAppShell() {
               <option value="ta">{t('lang_ta')}</option>
               <option value="te">{t('lang_te')}</option>
             </select>
-            <Server 
-              onClick={() => showNotification("Telemetry Pipeline: Ingesting live feeds from 8 C2 nodes.")}
-              className="w-4 h-4 cursor-pointer hover:text-text-primary transition-colors" 
-            />
-            <Users 
-              onClick={() => showNotification("Persona Verification: Authenticated as Lead Incident Responder.")}
-              className="w-4 h-4 cursor-pointer hover:text-text-primary transition-colors" 
-            />
-            <Settings 
-              onClick={() => showNotification("System Config: Heuristics parameters optimized for offline evaluation.")}
-              className="w-4 h-4 cursor-pointer hover:text-text-primary transition-colors" 
-            />
+
+            {/* Sun to Moon Animated Light/Dark Mode Toggle */}
+            <ThemeToggleSwitch />
+
+            {/* Interactive Header Action Icons */}
+            <button 
+              onClick={() => setIsServerOpen(true)}
+              className="p-2 rounded-lg hover:bg-card-bg-secondary text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+              title="Infrastructure & Server Telemetry Node Status"
+            >
+              <Server className="w-4 h-4" />
+            </button>
+
+            <button 
+              onClick={() => setIsAuthOpen(true)}
+              className="p-2 rounded-lg hover:bg-card-bg-secondary text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+              title="User Identity, Clearance & Role Session (IAM)"
+            >
+              <Users className="w-4 h-4" />
+            </button>
+
+            <button 
+              onClick={() => setIsSettingsOpen(true)}
+              className="p-2 rounded-lg hover:bg-card-bg-secondary text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+              title="System Heuristics, AI & Web3 Settings"
+            >
+              <Settings className="w-4 h-4" />
+            </button>
           </div>
         </header>
+
 
         {/* View Switches & Dynamic Content */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-8">

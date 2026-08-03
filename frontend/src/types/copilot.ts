@@ -13,7 +13,11 @@ export type CopilotAction =
   | "explain_iocs"
   | "executive_summary"
   | "analyst_summary"
-  | "mitigation";
+  | "mitigation"
+  | "summarize_case"
+  | "generate_mitre"
+  | "recommend_countermeasures";
+
 
 export interface CopilotCaseContext {
   caseId: string | null;

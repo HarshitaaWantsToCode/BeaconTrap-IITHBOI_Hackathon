@@ -83,9 +83,12 @@ class CopilotChatRequest(BaseModel):
     context: Optional[Dict[str, Any]] = None
     action: Optional[str] = None
 
+@router.post("/chat")
 @router.post("/copilot/chat")
 @router.post("/copilot")
+@router.post("/")
 async def copilot_chat(req: CopilotChatRequest):
+
     message = (req.message or "").strip()
     action = req.action
     ctx = req.context or {}
