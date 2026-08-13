@@ -29,3 +29,29 @@ Thumbs.db
 *.db
 *.sqlite
 *.sqlite3
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Frontend
+node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
