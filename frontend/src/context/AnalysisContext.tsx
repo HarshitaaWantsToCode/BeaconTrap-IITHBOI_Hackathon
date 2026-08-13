@@ -313,6 +313,7 @@ interface AnalysisContextType {
   triggerAnalysis: (file: File) => Promise<void>;
   appendNewCase: (filePayload: File) => void;
   resetAnalysis: () => void;
+  updateBlockchainAnchor: (txHash: string, blockNumber: number, timestamp: Date) => void;
 }
 
 const AnalysisContext = createContext<AnalysisContextType | undefined>(undefined);
@@ -544,9 +545,9 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       malwareType: payload?.malwareType || dynamicMalwareType,
       threatNarrative: typeof payload?.threatNarrative === "string" ? payload.threatNarrative : JSON.stringify(payload?.threatNarrative || dynamicNarrative),
       citizenImpact: typeof payload?.citizenImpact === "string" ? payload.citizenImpact : JSON.stringify(payload?.citizenImpact || dynamicImpact),
-      blockchainTxHash: payload?.blockchainTxHash || "0x" + Math.random().toString(36).substring(2) + Math.random().toString(36).substring(2),
-      blockchainBlock: payload?.blockchainBlock || 1782399,
-      blockchainTimestamp: payload?.blockchainTimestamp ? new Date(payload.blockchainTimestamp) : new Date(),
+      blockchainTxHash: payload?.blockchainTxHash || null,
+      blockchainBlock: payload?.blockchainBlock || null,
+      blockchainTimestamp: payload?.blockchainTimestamp ? new Date(payload.blockchainTimestamp) : null,
       analystReport: payload?.analystReport || `## Technical Forensic Report - ${file.name}\n\n### Ingestion Parameters\n* **Filename**: \`${file.name}\`\n* **Package**: \`${sanitizedPkg}\`\n* **SHA256**: \`${computedSha256}\`\n* **Risk Score**: \`${dynamicRiskScore}/100\`\n* **Classification**: \`${dynamicMalwareType}\``,
       officerReport: payload?.officerReport || `## Executive GRC Advisory - ${file.name}\n\n* **Risk Level**: ${dynamicPriority}\n* **Target Application**: ${sanitizedPkg}\n\n### Action Directive\nClassification rating: ${dynamicPriority}. Review policy for ${file.name}.`,
       multilingualReports: typeof payload?.multilingualReports === "string" ? payload.multilingualReports : JSON.stringify(payload?.multilingualReports || dynamicMultilingual)
@@ -634,7 +635,19 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     // 4. Push directly to the top slot of feedList state array
     setFeedList((prev) => [newAlert, ...prev].slice(0, 8));
   };
+  const updateBlockchainAnchor = (txHash: string, blockNumber: number, timestamp: Date) => {
+  setCaseData((prev) => {
+    if (!prev) return prev;
+    return {
+      ...prev,
+      blockchainTxHash: txHash,
+      blockchainBlock: blockNumber,
+      blockchainTimestamp: timestamp,
+    };
+  });
+};
 
+const resetAnalysis = () => {
   const resetAnalysis = () => {
     setCaseData(null);
     setCampaignGraph(null);
@@ -666,7 +679,8 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         executiveSummary,
         triggerAnalysis,
         appendNewCase,
-        resetAnalysis
+        resetAnalysis,
+        updateBlockchainAnchor
       }}
     >
       {children}
