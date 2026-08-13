@@ -21,4 +21,14 @@ class CaseService:
             sha256=sha256,
             status="queued"
         )
+        async def update_blockchain_anchor(self, case_id: uuid.UUID, tx_hash: str, block_number: int, timestamp) -> Case:
+        case = await self.repo.get(case_id)
+        if not case:
+            return None
+        case.blockchain_tx_hash = tx_hash
+        case.blockchain_block = block_number
+        case.blockchain_timestamp = timestamp
+        await self.repo.session.commit()
+        await self.repo.session.refresh(case)
+        return case
         return await self.repo.create(case)
