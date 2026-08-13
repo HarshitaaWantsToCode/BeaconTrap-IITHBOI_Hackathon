@@ -105,7 +105,7 @@ export default function BlockchainEvidencePanel() {
             <div>
               <span className="text-text-muted text-[10px] block">TRANSACTION HASH</span>
               {caseData.blockchainTxHash ? (
-                
+                <a
                   href={`https://sepolia.etherscan.io/tx/${caseData.blockchainTxHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -139,4 +139,11 @@ export default function BlockchainEvidencePanel() {
             </h4>
           </div>
           <p className="text-xs text-text-secondary leading-relaxed font-mono">
-            This malware report has been cryptographically signed and hash-anchored onto the distributed evidence ledger. This
+            This malware report has been cryptographically signed and hash-anchored onto the distributed evidence ledger. This record guarantees immutable verification of intelligence findings across judicial proceedings.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
