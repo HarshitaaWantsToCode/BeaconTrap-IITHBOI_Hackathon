@@ -188,9 +188,9 @@ class ApkAnalysisRunner:
             "malwareType": malware_type,
             "threatNarrative": json.dumps(threat_narrative),
             "citizenImpact": json.dumps(citizen_impact),
-            "blockchainTxHash": "0x" + uuid.uuid4().hex + uuid.uuid4().hex[:16],
-            "blockchainBlock": 1782390,
-            "blockchainTimestamp": datetime.now(timezone.utc).isoformat(),
+            "blockchainTxHash": None,
+            "blockchainBlock": None,
+            "blockchainTimestamp": None,
             "analystReport": analyst_report,
             "officerReport": officer_report,
             "multilingualReports": json.dumps(multilingual)
