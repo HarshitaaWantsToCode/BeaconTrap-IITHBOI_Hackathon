@@ -648,7 +648,6 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
 };
 
 const resetAnalysis = () => {
-  const resetAnalysis = () => {
     setCaseData(null);
     setCampaignGraph(null);
     setTimeline(null);
