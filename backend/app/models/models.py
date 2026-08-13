@@ -31,6 +31,9 @@ class Case(Base):
     runtime_json = Column(JSON, nullable=True)
     network_json = Column(JSON, nullable=True)
     evidence_json = Column(JSON, nullable=True)
+    blockchain_tx_hash = Column(String, nullable=True)
+    blockchain_block = Column(Integer, nullable=True)
+    blockchain_timestamp = Column(DateTime, nullable=True)
 
 class AnalysisJob(Base):
     __tablename__ = "analysis_jobs"
