@@ -3,7 +3,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from backend.app.core.config import settings
 from backend.app.core.middleware import RequestIDMiddleware, LoggingMiddleware, ExceptionMiddleware
-from backend.app.core.database import engine, Base
+from backend.app.core.database import engine, Base, run_startup_migrations
 from backend.app.api.v1 import auth, cases, uploads, reports, campaigns, system, ai, risk, investigation
 
 app = FastAPI(
@@ -17,6 +17,7 @@ app = FastAPI(
 async def startup_event():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+    await run_startup_migrations()
 
 @app.get("/api/alerts")
 async def get_alerts():
