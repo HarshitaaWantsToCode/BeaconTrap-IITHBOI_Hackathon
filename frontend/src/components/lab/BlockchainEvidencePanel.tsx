@@ -3,6 +3,8 @@ import { Fingerprint, AlertTriangle, Loader2, ShieldCheck } from "lucide-react";
 import { useAnalysis } from "../../context/AnalysisContext";
 import { useBlockchainAnchor } from "../../hooks/useBlockchainAnchor";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://beacontrap-backend.onrender.com";
+
 export default function BlockchainEvidencePanel() {
   const { caseData, updateBlockchainAnchor } = useAnalysis();
   const { anchorEvidence, status, error } = useBlockchainAnchor();
@@ -26,11 +28,28 @@ export default function BlockchainEvidencePanel() {
 
       const result = await anchorEvidence(caseData.id, reportBytes);
       if (result) {
-        updateBlockchainAnchor(
-          result.txHash,
-          result.blockNumber,
-          new Date()
-        );
+        // Ask the backend to independently verify this tx against Sepolia
+        // before trusting it — never just take the frontend's word for it.
+        try {
+          const verifyRes = await fetch(`${API_BASE_URL}/api/v1/cases/${caseData.id}/verify-anchor`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tx_hash: result.txHash }),
+          });
+          if (verifyRes.ok) {
+            const verified = await verifyRes.json();
+            updateBlockchainAnchor(
+              verified.tx_hash,
+              verified.block_number,
+              new Date()
+            );
+          } else {
+            const errBody = await verifyRes.json().catch(() => null);
+            setLocalError(errBody?.detail || "Backend could not verify the anchor on-chain.");
+          }
+        } catch (verifyErr) {
+          setLocalError("Anchored on-chain, but backend verification failed to run.");
+        }
       }
     } catch (err: any) {
       setLocalError(err?.message || "Anchoring failed");
@@ -120,10 +139,4 @@ export default function BlockchainEvidencePanel() {
             </h4>
           </div>
           <p className="text-xs text-text-secondary leading-relaxed font-mono">
-            This malware report has been cryptographically signed and hash-anchored onto the distributed evidence ledger. This prevents retrospective tampering, providing court-admissible evidence that the extracted behaviors, malicious network signatures, and package metadata correspond strictly to the submitted binary.
-          </p>
-        </div>
-      </div>
-    </div>
-  );
-}
+            This malware report has been cryptographically signed and hash-anchored onto the distributed evidence ledger. This
