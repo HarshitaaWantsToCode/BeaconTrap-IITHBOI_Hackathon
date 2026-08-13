@@ -361,7 +361,8 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch("/api/v1/uploads", {
+      const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://beacontrap-backend.onrender.com";
+      const res = await fetch(`${API_BASE_URL}/api/v1/uploads`, {
         method: "POST",
         body: formData,
       });
