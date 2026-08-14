@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import { Sparkles, User } from "lucide-react";
+import { Terminal, User } from "lucide-react";
 import { CopilotMessage } from "@/types/copilot";
 import { MultiSpeakerNarrator } from "./MultiSpeakerNarrator";
-
 
 interface ChatMessageProps {
   message: CopilotMessage;
@@ -15,7 +14,7 @@ function renderInline(text: string): React.ReactNode[] {
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
-        <strong key={i} className="font-bold text-text-primary">
+        <strong key={i} className="font-bold text-[var(--text-primary)]">
           {part.slice(2, -2)}
         </strong>
       );
@@ -24,7 +23,7 @@ function renderInline(text: string): React.ReactNode[] {
       return (
         <code
           key={i}
-          className="bg-card-secondary px-1 py-0.5 rounded text-primary font-mono text-[10px] border border-card-border"
+          className="bg-[var(--bg-base)] px-1 py-0.5 rounded-sm text-[var(--accent)] font-mono text-[10px] border border-[var(--border)]"
         >
           {part.slice(1, -1)}
         </code>
@@ -42,9 +41,9 @@ function renderContent(content: string): React.ReactNode {
   const flushList = () => {
     if (listBuffer.length === 0) return;
     elements.push(
-      <ul key={`list-${elements.length}`} className="list-disc ml-4 space-y-0.5 my-1">
+      <ul key={`list-${elements.length}`} className="list-disc ml-4 space-y-1 my-1">
         {listBuffer.map((item, i) => (
-          <li key={i} className="text-text-secondary text-xs leading-relaxed">
+          <li key={i} className="text-[var(--text-muted)] text-xs font-mono leading-relaxed">
             {renderInline(item)}
           </li>
         ))}
@@ -62,13 +61,13 @@ function renderContent(content: string): React.ReactNode {
 
     if (line.startsWith("## ")) {
       elements.push(
-        <h4 key={idx} className="text-xs font-bold text-primary uppercase tracking-wider font-mono mt-2 mb-1">
+        <h4 key={idx} className="text-xs font-bold text-[var(--accent)] uppercase tracking-wider font-mono mt-2 mb-1">
           {line.slice(3)}
         </h4>
       );
     } else if (line.startsWith("# ")) {
       elements.push(
-        <h3 key={idx} className="text-sm font-bold text-text-primary uppercase tracking-wider font-mono mt-2 mb-1">
+        <h3 key={idx} className="text-xs font-bold text-[var(--text-primary)] uppercase tracking-wider font-mono mt-2 mb-1">
           {line.slice(2)}
         </h3>
       );
@@ -76,7 +75,7 @@ function renderContent(content: string): React.ReactNode {
       elements.push(<div key={idx} className="h-1" />);
     } else {
       elements.push(
-        <p key={idx} className="text-xs text-text-secondary leading-relaxed">
+        <p key={idx} className="text-xs text-[var(--text-muted)] leading-relaxed font-sans">
           {renderInline(line)}
         </p>
       );
@@ -91,32 +90,32 @@ export default function ChatMessage({ message }: ChatMessageProps) {
   const isUser = message.role === "user";
 
   return (
-    <div className={`flex gap-2.5 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
+    <div className={`flex gap-2 ${isUser ? "flex-row-reverse" : "flex-row"}`}>
       <div
-        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 border ${
+        className={`w-6 h-6 rounded-sm flex items-center justify-center shrink-0 border text-xs font-mono ${
           isUser
-            ? "bg-card-secondary border-card-border text-text-secondary"
-            : "bg-primary/10 border-primary/30 text-primary"
+            ? "bg-[var(--bg-panel-alt)] border-[var(--border)] text-[var(--text-muted)]"
+            : "bg-[var(--accent)]/10 border-[var(--accent)]/30 text-[var(--accent)]"
         }`}
       >
-        {isUser ? <User className="w-3.5 h-3.5" /> : <Sparkles className="w-3.5 h-3.5" />}
+        {isUser ? <User className="w-3.5 h-3.5" /> : <Terminal className="w-3.5 h-3.5" />}
       </div>
 
       <div
-        className={`max-w-[85%] rounded-xl px-3.5 py-2.5 border ${
+        className={`max-w-[88%] rounded-sm px-3 py-2 border ${
           isUser
-            ? "bg-card-secondary/60 border-card-border/60"
-            : "bg-card/80 border-card-border/80"
+            ? "bg-[var(--bg-panel-alt)] border-[var(--border)] text-[var(--text-primary)]"
+            : "bg-[var(--bg-panel)] border-[var(--border)]"
         }`}
       >
         {!isUser && (
-          <div className="flex items-center justify-between text-[8px] font-mono text-primary uppercase tracking-widest font-bold mb-1.5">
-            <span>BeaconTrap Copilot</span>
+          <div className="flex items-center justify-between text-[9px] font-mono text-[var(--accent)] uppercase tracking-wider font-bold mb-1 border-b border-[var(--border)] pb-1">
+            <span>ANALYST COPILOT</span>
             <MultiSpeakerNarrator textToRead={message.content} />
           </div>
         )}
         <div className="space-y-0.5">{renderContent(message.content)}</div>
-        <div className="text-[8px] font-mono text-text-muted mt-1.5 text-right">
+        <div className="text-[9px] font-mono text-[var(--text-muted)] mt-1 text-right">
           {new Date(message.timestamp).toLocaleTimeString("en-IN", {
             hour: "2-digit",
             minute: "2-digit",
@@ -126,4 +125,3 @@ export default function ChatMessage({ message }: ChatMessageProps) {
     </div>
   );
 }
-

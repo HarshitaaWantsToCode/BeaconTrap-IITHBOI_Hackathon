@@ -6,14 +6,28 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', '"IBM Plex Mono"', 'monospace'],
+      },
       colors: {
+        base: 'var(--bg-base)',
+        panel: {
+          DEFAULT: 'var(--bg-panel)',
+          alt: 'var(--bg-panel-alt)',
+        },
+        border: 'var(--border)',
+        accent: {
+          DEFAULT: 'var(--accent)',
+          cool: 'var(--accent-cool)',
+        },
         primary: {
           DEFAULT: "var(--primary)",
           hover: "var(--primary-hover)",
         },
         background: {
           DEFAULT: "var(--background)",
-          secondary: "var(--bg-main)",
+          secondary: "var(--card-bg-secondary)",
         },
         card: {
           DEFAULT: "var(--card)",
@@ -24,6 +38,12 @@ export default {
           primary: "var(--text-primary)",
           secondary: "var(--text-secondary)",
           muted: "var(--text-muted)",
+        },
+        severity: {
+          critical: "var(--severity-critical)",
+          high: "var(--severity-high)",
+          medium: "var(--severity-medium)",
+          low: "var(--severity-low)",
         }
       }
     },

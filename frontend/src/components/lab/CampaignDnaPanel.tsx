@@ -8,7 +8,7 @@ export default function CampaignDnaPanel() {
 
   if (!caseData) {
     return (
-      <div className="text-center py-10 text-xs font-mono text-text-muted">
+      <div className="text-center py-10 text-xs font-mono text-[var(--text-muted)]">
         NO CASE DATA LOADED FOR CAMPAIGN DNA PANEL
       </div>
     );
@@ -18,15 +18,15 @@ export default function CampaignDnaPanel() {
   const iocs = JSON.parse(caseData.iocs || "[]");
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2 border-b border-card-border pb-3">
-        <Network className="w-5 h-5 text-primary" />
-        <h3 className="text-sm font-bold uppercase tracking-wider text-text-primary font-mono">
+    <div className="space-y-6 font-mono">
+      <div className="flex items-center gap-2 border-b border-[var(--border)] pb-3">
+        <Network className="w-5 h-5 text-[var(--accent)]" />
+        <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text-primary)] font-mono">
           Campaign Infrastructure DNA
         </h3>
       </div>
 
-      <div className="h-[450px] bg-card-secondary/50 border border-card-border rounded-xl relative overflow-hidden">
+      <div className="h-[450px] bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm relative overflow-hidden">
         <ThreatCorrelationGraph
           fileName={caseData.fileName}
           threatFamily={caseData.threatFamily}
@@ -36,9 +36,9 @@ export default function CampaignDnaPanel() {
         />
       </div>
       
-      <div className="p-3.5 bg-card border border-card-border rounded-lg text-xs font-mono text-text-secondary flex justify-between">
+      <div className="p-3.5 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm text-xs font-mono text-[var(--text-muted)] flex justify-between">
         <span>ACTIVE CORRELATED NODES: 5</span>
-        <span>MALICIOUS ENDPOINT MATCHES: 185.220.101.5 / update-server-v3.net</span>
+        <span className="text-[var(--accent)] font-bold">MALICIOUS ENDPOINT MATCHES: 185.220.101.5 / update-server-v3.net</span>
       </div>
     </div>
   );

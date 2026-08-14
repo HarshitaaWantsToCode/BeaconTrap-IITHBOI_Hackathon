@@ -30,30 +30,15 @@ export const ThemeToggleSwitch: React.FC = () => {
   return (
     <button
       onClick={toggleTheme}
-      className={`relative inline-flex h-8 w-16 items-center rounded-full p-1 transition-colors duration-300 cursor-pointer focus:outline-none border ${
-        isLight
-          ? "bg-slate-100 border-sky-400/50 shadow-[0_0_12px_rgba(56,189,248,0.35)]"
-          : "bg-slate-900 border-cyan-500/40 shadow-[0_0_12px_rgba(6,182,212,0.3)]"
-      }`}
+      className="p-1.5 rounded-sm border border-[var(--border)] bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer flex items-center justify-center font-mono text-xs"
       title={isLight ? "Switch to Dark Mode" : "Switch to Light Mode"}
+      aria-label="Toggle Light/Dark Theme"
     >
-      <span className="sr-only">Toggle Dark/Light Mode</span>
-      
-      {/* Sliding Knob */}
-      <span
-        className={`flex h-6 w-6 items-center justify-center rounded-full transition-transform duration-300 transform shadow-md ${
-          isLight
-            ? "translate-x-8 bg-gradient-to-r from-sky-400 to-blue-500 text-slate-950"
-            : "translate-x-0 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950"
-        }`}
-      >
-        {isLight ? (
-          <Sun className="h-3.5 w-3.5 fill-current text-slate-950 animate-spin-slow" />
-        ) : (
-          <Moon className="h-3.5 w-3.5 fill-current text-slate-950" />
-        )}
-      </span>
+      {isLight ? (
+        <Sun className="h-4 w-4 text-[var(--accent)]" />
+      ) : (
+        <Moon className="h-4 w-4 text-[var(--text-primary)]" />
+      )}
     </button>
-
   );
 };

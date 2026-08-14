@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { Activity, AlertTriangle, Shield } from "lucide-react";
 import SocPanel from "./SocPanel";
 import { CampaignActivity } from "@/types/dashboard";
 
@@ -10,78 +8,67 @@ interface CampaignActivityPanelProps {
   campaigns: CampaignActivity[];
 }
 
-const STATUS_STYLE: Record<CampaignActivity["status"], { color: string; bg: string; border: string; icon: React.ElementType }> = {
-  active: { color: "text-[var(--critical-color)]", bg: "bg-[var(--critical-bg)]", border: "border-[var(--critical-border)]", icon: AlertTriangle },
-  monitoring: { color: "text-[var(--medium-color)]", bg: "bg-[var(--medium-bg)]", border: "border-[var(--medium-border)]", icon: Activity },
-  contained: { color: "text-[var(--low-color)]", bg: "bg-[var(--low-bg)]", border: "border-[var(--low-border)]", icon: Shield },
-};
-
 export default function CampaignActivityPanel({ campaigns }: CampaignActivityPanelProps) {
   return (
     <SocPanel
-      title="Campaign Activity"
-      subtitle="Active threat operations · Infrastructure overlap"
+      title="CAMPAIGN INTEL OPERATIONS"
+      subtitle="Tracked trojan campaigns & shared infrastructure overlap"
       badge={`${campaigns.filter((c) => c.status === "active").length} ACTIVE`}
-      badgeColor="text-[var(--critical-color)] bg-[var(--critical-bg)] border-[var(--critical-border)]"
     >
-      <div className="space-y-3">
-        {campaigns.map((camp, idx) => {
-          const style = STATUS_STYLE[camp.status];
-          const Icon = style.icon;
+      <div className="space-y-3 font-mono text-xs">
+        {campaigns.map((camp) => {
+          let statusBadge = "bg-[var(--severity-low)]/10 text-[var(--severity-low)] border-[var(--severity-low)]/30";
+          if (camp.status === "active") statusBadge = "bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border-[var(--severity-critical)]/30";
+          else if (camp.status === "monitoring") statusBadge = "bg-[var(--severity-medium)]/10 text-[var(--severity-medium)] border-[var(--severity-medium)]/30";
 
           return (
-            <motion.div
+            <div
               key={camp.id}
-              initial={{ opacity: 0, x: -12 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: idx * 0.08 }}
-              className={`rounded-xl border p-4 ${style.bg} ${style.border} hover:border-opacity-60 transition-colors`}
+              className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm p-3.5 space-y-2.5"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="flex items-start gap-2.5">
-                  <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${style.color}`} />
-                  <div>
-                    <div className="text-xs font-extrabold text-text-primary font-mono">{camp.label}</div>
-                    <div className="text-[10px] font-mono text-text-secondary mt-0.5">{camp.threatFamily}</div>
-                  </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-bold text-[var(--text-primary)] text-xs font-mono">{camp.label}</div>
+                  <div className="text-[10px] text-[var(--text-muted)] mt-0.5">{camp.threatFamily}</div>
                 </div>
-                <span className={`text-[8px] font-mono font-black uppercase px-2 py-0.5 rounded border ${style.color} ${style.border}`}>
+                <span className={`text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded-sm border ${statusBadge}`}>
                   {camp.status}
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-3 mt-3 text-[9px] font-mono">
+              <div className="grid grid-cols-3 gap-2 py-1 border-t border-b border-[var(--border)] text-[10px]">
                 <div>
-                  <span className="text-text-muted block uppercase font-bold">Cases</span>
-                  <span className="text-text-primary font-extrabold text-sm">{camp.caseCount}</span>
+                  <span className="text-[var(--text-muted)] uppercase block">CASES</span>
+                  <span className="text-[var(--text-primary)] font-bold text-xs">{camp.caseCount}</span>
                 </div>
                 <div>
-                  <span className="text-text-muted block uppercase font-bold">Avg Risk</span>
-                  <span className={`font-extrabold text-sm ${camp.avgRisk >= 80 ? "text-[var(--critical-color)]" : "text-[var(--medium-color)]"}`}>
+                  <span className="text-[var(--text-muted)] uppercase block">AVG RISK</span>
+                  <span className={`font-bold text-xs ${camp.avgRisk >= 80 ? "text-[var(--accent)]" : "text-[var(--severity-medium)]"}`}>
                     {camp.avgRisk}/100
                   </span>
                 </div>
-                <div>
-                  <span className="text-text-muted block uppercase font-bold">Last Seen</span>
-                  <span className="text-text-secondary text-[9px] font-bold">
+                <div className="text-right">
+                  <span className="text-[var(--text-muted)] uppercase block">LAST SEEN</span>
+                  <span className="text-[var(--text-primary)]">
                     {new Date(camp.lastSeen).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}
                   </span>
                 </div>
               </div>
 
               {camp.sharedInfrastructure.length > 0 && (
-                <div className="mt-2.5 flex flex-wrap gap-1">
+                <div className="flex flex-wrap gap-1 pt-0.5">
+                  <span className="text-[9px] text-[var(--text-muted)] uppercase self-center mr-1">INFRA:</span>
                   {camp.sharedInfrastructure.map((infra) => (
                     <span
                       key={infra}
-                      className="text-[8px] font-mono px-1.5 py-0.5 rounded bg-card-secondary border border-card-border text-text-secondary font-semibold truncate max-w-[160px]"
+                      className="text-[9px] font-mono px-1.5 py-0.5 rounded-sm bg-[var(--bg-panel)] border border-[var(--border)] text-[var(--text-muted)]"
                     >
                       {infra}
                     </span>
                   ))}
                 </div>
               )}
-            </motion.div>
+            </div>
           );
         })}
       </div>

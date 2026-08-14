@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useRef, useEffect, useState } from "react";
 import {
   X,
   Minimize2,
@@ -11,7 +10,8 @@ import {
   Shield,
   Target,
   AlertTriangle,
-  Sparkles,
+  Terminal,
+  Activity,
 } from "lucide-react";
 import ChatMessage from "./ChatMessage";
 import { CopilotAction, CopilotCaseContext, CopilotMessage } from "@/types/copilot";
@@ -33,12 +33,12 @@ interface ChatPanelProps {
 }
 
 const QUICK_ACTIONS: { action: CopilotAction; label: string; icon: React.ElementType }[] = [
-  { action: "executive_summary", label: "Executive Summary", icon: FileText },
-  { action: "analyst_summary", label: "Analyst Report", icon: Shield },
-  { action: "explain_mitre", label: "Explain MITRE", icon: Target },
-  { action: "explain_iocs", label: "Explain IOCs", icon: AlertTriangle },
-  { action: "explain_risk", label: "Risk Score", icon: Sparkles },
-  { action: "mitigation", label: "Mitigation", icon: Shield },
+  { action: "executive_summary", label: "Executive Dossier", icon: FileText },
+  { action: "analyst_summary", label: "Forensic Synthesis", icon: Shield },
+  { action: "explain_mitre", label: "MITRE ATT&CK Matrix", icon: Target },
+  { action: "explain_iocs", label: "IOC Indicators", icon: AlertTriangle },
+  { action: "explain_risk", label: "Risk Score Heuristics", icon: Activity },
+  { action: "mitigation", label: "IR Action Plan", icon: Shield },
 ];
 
 export default function ChatPanel({
@@ -58,6 +58,7 @@ export default function ChatPanel({
 }: ChatPanelProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [activeTab, setActiveTab] = useState<"CONSOLE" | "QUICK_ACTIONS">("CONSOLE");
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -81,150 +82,177 @@ export default function ChatPanel({
   if (!isOpen) return null;
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.95 }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          height: isMinimized ? 52 : 560,
-        }}
-        exit={{ opacity: 0, y: 20, scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 380, damping: 30 }}
-        className="fixed bottom-6 right-6 z-[100] w-[400px] max-w-[calc(100vw-2rem)] flex flex-col bg-card/95 border border-card-border rounded-2xl backdrop-blur-xl shadow-[0_0_60px_var(--primary-glow),var(--shadow-card)] overflow-hidden"
-      >
-        {/* Top accent bar */}
-        <div className="h-[2px] bg-gradient-to-r from-primary via-critical to-primary shrink-0" />
-
-        {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-card-border bg-card-secondary/40 shrink-0">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/30 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-primary" />
-            </div>
-            <div>
-              <h3 className="text-xs font-bold text-text-primary uppercase tracking-wider font-mono">
-                BeaconTrap AI Copilot
-              </h3>
-              <p className="text-[9px] font-mono text-text-muted">
-                {context.caseId ? `Case: ${context.caseId}` : "SOC Intelligence Layer"}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1">
-            <span className="text-[8px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded uppercase mr-1">
-              Live
+    <aside
+      className={`fixed top-12 bottom-0 right-0 z-[100] w-[420px] max-w-full flex flex-col bg-[var(--bg-panel)] border-l border-[var(--border)] ${
+        isMinimized ? "h-12 border-t border-[var(--border)]" : "h-[calc(100vh-3rem)]"
+      }`}
+    >
+      {/* Header Bar */}
+      <div className="flex items-center justify-between px-4 h-11 border-b border-[var(--border)] bg-[var(--bg-base)] shrink-0">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-1.5">
+            <Terminal className="w-4 h-4 text-[var(--accent)]" />
+            <span className="text-xs font-mono font-bold text-[var(--text-primary)] tracking-wider uppercase">
+              ANALYST CONSOLE
             </span>
+          </div>
+
+          <div className="flex gap-3 text-xs font-mono">
             <button
-              onClick={onMinimize}
-              className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-card-secondary transition-colors"
-              aria-label="Minimize"
+              onClick={() => setActiveTab("CONSOLE")}
+              className={`py-1 border-b-2 transition-colors cursor-pointer ${
+                activeTab === "CONSOLE"
+                  ? "border-[var(--accent)] text-[var(--text-primary)] font-bold"
+                  : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              }`}
             >
-              <Minimize2 className="w-3.5 h-3.5" />
+              QUERY CONSOLE
             </button>
             <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-text-muted hover:text-text-primary hover:bg-card-secondary transition-colors"
-              aria-label="Close"
+              onClick={() => setActiveTab("QUICK_ACTIONS")}
+              className={`py-1 border-b-2 transition-colors cursor-pointer ${
+                activeTab === "QUICK_ACTIONS"
+                  ? "border-[var(--accent)] text-[var(--text-primary)] font-bold"
+                  : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+              }`}
             >
-              <X className="w-3.5 h-3.5" />
+              QUICK INTEL
             </button>
           </div>
         </div>
 
-        {!isMinimized && (
-          <>
-            {/* Quick actions */}
-            <div className="px-3 py-2 border-b border-card-border/40 flex gap-1.5 overflow-x-auto shrink-0 scrollbar-thin">
-              {QUICK_ACTIONS.map(({ action, label, icon: Icon }) => (
-                <button
-                  key={action}
-                  onClick={() => onAction(action)}
-                  disabled={loading}
-                  className="flex items-center gap-1 px-2 py-1 rounded-lg border border-card-border bg-card-secondary/40 text-[9px] font-mono text-text-secondary hover:text-primary hover:border-primary/30 transition-all whitespace-nowrap shrink-0 disabled:opacity-50"
-                >
-                  <Icon className="w-2.5 h-2.5" />
-                  {label}
-                </button>
-              ))}
-            </div>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={onMinimize}
+            className="p-1 rounded-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel-alt)] transition-colors"
+            title="Minimize Console"
+          >
+            <Minimize2 className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={onClose}
+            className="p-1 rounded-sm text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel-alt)] transition-colors"
+            title="Close Console"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
 
-            {/* Messages */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
-              {messages.length === 0 && (
-                <div className="text-center py-6 space-y-3">
-                  <Sparkles className="w-8 h-8 text-primary/40 mx-auto" />
-                  <p className="text-xs text-text-secondary font-sans leading-relaxed px-4">
-                    Ask me about threat findings, risk scores, MITRE techniques, or request executive reports.
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 justify-center px-2">
-                    {suggestedPrompts.slice(0, 3).map((prompt) => (
-                      <button
-                        key={prompt}
-                        onClick={() => onSuggestedPrompt(prompt)}
-                        className="text-[9px] font-mono px-2.5 py-1 rounded-full border border-card-border text-text-secondary hover:border-primary/40 hover:text-primary transition-colors"
-                      >
-                        {prompt}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {messages.map((msg) => (
-                <ChatMessage key={msg.id} message={msg} />
-              ))}
-
-              {loading && (
-                <div className="flex items-center gap-2 text-primary text-xs font-mono animate-pulse px-2">
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Synthesizing intelligence...
-                </div>
-              )}
-            </div>
-
-            {/* Suggested prompts */}
-            {messages.length > 0 && suggestedPrompts.length > 0 && !loading && (
-              <div className="px-3 py-1.5 border-t border-card-border/40 flex gap-1 overflow-x-auto shrink-0">
-                {suggestedPrompts.slice(0, 4).map((prompt) => (
+      {!isMinimized && (
+        <>
+          {activeTab === "QUICK_ACTIONS" && (
+            <div className="p-3 border-b border-[var(--border)] bg-[var(--bg-panel-alt)] space-y-2 shrink-0">
+              <div className="text-[10px] font-mono font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                SELECT SYNTHESIS ACTION
+              </div>
+              <div className="grid grid-cols-2 gap-1.5">
+                {QUICK_ACTIONS.map(({ action, label, icon: Icon }) => (
                   <button
-                    key={prompt}
-                    onClick={() => onSuggestedPrompt(prompt)}
-                    className="text-[8px] font-mono px-2 py-0.5 rounded border border-card-border text-text-muted hover:text-primary hover:border-primary/30 transition-colors whitespace-nowrap shrink-0"
+                    key={action}
+                    onClick={() => {
+                      onAction(action);
+                      setActiveTab("CONSOLE");
+                    }}
+                    disabled={loading}
+                    className="flex items-center gap-2 px-2.5 py-1.5 rounded-sm border border-[var(--border)] bg-[var(--bg-panel)] hover:border-[var(--accent)]/50 text-xs font-mono text-[var(--text-primary)] transition-colors text-left disabled:opacity-50 cursor-pointer"
                   >
-                    {prompt}
+                    <Icon className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
+                    <span className="truncate">{label}</span>
                   </button>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Messages Output */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-3 min-h-0 bg-[var(--bg-base)]">
+            {messages.length === 0 && (
+              <div className="py-6 space-y-4">
+                <div className="border-l-2 border-[var(--accent)] bg-[var(--bg-panel)] p-3 text-xs font-mono text-[var(--text-muted)] space-y-1">
+                  <div className="text-[var(--text-primary)] font-bold">&gt; ANALYST ASSISTANT READY</div>
+                  <div>Ask telemetry questions, request risk breakdowns, or synthesize incident response documentation.</div>
+                  {context.fileName && (
+                    <div className="text-[var(--accent)] text-[11px] font-mono mt-1">
+                      TARGET: {context.fileName} ({context.packageName || "N/A"})
+                    </div>
+                  )}
+                </div>
+
+                <div className="space-y-1.5">
+                  <div className="text-[10px] font-mono font-semibold uppercase tracking-wider text-[var(--text-muted)] px-1">
+                    SUGGESTED QUERIES
+                  </div>
+                  {suggestedPrompts.slice(0, 4).map((prompt) => (
+                    <button
+                      key={prompt}
+                      onClick={() => onSuggestedPrompt(prompt)}
+                      className="w-full text-left border-l-2 border-[var(--accent)] bg-[var(--bg-panel)] hover:bg-[var(--bg-panel-alt)] px-3 py-2 font-mono text-xs text-[var(--text-primary)] transition-colors rounded-r-sm cursor-pointer block"
+                    >
+                      &gt; {prompt}
+                    </button>
+                  ))}
+                </div>
+              </div>
             )}
 
-            {/* Input */}
-            <div className="px-3 py-3 border-t border-card-border bg-card-secondary/40 shrink-0">
-              <div className="flex items-center gap-2">
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={input}
-                  onChange={(e) => onInputChange(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Ask about this investigation..."
-                  disabled={loading}
-                  className="flex-1 bg-card border border-card-border rounded-lg px-3 py-2 text-xs text-text-primary placeholder-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 font-sans disabled:opacity-50"
-                />
-                <button
-                  onClick={onSend}
-                  disabled={loading || !input.trim()}
-                  className="p-2 rounded-lg bg-primary hover:bg-primary-hover text-[var(--btn-copilot-text)] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shrink-0"
-                  aria-label="Send message"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
+            {messages.map((msg) => (
+              <ChatMessage key={msg.id} message={msg} />
+            ))}
+
+            {loading && (
+              <div className="flex items-center gap-2 text-[var(--accent)] text-xs font-mono p-2 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>Processing forensic queries & AI graph heuristics...</span>
+              </div>
+            )}
+          </div>
+
+          {/* Left-Bordered List of Suggested Follow-ups */}
+          {messages.length > 0 && suggestedPrompts.length > 0 && !loading && (
+            <div className="p-2 border-t border-[var(--border)] bg-[var(--bg-panel)] space-y-1 shrink-0">
+              <div className="text-[9px] font-mono font-semibold uppercase text-[var(--text-muted)] px-1">
+                FOLLOW-UP QUERIES
+              </div>
+              <div className="space-y-1 max-h-24 overflow-y-auto">
+                {suggestedPrompts.slice(0, 3).map((prompt) => (
+                  <button
+                    key={prompt}
+                    onClick={() => onSuggestedPrompt(prompt)}
+                    className="w-full text-left border-l-2 border-[var(--accent)] bg-[var(--bg-panel-alt)] hover:bg-[var(--border)] px-2.5 py-1 font-mono text-[11px] text-[var(--text-primary)] transition-colors rounded-r-sm truncate cursor-pointer block"
+                  >
+                    &gt; {prompt}
+                  </button>
+                ))}
               </div>
             </div>
-          </>
-        )}
-      </motion.div>
-    </AnimatePresence>
+          )}
+
+          {/* Plain Bordered Input Field */}
+          <div className="p-3 border-t border-[var(--border)] bg-[var(--bg-base)] shrink-0">
+            <div className="flex items-center gap-2">
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => onInputChange(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Enter forensic query or command..."
+                disabled={loading}
+                className="flex-1 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm px-3 py-2 text-xs font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/60 disabled:opacity-50"
+              />
+              <button
+                onClick={onSend}
+                disabled={loading || !input.trim()}
+                className="bg-[var(--accent)] hover:bg-[var(--primary-hover)] text-[var(--btn-copilot-text)] px-3 py-2 rounded-sm text-xs font-mono font-bold transition-colors disabled:opacity-40 disabled:cursor-not-allowed shrink-0 cursor-pointer flex items-center gap-1"
+              >
+                <span>RUN</span>
+                <Send className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </aside>
   );
 }

@@ -2,389 +2,303 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #030712;
-  --foreground: #f3f4f6;
-  --card: #0b111e;
-  --card-border: #1e293b;
-  --primary: #06b6d4;
-  --primary-glow: rgba(6, 182, 212, 0.15);
-  --primary-hover: #0891b2;
-  --critical: #f43f5e;
-  --high: #f97316;
-  --medium: #eab308;
-  --low: #10b981;
-  --safe: #3b82f6;
+:root,
+html.dark {
+  /* Dark Mode — Near-black Plum / Aubergine Base (#151118) + Soft Mint (#98E2C6) & Dusty Pink (#F2A6C4) Accent */
+  --bg-base: #151118;
+  --bg-panel: #1C1721;
+  --bg-panel-alt: #241E2A;
+  --border: #322B3A;
+  --text-primary: #E5DFEC;
+  --text-muted: #8D8398;
+  --accent: #98E2C6;       /* Soft Mint */
+  --accent-cool: #F2A6C4;  /* Dusty Pink */
+  --accent-warm: #E06D85;  /* Muted Rose-Dust */
 
-  /* Additional layout-specific variables for Dark Mode */
-  --bg-page: #020617;
-  --bg-sidebar: #0f172a;
-  --sidebar-border: #1e293b;
-  --sidebar-text: #94a3b8;
-  --sidebar-text-active: #22d3ee;
-  --sidebar-item-hover: rgba(30, 41, 59, 0.5);
-  --sidebar-active-bg: transparent;
-  --sidebar-active-border: transparent;
-  --sidebar-active-shadow: none;
+  --severity-critical: #E06D85;
+  --severity-high: #E89568;
+  --severity-medium: #DDB967;
+  --severity-low: #98E2C6;
+
+  /* Backward compatibility aliases */
+  --background: #151118;
+  --foreground: #E5DFEC;
+  --card: #1C1721;
+  --card-border: #322B3A;
+  --card-bg-secondary: #241E2A;
+  --primary: #98E2C6;
+  --primary-hover: #7FD2B4;
+  --primary-glow: transparent;
+  --critical: #E06D85;
+  --high: #E89568;
+  --medium: #DDB967;
+  --low: #98E2C6;
+  --safe: #98E2C6;
+
+  --bg-page: #151118;
+  --bg-sidebar: #151118;
+  --sidebar-border: #322B3A;
+  --sidebar-text: #8D8398;
+  --sidebar-text-active: #E5DFEC;
+  --sidebar-item-hover: #1C1721;
+  --sidebar-active-bg: #1C1721;
+  --sidebar-active-border: #98E2C6;
   
-  --bg-header: rgba(15, 23, 42, 0.3);
-  --header-border: rgba(30, 41, 59, 0.6);
+  --bg-header: #151118;
+  --header-border: #322B3A;
+  --bg-main: #151118;
+  --briefing-bg: #1C1721;
   
-  --bg-main: rgba(2, 6, 23, 0.6);
-  --briefing-bg: linear-gradient(to right, #0f172a, #0d162d, #0f172a);
-  
-  --text-primary: #f3f4f6;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  
-  --card-bg-secondary: #0f172a;
-  --card-dot-color: #06b6d4;
-  
+  --text-secondary: #8D8398;
+  --card-dot-color: #98E2C6;
+  --btn-copilot-text: #151118;
+
   --shadow-card: none;
-  --radius-card: 12px;
-  --accent-glow: rgba(6, 182, 212, 0.25);
-
-  /* KPI indicator lines */
-  --kpi-indicator-height: 0px;
-  --kpi-1-color: transparent;
-  --kpi-2-color: transparent;
-  --kpi-3-color: transparent;
-  --kpi-4-color: transparent;
-  --kpi-5-color: transparent;
-  --kpi-6-color: transparent;
-
-  /* Badge colors - low/medium/high/critical */
-  --low-bg: rgba(16, 185, 129, 0.1);
-  --low-color: #10b981;
-  --low-border: rgba(16, 185, 129, 0.25);
-  
-  --medium-bg: rgba(234, 179, 8, 0.1);
-  --medium-color: #fbbf24;
-  --medium-border: rgba(234, 179, 8, 0.25);
-  
-  --high-bg: rgba(249, 115, 22, 0.1);
-  --high-color: #fb923c;
-  --high-border: rgba(249, 115, 22, 0.25);
-  
-  --critical-bg: rgba(244, 63, 94, 0.1);
-  --critical-color: #fb7185;
-  --critical-border: rgba(244, 63, 94, 0.25);
+  --radius-card: 4px;
 
   /* SVG maps & charts variables */
-  --map-bg: #020810;
-  --map-vignette: radial-gradient(ellipse at center, transparent 50%, rgba(2,8,16,0.85) 100%);
-  --map-continent-fill: rgba(30,41,59,0.55);
-  --map-continent-stroke: rgba(51,65,85,0.6);
-  --map-grid-line: rgba(30, 41, 59, 0.4);
-  --map-side-bg: rgba(15, 23, 42, 0.3);
-  --map-side-border: rgba(30, 41, 59, 0.6);
-  --graph-bg: #030912;
-  --graph-grid-line: rgba(6,182,212,0.04);
+  --map-bg: #151118;
+  --map-continent-fill: #241E2A;
+  --map-continent-stroke: #322B3A;
+  --map-grid-line: rgba(50, 43, 58, 0.6);
+  --map-side-bg: #1C1721;
+  --map-side-border: #322B3A;
+  --graph-bg: #151118;
+  --graph-grid-line: rgba(50, 43, 58, 0.4);
 
-  /* Static node graphs variables */
-  --node-center-stroke: #f43f5e;
-  --node-center-fill: #1a0610;
-  --node-center-glow: rgba(244,63,94,0.55);
-  --node-domain-stroke: #f97316;
-  --node-domain-fill: #160a02;
-  --node-domain-glow: rgba(249,115,22,0.5);
-  --node-ip-stroke: #ef4444;
-  --node-ip-fill: #160303;
-  --node-ip-glow: rgba(239,68,68,0.5);
-  --node-family-stroke: #a855f7;
-  --node-family-fill: #0f0616;
-  --node-family-glow: rgba(168,85,247,0.5);
-  --node-mitre-stroke: #06b6d4;
-  --node-mitre-fill: #011015;
-  --node-mitre-glow: rgba(6,182,212,0.45);
-  --node-sample-stroke: #10b981;
-  --node-sample-fill: #011009;
-  --node-sample-glow: rgba(16,185,129,0.45);
+  /* Node graph colors */
+  --node-center-stroke: #E06D85;
+  --node-center-fill: #241E2A;
+  --node-domain-stroke: #E89568;
+  --node-domain-fill: #241E2A;
+  --node-ip-stroke: #E06D85;
+  --node-ip-fill: #241E2A;
+  --node-family-stroke: #98E2C6;
+  --node-family-fill: #241E2A;
+  --node-mitre-stroke: #F2A6C4;
+  --node-mitre-fill: #241E2A;
+  --node-sample-stroke: #98E2C6;
+  --node-sample-fill: #241E2A;
 
-  /* Risk wheel variables */
-  --wheel-0-color: #f43f5e;
-  --wheel-0-glow: rgba(244,63,94,0.55);
-  --wheel-1-color: #f97316;
-  --wheel-1-glow: rgba(249,115,22,0.5);
-  --wheel-2-color: #eab308;
-  --wheel-2-glow: rgba(234,179,8,0.5);
-  --wheel-3-color: #a855f7;
-  --wheel-3-glow: rgba(168,85,247,0.5);
-  --wheel-4-color: #06b6d4;
-  --wheel-4-glow: rgba(6,182,212,0.5);
-  --wheel-5-color: #10b981;
-  --wheel-5-glow: rgba(16,185,129,0.5);
-
-  /* MITRE cells background & border variables */
-  --mitre-critical-bg: rgba(244, 63, 94, 0.25);
-  --mitre-critical-text: #fda4af;
-  --mitre-critical-border: rgba(244, 63, 94, 0.4);
-  --mitre-high-bg: rgba(249, 115, 22, 0.2);
-  --mitre-high-text: #fed7aa;
-  --mitre-high-border: rgba(249, 115, 22, 0.35);
-  --mitre-medium-bg: rgba(234, 179, 8, 0.15);
-  --mitre-medium-text: #fef08a;
-  --mitre-medium-border: rgba(234, 179, 8, 0.3);
-  --mitre-low-bg: rgba(30, 41, 59, 0.6);
-  --mitre-low-text: #94a3b8;
-  --mitre-low-border: rgba(51, 65, 85, 0.4);
-
-  /* ReactFlow variables */
-  --reactflow-dot-color: rgba(6, 182, 212, 0.06);
-  --minimap-mask: rgba(3, 9, 18, 0.85);
-
-  --map-cell-bg: rgba(3, 9, 20, 0.4);
-  --map-cell-border: rgba(30, 41, 59, 0.4);
-
-  /* Button text custom color */
-  --btn-copilot-text: #020617;
+  /* MITRE cells background & border */
+  --mitre-critical-bg: rgba(224, 109, 133, 0.15);
+  --mitre-critical-text: #E06D85;
+  --mitre-critical-border: rgba(224, 109, 133, 0.35);
+  --mitre-high-bg: rgba(232, 149, 104, 0.15);
+  --mitre-high-text: #E89568;
+  --mitre-high-border: rgba(232, 149, 104, 0.35);
+  --mitre-medium-bg: rgba(221, 185, 103, 0.15);
+  --mitre-medium-text: #DDB967;
+  --mitre-medium-border: rgba(221, 185, 103, 0.35);
+  --mitre-low-bg: #241E2A;
+  --mitre-low-text: #8D8398;
+  --mitre-low-border: #322B3A;
 }
 
-:root.light {
-  --background: #FFFFFF;
-  --foreground: #0F172A;
-  --card: #FFFFFF;
-  --card-border: #E2E8F0;
-  --primary: #3B82F6;
-  --primary-glow: rgba(59, 130, 246, 0.22);
-  --primary-hover: #2563EB;
-  --critical: #EF4444;
-  --high: #F97316;
-  --medium: #EAB308;
-  --low: #10B981;
-  --safe: #06B6D4;
+/*
+  =============================================================================
+  SAVED BACKUP: SWAPPED LIGHT MODE V2 — WHITE BASE (#FFFFFF) + LILAC PANELS (#F3F0F7)
+  =============================================================================
+  --bg-base: #FFFFFF;
+  --bg-panel: #F3F0F7;
+  --bg-panel-alt: #E7E2F0;
+  --border: #DAD4E6;
+  --text-primary: #241F2E;
+  --text-muted: #756E85;
+  --accent: #6B4EFF;
+  =============================================================================
+*/
 
-  /* Layout-specific variables for Light Mode */
-  --bg-page: #FFFFFF;
-  --bg-sidebar: #F8FAFC;
-  --sidebar-border: #E2E8F0;
-  --sidebar-text: #64748B;
-  --sidebar-text-active: #2563EB;
-  --sidebar-item-hover: rgba(226, 232, 240, 0.6);
-  --sidebar-active-bg: rgba(59, 130, 246, 0.12);
-  --sidebar-active-border: #3B82F6;
-  --sidebar-active-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
-  
-  --bg-header: #FFFFFF;
-  --header-border: #E2E8F0;
-  
-  --bg-main: #FFFFFF;
-  --briefing-bg: linear-gradient(to right, #F8FAFC, #F1F5F9, #F8FAFC);
-  
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
-  --text-muted: #64748B;
-  
-  --card-bg-secondary: #F8FAFC;
-  --card-dot-color: #3B82F6;
-  --accent-glow: rgba(59, 130, 246, 0.25);
-  
-  --shadow-card: 0 4px 20px rgba(59, 130, 246, 0.12);
-  --radius-card: 16px;
+html.light,
+:root.light,
+.light {
+  /* LIGHT MODE GLASSMORPHISM: Gradient Base (#f5f2ff, #ece8ff) + Glassmorphic Cards */
+  --bg-base: linear-gradient(135deg, #f5f2ff, #ece8ff);
+  --bg-panel: rgba(255, 255, 255, 0.75);
+  --bg-panel-alt: rgba(235, 230, 245, 0.65);
+  --border: rgba(255, 255, 255, 0.45);
+  --text-primary: #241F2E;
+  --text-muted: #6C647C;
+  --accent: #6B4EFF;
+  --accent-cool: #2D7A6E;
+  --accent-warm: #D9622B;
 
+  --severity-critical: #D9622B;
+  --severity-high: #E07A38;
+  --severity-medium: #D99B26;
+  --severity-low: #2D7A6E;
 
-  /* KPI indicator lines */
-  --kpi-indicator-height: 3px;
-  --kpi-1-color: #A78BFA;
-  --kpi-2-color: #059669;
-  --kpi-3-color: #EA580C;
-  --kpi-4-color: #0284C7;
-  --kpi-5-color: #DC2626;
-  --kpi-6-color: #D97706;
+  --background: #f5f2ff;
+  --foreground: #241F2E;
+  --card: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(255, 255, 255, 0.45);
+  --card-bg-secondary: rgba(235, 230, 245, 0.65);
+  --primary: #6B4EFF;
+  --primary-hover: #5639E0;
+  --primary-glow: transparent;
+  --critical: #D9622B;
+  --high: #E07A38;
+  --medium: #D99B26;
+  --low: #2D7A6E;
+  --safe: #2D7A6E;
 
-  /* Badge colors - low/medium/high/critical in Light Mode */
-  --low-bg: #ECFDF5;
-  --low-color: #059669;
-  --low-border: #A7F3D0;
-  
-  --medium-bg: #FFFBEB;
-  --medium-color: #D97706;
-  --medium-border: #FDE68A;
-  
-  --high-bg: #FFF7ED;
-  --high-color: #EA580C;
-  --high-border: #FDBA74;
-  
-  --critical-bg: #FFF1F2;
-  --critical-color: #DC2626;
-  --critical-border: #FCA5A5;
+  --bg-page: transparent;
+  --bg-sidebar: rgba(255, 255, 255, 0.55);
+  --sidebar-border: rgba(255, 255, 255, 0.35);
+  --sidebar-text: #6C647C;
+  --sidebar-text-active: #241F2E;
+  --sidebar-item-hover: rgba(255, 255, 255, 0.85);
+  --sidebar-active-bg: rgba(255, 255, 255, 0.85);
+  --sidebar-active-border: #6B4EFF;
 
-  /* SVG maps & charts variables */
-  --map-bg: #FFFFFF;
-  --map-vignette: radial-gradient(ellipse at center, transparent 70%, rgba(245,243,255,0.4) 100%);
-  --map-continent-fill: #EDE9FE;
-  --map-continent-stroke: #C4B5FD;
-  --map-grid-line: rgba(196, 181, 253, 0.3);
-  --map-side-bg: #FAF9FF;
-  --map-side-border: #C7BDFF;
-  --map-cell-bg: #FFFFFF;
-  --map-cell-border: #C7BDFF;
-  --graph-bg: #FAF9FF;
-  --graph-grid-line: rgba(124,58,237,0.04);
+  --bg-header: rgba(255, 255, 255, 0.55);
+  --header-border: rgba(255, 255, 255, 0.35);
+  --bg-main: transparent;
+  --briefing-bg: rgba(255, 255, 255, 0.75);
 
-  /* Static node graphs variables */
-  --node-center-stroke: #DC2626;
-  --node-center-fill: #FFF1F2;
-  --node-center-glow: rgba(220,38,38,0.15);
-  --node-domain-stroke: #EA580C;
-  --node-domain-fill: #FFF7ED;
-  --node-domain-glow: rgba(234,88,12,0.15);
-  --node-ip-stroke: #DC2626;
-  --node-ip-fill: #FFF1F2;
-  --node-ip-glow: rgba(220,38,38,0.15);
-  --node-family-stroke: #7C3AED;
-  --node-family-fill: #EDE9FE;
-  --node-family-glow: rgba(124,58,237,0.15);
-  --node-mitre-stroke: #0284C7;
-  --node-mitre-fill: #F0F9FF;
-  --node-mitre-glow: rgba(2,132,199,0.15);
-  --node-sample-stroke: #059669;
-  --node-sample-fill: #ECFDF5;
-  --node-sample-glow: rgba(5,150,105,0.15);
+  --text-secondary: #6C647C;
+  --card-dot-color: #6B4EFF;
+  --btn-copilot-text: #FFFFFF;
 
-  /* Risk wheel variables */
-  --wheel-0-color: #DC2626;
-  --wheel-0-glow: rgba(220,38,38,0.15);
-  --wheel-1-color: #EA580C;
-  --wheel-1-glow: rgba(234,88,12,0.15);
-  --wheel-2-color: #D97706;
-  --wheel-2-glow: rgba(217,119,6,0.15);
-  --wheel-3-color: #7C3AED;
-  --wheel-3-glow: rgba(124,58,237,0.15);
-  --wheel-4-color: #0284C7;
-  --wheel-4-glow: rgba(2,132,199,0.15);
-  --wheel-5-color: #059669;
-  --wheel-5-glow: rgba(5,150,105,0.15);
+  /* SVG maps & charts variables - Glass Light Mode */
+  --map-bg: transparent;
+  --map-continent-fill: rgba(235, 230, 245, 0.7);
+  --map-continent-stroke: rgba(218, 212, 230, 0.8);
+  --map-grid-line: rgba(218, 212, 230, 0.4);
+  --map-side-bg: rgba(255, 255, 255, 0.75);
+  --map-side-border: rgba(255, 255, 255, 0.45);
+  --graph-bg: transparent;
+  --graph-grid-line: rgba(218, 212, 230, 0.4);
 
-  /* MITRE cells background & border variables */
-  --mitre-critical-bg: #FFF1F2;
-  --mitre-critical-text: #DC2626;
+  /* MITRE cells - Light Mode */
+  --mitre-critical-bg: rgba(254, 226, 226, 0.8);
+  --mitre-critical-text: #991B1B;
   --mitre-critical-border: #FCA5A5;
-  --mitre-high-bg: #FFF7ED;
-  --mitre-high-text: #EA580C;
+  --mitre-high-bg: rgba(255, 237, 213, 0.8);
+  --mitre-high-text: #9A3412;
   --mitre-high-border: #FDBA74;
-  --mitre-medium-bg: #FFFBEB;
-  --mitre-medium-text: #D97706;
+  --mitre-medium-bg: rgba(254, 243, 199, 0.8);
+  --mitre-medium-text: #92400E;
   --mitre-medium-border: #FDE68A;
-  --mitre-low-bg: #EDE9FE;
-  --mitre-low-text: #7C3AED;
-  --mitre-low-border: #C4B5FD;
-
-  /* ReactFlow variables */
-  --reactflow-dot-color: rgba(124,58,237,0.06);
-  --minimap-mask: rgba(245,243,255,0.85);
-
-  /* Button text custom color */
-  --btn-copilot-text: #ffffff;
+  --mitre-low-bg: rgba(235, 230, 245, 0.8);
+  --mitre-low-text: #6C647C;
+  --mitre-low-border: rgba(218, 212, 230, 0.8);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-border: var(--card-border);
-  --color-primary: var(--primary);
-  --color-critical: var(--critical);
-  --color-high: var(--high);
-  --color-medium: var(--medium);
-  --color-low: var(--low);
-  --color-safe: var(--safe);
-  --color-card-secondary: var(--card-bg-secondary);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
+/* User-requested Glassmorphic class */
+.glass {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(18px);
+  border-radius: 22px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+html.light body,
+:root.light body,
+.light body {
+  background: linear-gradient(135deg, #f5f2ff, #ece8ff) !important;
+  background-attachment: fixed !important;
+}
+
+html.light .bg-\[var\(--bg-panel\)\],
+:root.light .bg-\[var\(--bg-panel\)\] {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(18px) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06) !important;
 }
 
 body {
-  background: var(--bg-page);
+  background-color: var(--bg-base);
   color: var(--text-primary);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
-  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-/* Custom premium scrollbar */
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', 'IBM Plex Mono', monospace !important;
+}
+
+/* Custom forensic scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #060913;
+  background: var(--bg-base);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: var(--border);
+  border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #06b6d4;
+  background: var(--text-muted);
 }
 
-/* Custom cyber grid background */
+/* Explicit high-contrast text utility classes */
+.theme-text-primary {
+  color: var(--text-primary) !important;
+}
+
+.theme-text-muted {
+  color: var(--text-muted) !important;
+}
+
+.theme-accent {
+  color: var(--accent) !important;
+}
+
+.theme-accent-cool {
+  color: var(--accent-cool) !important;
+}
+
+.theme-bg-panel {
+  background-color: var(--bg-panel) !important;
+}
+
+.theme-bg-panel-alt {
+  background-color: var(--bg-panel-alt) !important;
+}
+
+.theme-border {
+  border-color: var(--border) !important;
+}
+
+/* Grid lines overlay for SOC radar/graphs */
 .bg-cyber-grid {
-  background-size: 30px 30px;
+  background-size: 24px 24px;
   background-image: 
-    linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
 }
 
-/* Radar scanning sweep animation */
-@keyframes sweep {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Operational standard 1px hairline border panel override */
+.border-glow {
+  border-color: var(--border) !important;
+  box-shadow: none !important;
 }
 
-.animate-radar-sweep {
-  animation: sweep 8s linear infinite;
-  transform-origin: center;
-}
-
-/* Glowing text and boxes */
-.shadow-neon-cyan {
-  box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
-}
-.shadow-neon-rose {
-  box-shadow: 0 0 15px rgba(244, 63, 94, 0.2);
-}
-
-/* Print Styles — Multi-page Intelligence Dossier */
+/* Print Styles */
 @media print {
   @page {
     size: A4 portrait;
     margin: 1.2cm 1.5cm;
   }
 
-  html,
-  body {
-    height: auto !important;
-    min-height: 0 !important;
-    overflow: visible !important;
+  html, body {
     background: #ffffff !important;
     color: #111111 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
   }
 
-  /* Reset layout shell constraints that clip multi-page content */
-  body > div,
-  main,
-  .flex,
-  .overflow-hidden,
-  .overflow-y-auto {
-    display: block !important;
-    height: auto !important;
-    min-height: 0 !important;
-    max-height: none !important;
-    overflow: visible !important;
-    position: static !important;
-  }
-
-  /* Hide entire app UI — show only the dossier */
   body * {
     visibility: hidden;
   }
 
-  .print-report-root,
-  .print-report-root * {
+  .print-report-root, .print-report-root * {
     visibility: visible;
   }
 
@@ -395,71 +309,5 @@ body {
     top: 0 !important;
     width: 100% !important;
     background: #ffffff !important;
-    z-index: 99999 !important;
-  }
-
-  .no-print {
-    display: none !important;
-    visibility: hidden !important;
-  }
-
-  .print-page {
-    display: block !important;
-    page-break-after: always;
-    break-after: page;
-    page-break-inside: avoid;
-    break-inside: avoid-page;
-    min-height: 0 !important;
-    height: auto !important;
-    padding: 0 !important;
-    background: #ffffff !important;
-  }
-
-  .print-page:last-child {
-    page-break-after: auto;
-    break-after: auto;
-  }
-
-  .print-card {
-    background: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    color: #111111 !important;
-    box-shadow: none !important;
-    page-break-inside: avoid;
-    margin-bottom: 20px;
-  }
-
-  table {
-    page-break-inside: auto;
-  }
-
-  tr {
-    page-break-inside: avoid;
-    break-inside: avoid;
   }
 }
-
-/* React Flow MiniMap & UI Element Custom Overrides */
-.react-flow__minimap {
-  background-color: #0b111e !important;
-  border: 1px solid var(--card-border) !important;
-  border-radius: 8px !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
-}
-
-.react-flow__minimap-mask {
-  fill: rgba(2, 6, 23, 0.45) !important;
-}
-
-.react-flow__minimap-node {
-  fill: var(--primary) !important;
-  rx: 3px !important;
-  ry: 3px !important;
-}
-
-.react-flow__minimap-viewport {
-  stroke: var(--primary) !important;
-  stroke-width: 1.5px !important;
-  fill: rgba(6, 182, 212, 0.08) !important;
-}
-

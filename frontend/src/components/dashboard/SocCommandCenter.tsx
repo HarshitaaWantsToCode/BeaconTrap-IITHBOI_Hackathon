@@ -27,39 +27,36 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
   const [dashboardLens, setDashboardLens] = useState<LensType>("ALL");
   const { t } = useTranslation();
 
-  const showGlobal = dashboardLens === "ALL" || dashboardLens === "GLOBAL";
-  const showTactical = dashboardLens === "ALL" || dashboardLens === "TACTICAL";
-
   return (
     <div className="space-y-6 max-w-[1600px] mx-auto">
       {/* Command header */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-card-border pb-5"
+        className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-[var(--border)] pb-5"
       >
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <Radio className="w-4 h-4 text-[var(--critical-color)] animate-pulse" />
-            <span className="text-[9px] font-mono text-[var(--critical-color)] uppercase tracking-widest font-bold">
-              {t('cmd_active')}
+            <Radio className="w-4 h-4 text-[var(--severity-critical)] animate-pulse" />
+            <span className="text-[9px] font-mono text-[var(--severity-critical)] uppercase tracking-widest font-bold">
+              {t('cmd_active') || "COMMAND CENTER ACTIVE"}
             </span>
           </div>
-          <h2 className="text-2xl font-extrabold tracking-tight text-text-primary">
-            {t('soc_command_center').toUpperCase()}
+          <h2 className="text-2xl font-extrabold font-mono tracking-tight text-[var(--text-primary)]">
+            {(t('soc_command_center') || "SOC COMMAND CENTER").toUpperCase()}
           </h2>
-          <p className="text-xs text-text-muted font-mono mt-1">
-            {t('node_ind')}
+          <p className="text-xs text-[var(--text-muted)] font-mono mt-1">
+            {t('node_ind') || "NODE IND: LEAP-205_BOI // THREAT INTELLIGENCE OPERATIONS // LIVE TELEMETRY"}
           </p>
         </div>
         
         <div className="flex items-center gap-4">
-          {/* Dynamic Grid Filter Pills */}
-          <div className="flex gap-1.5 bg-card/60 p-1 rounded-lg border border-card-border backdrop-blur-sm">
+          {/* Lens Filter Switcher */}
+          <div className="flex gap-1 bg-[var(--bg-panel-alt)] p-1 rounded-sm border border-[var(--border)] font-mono">
             {[
-              { id: "ALL", label: t('all_analytics'), icon: Database },
-              { id: "GLOBAL", label: t('global_map'), icon: Map },
-              { id: "TACTICAL", label: t('tactical'), icon: BarChart3 }
+              { id: "ALL", label: t('all_analytics') || "All Analytics", icon: Database },
+              { id: "GLOBAL", label: t('global_map') || "Global Map", icon: Map },
+              { id: "TACTICAL", label: t('tactical') || "Tactical Matrices", icon: BarChart3 }
             ].map((lens) => {
               const Icon = lens.icon;
               const isSelected = dashboardLens === lens.id;
@@ -67,10 +64,10 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
                 <button
                   key={lens.id}
                   onClick={() => setDashboardLens(lens.id as LensType)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-bold transition-all ${
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-mono font-bold transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-primary text-[var(--btn-copilot-text)] shadow-[0_0_12px_var(--primary-glow)]"
-                      : "text-text-secondary hover:text-text-primary hover:bg-card-secondary/80"
+                      ? "bg-[var(--accent)] text-[var(--btn-copilot-text)]"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel)]"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -82,10 +79,10 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
 
           <button
             onClick={onNavigateToUpload}
-            className="flex items-center gap-2 bg-primary hover:bg-primary-hover text-[var(--btn-copilot-text)] font-bold px-4 py-2.5 rounded-lg text-sm transition-colors shadow-[0_0_20px_var(--primary-glow)] cursor-pointer"
+            className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--primary-hover)] text-[var(--btn-copilot-text)] font-mono text-xs font-bold px-4 py-2.5 rounded-sm transition-colors cursor-pointer"
           >
             <Upload className="w-4 h-4" />
-            {t('upload_new')}
+            {t('upload_new') || "UPLOAD NEW APK"}
           </button>
         </div>
       </motion.div>
@@ -105,7 +102,6 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
           transition={{ duration: 0.25, ease: "easeInOut" }}
           className="space-y-6"
         >
-          {/* LENS 1: GLOBAL MAP FOCUS */}
           {dashboardLens === "GLOBAL" && (
             <div className="space-y-6">
               <div className="w-full">
@@ -122,7 +118,6 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
             </div>
           )}
 
-          {/* LENS 2: TACTICAL MATRICES FOCUS */}
           {dashboardLens === "TACTICAL" && (
             <div className="space-y-6">
               <div className="w-full">
@@ -142,13 +137,10 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
             </div>
           )}
 
-          {/* LENS 3: ALL ANALYTICS (DEFAULT MONOLITHIC FLOW WITH SCROLL REDUCTION) */}
           {dashboardLens === "ALL" && (
             <>
-              {/* Row 1: Global map (full width) */}
               <WorldThreatMap />
 
-              {/* Row 2: Correlation graph + Live feed */}
               <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
                 <div className="xl:col-span-8">
                   <ThreatCorrelationFlow
@@ -163,19 +155,16 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
                 </div>
               </div>
 
-              {/* Row 3: MITRE Heatmap + Risk Trend */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <MitreHeatmap cells={data.mitreHeatmap} />
                 <RiskTrendAnalytics data={data.riskTrend} />
               </div>
 
-              {/* Row 4: Threat Families + Campaign Activity */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <TopThreatFamilies families={data.threatFamilies} />
                 <CampaignActivityPanel campaigns={data.campaigns} />
               </div>
 
-              {/* Row 5: IOC Intelligence Table (full width) */}
               <IocIntelligenceTable iocs={data.iocIntel} />
             </>
           )}

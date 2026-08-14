@@ -73,15 +73,15 @@ const ROUTES: AttackRoute[] = [
 ];
 
 const SEVERITY_COLORS = {
-  CRITICAL: { stroke: "var(--critical)", glow: "var(--critical-glow)", text: "var(--critical)" },
-  HIGH:     { stroke: "var(--high)", glow: "rgba(249,115,22,0.3)", text: "var(--high)" },
-  MEDIUM:   { stroke: "var(--medium)", glow: "rgba(234,179,8,0.3)", text: "var(--medium)" },
+  CRITICAL: { stroke: "var(--severity-critical)", glow: "rgba(229,72,77,0.3)", text: "var(--severity-critical)" },
+  HIGH:     { stroke: "var(--severity-high)", glow: "rgba(240,136,62,0.3)", text: "var(--severity-high)" },
+  MEDIUM:   { stroke: "var(--severity-medium)", glow: "rgba(232,197,71,0.3)", text: "var(--severity-medium)" },
 };
 
 const ROLE_COLORS = {
-  origin:  { fill: "var(--critical)", label: "Origin Infra",  icon: "⚠" },
-  c2:      { fill: "var(--high)", label: "C2 Server",     icon: "⚡" },
-  victim:  { fill: "var(--primary)", label: "Victim Region", icon: "🎯" },
+  origin:  { fill: "var(--severity-critical)", label: "Origin Infra",  icon: "⚠" },
+  c2:      { fill: "var(--severity-high)", label: "C2 Server",     icon: "⚡" },
+  victim:  { fill: "var(--accent)", label: "Victim Region", icon: "🎯" },
 };
 
 // ─── Quadratic bezier midpoint arc helper ────────────────────────────────────
@@ -90,7 +90,6 @@ function arcPath(x1: number, y1: number, x2: number, y2: number, bulge = 0.35): 
   const my = (y1 + y2) / 2;
   const dx = x2 - x1, dy = y2 - y1;
   const len = Math.sqrt(dx * dx + dy * dy);
-  // control point offset perpendicular to the line, scaled by bulge
   const cx = mx - dy * bulge;
   const cy = my + dx * bulge - len * 0.08;
   return `M ${x1} ${y1} Q ${cx} ${cy} ${x2} ${y2}`;
@@ -103,9 +102,9 @@ function pathLength(x1: number, y1: number, x2: number, y2: number): number {
 // ─── Minibar ─────────────────────────────────────────────────────────────────
 function Bar({ value, color }: { value: number; color: string }) {
   return (
-    <div className="flex-1 h-1 bg-slate-800 rounded-full overflow-hidden">
+    <div className="flex-1 h-1 bg-[var(--border)] rounded-full overflow-hidden">
       <div className="h-full rounded-full transition-all duration-700"
-        style={{ width: `${value}%`, background: color, boxShadow: `0 0 6px ${color}` }} />
+        style={{ width: `${value}%`, background: color }} />
     </div>
   );
 }
@@ -117,13 +116,11 @@ export default function WorldThreatMap() {
   const [hoveredRoute, setHoveredRoute] = useState<AttackRoute | null>(null);
   const [activeEvents, setActiveEvents] = useState<string[]>([]);
 
-  // Animation clock
   useEffect(() => {
     const id = setInterval(() => setTick(t => t + 1), 40);
     return () => clearInterval(id);
   }, []);
 
-  // Randomly fire "event" alerts for blinking route highlights
   useEffect(() => {
     const id = setInterval(() => {
       const route = ROUTES[Math.floor(Math.random() * ROUTES.length)];
@@ -138,114 +135,79 @@ export default function WorldThreatMap() {
     LOCATIONS.map(l => [l.id, { x: mx(l.lon), y: my(l.lat) }])
   );
 
-  // Live stats
   const criticalCount = LOCATIONS.filter(l => l.severity === "CRITICAL").length;
-  const totalVolume = LOCATIONS.reduce((a, l) => a + l.volume, 0);
   const avgConf = Math.round(LOCATIONS.reduce((a, l) => a + l.confidence, 0) / LOCATIONS.length);
 
   return (
     <div 
-      className="w-full border rounded-2xl overflow-hidden transition-all duration-200"
-      style={{ backgroundColor: "var(--map-bg)", borderColor: "var(--card-border)", boxShadow: "var(--shadow-card)" }}
+      className="w-full border border-[var(--border)] rounded-sm overflow-hidden transition-all bg-[var(--bg-panel)] font-mono"
     >
-
-      {/* ── Header ── */}
+      {/* Header */}
       <div 
-        className="flex items-center justify-between px-5 py-3 border-b"
-        style={{ backgroundColor: "var(--card-bg-secondary)", borderColor: "var(--card-border)" }}
+        className="flex items-center justify-between px-5 py-3 border-b border-[var(--border)] bg-[var(--bg-panel-alt)]"
       >
         <div className="flex items-center gap-3">
-          <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
-          <span className="text-xs font-mono font-bold uppercase tracking-widest" style={{ color: "var(--text-primary)" }}>
+          <span className="w-2 h-2 rounded-full bg-[var(--severity-critical)] animate-pulse" />
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
             Global Threat Intelligence Map
           </span>
-          <span 
-            className="text-[9px] font-mono border px-2 py-0.5 rounded uppercase tracking-wider"
-            style={{ color: "var(--text-muted)", borderColor: "var(--card-border)" }}
-          >
+          <span className="text-[9px] font-mono border border-[var(--border)] px-2 py-0.5 rounded-sm uppercase tracking-wider text-[var(--text-muted)]">
             LIVE · NODE IND LEAP-205
           </span>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 font-mono text-[10px]">
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ background: ROLE_COLORS.origin.fill, boxShadow: `0 0 6px ${ROLE_COLORS.origin.fill}` }} />
-            <span className="text-[8px] font-mono uppercase" style={{ color: "var(--text-muted)" }}>Origin Infra</span>
+            <span className="w-2 h-2 rounded-full" style={{ background: ROLE_COLORS.origin.fill }} />
+            <span className="text-[var(--text-muted)] uppercase">Origin Infra</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ background: ROLE_COLORS.c2.fill, boxShadow: `0 0 6px ${ROLE_COLORS.c2.fill}` }} />
-            <span className="text-[8px] font-mono uppercase" style={{ color: "var(--text-muted)" }}>C2 Server</span>
+            <span className="w-2 h-2 rounded-full" style={{ background: ROLE_COLORS.c2.fill }} />
+            <span className="text-[var(--text-muted)] uppercase">C2 Server</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ background: ROLE_COLORS.victim.fill, boxShadow: `0 0 6px ${ROLE_COLORS.victim.fill}` }} />
-            <span className="text-[8px] font-mono uppercase" style={{ color: "var(--text-muted)" }}>Victim Region</span>
+            <span className="w-2 h-2 rounded-full" style={{ background: ROLE_COLORS.victim.fill }} />
+            <span className="text-[var(--text-muted)] uppercase">Victim Region</span>
           </div>
         </div>
       </div>
 
-      {/* ── Map + Sidebar layout ── */}
+      {/* Map + Sidebar layout */}
       <div className="flex flex-col lg:flex-row">
-
         {/* Map Canvas */}
-        <div className="relative flex-1 min-h-[440px]">
-
-          {/* Grid overlay */}
-          <div className="absolute inset-0 pointer-events-none" style={{
-            backgroundImage: "linear-gradient(rgba(6,182,212,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.025) 1px,transparent 1px)",
-            backgroundSize: "50px 50px",
-          }} />
-          {/* Radial vignette */}
-          <div className="absolute inset-0 pointer-events-none transition-all duration-200"
-            style={{ background: "var(--map-vignette)" }} />
-
-          <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full"
-            style={{ display: "block" }}>
+        <div className="relative flex-1 min-h-[440px] bg-[var(--bg-base)]">
+          <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" style={{ display: "block" }}>
             <defs>
-              {/* Glow filter for arcs */}
-              <filter id="arc-glow" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur stdDeviation="3" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-              <filter id="node-glow" x="-60%" y="-60%" width="220%" height="220%">
-                <feGaussianBlur stdDeviation="5" result="blur" />
-                <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-              </filter>
-              {/* Arrowhead markers */}
               {(["CRITICAL","HIGH","MEDIUM"] as const).map(sev => (
                 <marker key={sev} id={`arrow-${sev}`}
                   markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
                   <path d="M0,0 L5,2.5 L0,5 Z" fill={SEVERITY_COLORS[sev].stroke} opacity="0.9" />
                 </marker>
               ))}
-              {/* Animated pulse for victims */}
-              <radialGradient id="victim-glow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.6" />
-                <stop offset="100%" stopColor="var(--primary)" stopOpacity="0" />
-              </radialGradient>
             </defs>
 
-            {/* ── Continents ── */}
+            {/* Continents */}
             {CONTINENTS.map((d, i) => (
               <path key={i} d={d}
-                fill="var(--map-continent-fill)"
-                stroke="var(--map-continent-stroke)"
+                fill="var(--bg-panel-alt)"
+                stroke="var(--border)"
                 strokeWidth="0.8"
-                className="transition-all duration-200"
+                className="transition-all"
               />
             ))}
 
-            {/* ── Latitude / Longitude graticule lines ── */}
+            {/* Latitude / Longitude graticule lines */}
             {[-60,-30,0,30,60].map(lat => (
               <line key={`lat${lat}`}
                 x1={0} y1={my(lat)} x2={W} y2={my(lat)}
-                stroke="var(--map-grid-line)" strokeWidth="0.5" strokeDasharray="4 8" className="transition-all duration-200" />
+                stroke="var(--border)" strokeWidth="0.5" strokeDasharray="4 8" opacity="0.5" />
             ))}
             {[-120,-60,0,60,120].map(lon => (
               <line key={`lon${lon}`}
                 x1={mx(lon)} y1={0} x2={mx(lon)} y2={H}
-                stroke="var(--map-grid-line)" strokeWidth="0.5" strokeDasharray="4 8" className="transition-all duration-200" />
+                stroke="var(--border)" strokeWidth="0.5" strokeDasharray="4 8" opacity="0.5" />
             ))}
 
-            {/* ── Attack arcs ── */}
+            {/* Attack arcs */}
             {ROUTES.map((route) => {
               const src = locCoords[route.from];
               const dst = locCoords[route.to];
@@ -256,7 +218,6 @@ export default function WorldThreatMap() {
               const isActive = activeEvents.includes(key);
               const isHov = hoveredRoute?.from === route.from && hoveredRoute?.to === route.to;
               const pLen = pathLength(src.x, src.y, dst.x, dst.y);
-              // animated dash offset cycling
               const dashLen = 20, gapLen = pLen - dashLen;
               const offset = -((tick * 2.5) % pLen);
 
@@ -266,83 +227,49 @@ export default function WorldThreatMap() {
                 <g key={key} style={{ cursor: "pointer" }}
                   onMouseEnter={() => setHoveredRoute(route)}
                   onMouseLeave={() => setHoveredRoute(null)}>
-                  {/* Glow backing */}
                   <path d={d} fill="none"
-                    stroke={sc.stroke} strokeWidth={isActive || isHov ? 6 : 3}
-                    strokeOpacity={isActive ? 0.35 : isHov ? 0.25 : 0.1}
-                    filter="url(#arc-glow)" />
-                  {/* Animated dash */}
+                    stroke={sc.stroke} strokeWidth={isActive || isHov ? 5 : 2.5}
+                    strokeOpacity={isActive ? 0.35 : isHov ? 0.25 : 0.12} />
                   <path d={d} fill="none"
                     stroke={sc.stroke}
                     strokeWidth={isActive ? 2.5 : 1.5}
-                    strokeOpacity={isActive ? 1 : isHov ? 0.85 : 0.55}
+                    strokeOpacity={isActive ? 1 : isHov ? 0.85 : 0.6}
                     strokeDasharray={`${dashLen} ${gapLen}`}
                     strokeDashoffset={offset}
                     markerEnd={`url(#arrow-${route.severity})`}
                   />
-                  {/* Pulse dot at src on active */}
-                  {isActive && (
-                    <circle cx={src.x} cy={src.y} r={6}
-                      fill={sc.stroke} opacity={0.8}
-                      filter="url(#arc-glow)" />
-                  )}
                 </g>
               );
             })}
 
-            {/* ── Victim region pulse rings ── */}
-            {LOCATIONS.filter(l => l.role === "victim").map(l => {
-              const c = locCoords[l.id];
-              const pulseR = 28 + (tick % 40) * 0.7;
-              return (
-                <circle key={`pulse-${l.id}`}
-                  cx={c.x} cy={c.y} r={pulseR}
-                  fill="url(#victim-glow)"
-                  opacity={1 - (tick % 40) / 40}
-                />
-              );
-            })}
-
-            {/* ── Threat nodes ── */}
+            {/* Threat nodes */}
             {LOCATIONS.map(loc => {
               const c = locCoords[loc.id];
               const rc = ROLE_COLORS[loc.role];
-              const sc = SEVERITY_COLORS[loc.severity];
               const isHov = hoveredLoc?.id === loc.id;
               const r = loc.role === "victim" ? 10 : 7;
-              // blinking frequency for origin/c2
               const blink = loc.role !== "victim" && (tick % 30) < 8;
 
               return (
                 <g key={loc.id} style={{ cursor: "pointer" }}
                   onMouseEnter={() => setHoveredLoc(loc)}
                   onMouseLeave={() => setHoveredLoc(null)}>
-                  {/* Outer ring */}
                   {isHov && (
-                    <circle cx={c.x} cy={c.y} r={r + 14}
+                    <circle cx={c.x} cy={c.y} r={r + 12}
                       fill="none" stroke={rc.fill}
                       strokeWidth="1" strokeOpacity="0.4"
                       strokeDasharray="3 4" />
                   )}
-                  {/* Glow backing */}
-                  <circle cx={c.x} cy={c.y} r={r + 4}
-                     fill={rc.fill} opacity={blink ? 0.25 : isHov ? 0.2 : 0.1}
-                    filter="url(#node-glow)" />
-                  {/* Node body */}
                   <circle cx={c.x} cy={c.y} r={r}
-                    fill="var(--map-bg)" stroke={rc.fill}
+                    fill="var(--bg-panel)" stroke={rc.fill}
                     strokeWidth={isHov ? 2.5 : 1.8}
-                    filter={isHov ? "url(#node-glow)" : undefined}
                     opacity={blink ? 1 : 0.85}
-                    className="transition-all duration-200"
                   />
-                  {/* Inner dot */}
                   <circle cx={c.x} cy={c.y} r={r * 0.4}
                     fill={rc.fill} opacity={blink ? 1 : 0.7} />
-                  {/* Label */}
                   <text x={c.x} y={c.y + r + 11}
                     textAnchor="middle"
-                    fill={rc.fill} fontSize="7.5" fontFamily="monospace" fontWeight="bold"
+                    fill={rc.fill} fontSize="8" fontFamily="monospace" fontWeight="bold"
                     style={{ userSelect: "none" }}>
                     {loc.label.toUpperCase()}
                   </text>
@@ -356,43 +283,35 @@ export default function WorldThreatMap() {
             const c = locCoords[hoveredLoc.id];
             const rc = ROLE_COLORS[hoveredLoc.role];
             const sc = SEVERITY_COLORS[hoveredLoc.severity];
-            // rough screen position
             const px = (c.x / W) * 100;
             const py = (c.y / H) * 100;
             return (
-              <div className="absolute z-30 pointer-events-none w-48 rounded-xl border p-3 space-y-2"
-                style={{
-                  left: `${Math.min(px, 70)}%`,
-                  top: `${Math.min(py + 4, 75)}%`,
-                  borderColor: rc.fill + "55",
-                  background: "var(--card)",
-                  boxShadow: `0 4px 20px rgba(124,58,237,.12)`,
-                }}>
-                <div className="flex items-center justify-between border-b pb-1.5"
-                  style={{ borderColor: "var(--card-border)" }}>
-                  <span className="text-[9px] font-mono font-bold uppercase tracking-widest"
-                    style={{ color: rc.fill }}>{rc.label}</span>
-                  <span className="text-[8px] font-mono px-1.5 py-0.5 rounded border font-bold uppercase"
-                    style={{ color: sc.text, borderColor: sc.stroke + "50", background: sc.stroke + "15" }}>
+              <div className="absolute z-30 pointer-events-none w-48 rounded-sm border border-[var(--border)] p-3 space-y-2 font-mono bg-[var(--bg-panel)]">
+                <div className="flex items-center justify-between border-b border-[var(--border)] pb-1.5">
+                  <span className="text-[9px] font-mono font-bold uppercase tracking-wider" style={{ color: rc.fill }}>
+                    {rc.label}
+                  </span>
+                  <span className="text-[8px] font-mono px-1.5 py-0.5 rounded-sm border font-bold uppercase"
+                    style={{ color: sc.text, borderColor: sc.stroke, background: "transparent" }}>
                     {hoveredLoc.severity}
                   </span>
                 </div>
-                <div className="space-y-1.5 text-[9px] font-mono" style={{ color: "var(--text-secondary)" }}>
+                <div className="space-y-1 text-[9px] font-mono text-[var(--text-muted)]">
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Location</span>
-                    <span className="font-semibold" style={{ color: "var(--text-primary)" }}>{hoveredLoc.label}</span>
+                    <span>Location</span>
+                    <span className="font-bold text-[var(--text-primary)]">{hoveredLoc.label}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Node</span>
+                    <span>Node</span>
                     <span>{hoveredLoc.sublabel}</span>
                   </div>
                   <div className="flex justify-between items-center gap-2">
-                    <span className="text-slate-500">Volume</span>
+                    <span>Volume</span>
                     <Bar value={hoveredLoc.volume} color={rc.fill} />
                     <span style={{ color: rc.fill }} className="font-bold">{hoveredLoc.volume}</span>
                   </div>
                   <div className="flex justify-between items-center gap-2">
-                    <span className="text-slate-500">Conf.</span>
+                    <span>Conf.</span>
                     <Bar value={hoveredLoc.confidence} color={sc.stroke} />
                     <span style={{ color: sc.stroke }} className="font-bold">{hoveredLoc.confidence}%</span>
                   </div>
@@ -400,99 +319,49 @@ export default function WorldThreatMap() {
               </div>
             );
           })()}
-
-          {/* Tooltip for hovered route */}
-          {hoveredRoute && !hoveredLoc && (() => {
-            const sc = SEVERITY_COLORS[hoveredRoute.severity];
-            return (
-              <div className="absolute bottom-4 left-4 z-30 pointer-events-none rounded-lg border px-3 py-2 text-[9px] font-mono"
-                style={{ borderColor: "var(--card-border)", background: "var(--card)", boxShadow: `0 4px 20px rgba(124,58,237,.12)` }}>
-                <span style={{ color: sc.stroke }} className="font-bold uppercase">{hoveredRoute.severity}</span>
-                <span className="text-slate-400 mx-2">·</span>
-                <span style={{ color: "var(--text-primary)" }}>{hoveredRoute.label}</span>
-              </div>
-            );
-          })()}
         </div>
 
-        {/* ── Side panel ── */}
-        <div 
-          className="w-full lg:w-64 border-t lg:border-t-0 lg:border-l flex flex-col shrink-0 transition-all duration-200"
-          style={{ backgroundColor: "var(--map-side-bg)", borderColor: "var(--map-side-border)" }}
-        >
-
+        {/* Side panel */}
+        <div className="w-full lg:w-64 border-t lg:border-t-0 lg:border-l border-[var(--border)] flex flex-col shrink-0 bg-[var(--bg-panel-alt)] font-mono">
           {/* Live KPIs */}
-          <div className="p-4 border-b space-y-3" style={{ borderColor: "var(--map-side-border)" }}>
-            <div className="text-[9px] font-mono uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>Global Threat Status</div>
+          <div className="p-4 border-b border-[var(--border)] space-y-3">
+            <div className="text-[9px] font-mono uppercase tracking-wider text-[var(--text-muted)] font-semibold">Global Threat Status</div>
 
-            <div className="grid grid-cols-3 gap-2">
-              <div className="rounded-lg p-2 text-center border" style={{ backgroundColor: "var(--map-cell-bg)", borderColor: "var(--map-cell-border)" }}>
-                <div className="text-[var(--critical-color)] text-lg font-black font-mono">{criticalCount}</div>
-                <div className="text-[8px] font-mono uppercase font-bold" style={{ color: "var(--text-muted)" }}>Critical</div>
+            <div className="grid grid-cols-3 gap-2 text-mono">
+              <div className="rounded-sm p-2 text-center border border-[var(--border)] bg-[var(--bg-panel)]">
+                <div className="text-[var(--severity-critical)] text-lg font-bold font-mono">{criticalCount}</div>
+                <div className="text-[8px] font-mono uppercase text-[var(--text-muted)]">Critical</div>
               </div>
-              <div className="rounded-lg p-2 text-center border" style={{ backgroundColor: "var(--map-cell-bg)", borderColor: "var(--map-cell-border)" }}>
-                <div className="text-[var(--high-color)] text-lg font-black font-mono">{ROUTES.length}</div>
-                <div className="text-[8px] font-mono uppercase font-bold" style={{ color: "var(--text-muted)" }}>Routes</div>
+              <div className="rounded-sm p-2 text-center border border-[var(--border)] bg-[var(--bg-panel)]">
+                <div className="text-[var(--severity-high)] text-lg font-bold font-mono">{ROUTES.length}</div>
+                <div className="text-[8px] font-mono uppercase text-[var(--text-muted)]">Routes</div>
               </div>
-              <div className="rounded-lg p-2 text-center border" style={{ backgroundColor: "var(--map-cell-bg)", borderColor: "var(--map-cell-border)" }}>
-                <div className="text-[var(--primary)] text-lg font-black font-mono">{avgConf}%</div>
-                <div className="text-[8px] font-mono uppercase font-bold" style={{ color: "var(--text-muted)" }}>Conf.</div>
+              <div className="rounded-sm p-2 text-center border border-[var(--border)] bg-[var(--bg-panel)]">
+                <div className="text-[var(--accent)] text-lg font-bold font-mono">{avgConf}%</div>
+                <div className="text-[8px] font-mono uppercase text-[var(--text-muted)]">Conf.</div>
               </div>
             </div>
           </div>
 
           {/* Threat node list */}
-          <div className="p-3 border-b space-y-2" style={{ borderColor: "var(--map-side-border)" }}>
-            <div className="text-[9px] font-mono uppercase tracking-widest mb-2" style={{ color: "var(--text-muted)" }}>Node Directory</div>
+          <div className="p-3 border-b border-[var(--border)] space-y-2">
+            <div className="text-[9px] font-mono uppercase tracking-wider mb-2 text-[var(--text-muted)] font-semibold">Node Directory</div>
             {LOCATIONS.map(loc => {
               const rc = ROLE_COLORS[loc.role];
               const sc = SEVERITY_COLORS[loc.severity];
-              const blink = (tick % 30) < 8;
               return (
                 <div key={loc.id}
-                  className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 border cursor-pointer transition-colors"
-                  style={{ backgroundColor: "var(--map-cell-bg)", borderColor: "var(--map-cell-border)" }}
+                  className="flex items-center gap-2 rounded-sm px-2.5 py-1.5 border border-[var(--border)] bg-[var(--bg-panel)] cursor-pointer transition-colors hover:border-[var(--accent)]/40"
                   onMouseEnter={() => setHoveredLoc(loc)}
                   onMouseLeave={() => setHoveredLoc(null)}>
-                  <span className="w-1.5 h-1.5 rounded-full shrink-0"
-                    style={{ background: rc.fill, boxShadow: (loc.role !== "victim" && blink) ? `0 0 6px ${rc.fill}` : "none" }} />
+                  <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: rc.fill }} />
                   <div className="flex-1 min-w-0">
-                    <div className="text-[9px] font-mono font-semibold truncate" style={{ color: "var(--text-primary)" }}>{loc.label}</div>
-                    <div className="text-[8px] font-mono truncate" style={{ color: "var(--text-muted)" }}>{loc.sublabel}</div>
+                    <div className="text-[9px] font-mono font-bold truncate text-[var(--text-primary)]">{loc.label}</div>
+                    <div className="text-[8px] font-mono truncate text-[var(--text-muted)]">{loc.sublabel}</div>
                   </div>
                   <div className="flex flex-col items-end gap-0.5">
                     <span className="text-[8px] font-mono font-bold" style={{ color: sc.text }}>{loc.severity}</span>
-                    <span className="text-[7px] font-mono" style={{ color: "var(--text-muted)" }}>VOL {loc.volume}</span>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Active attack routes */}
-          <div className="p-3 flex-1 overflow-auto space-y-2">
-            <div className="text-[9px] font-mono uppercase tracking-widest mb-2" style={{ color: "var(--text-muted)" }}>Active Campaigns</div>
-            {ROUTES.map((route, i) => {
-              const sc = SEVERITY_COLORS[route.severity];
-              const key = `${route.from}-${route.to}`;
-              const isActive = activeEvents.includes(key);
-              return (
-                <div key={i}
-                  className="rounded-lg px-2.5 py-1.5 border transition-all duration-200"
-                  style={{
-                    borderColor: isActive ? sc.stroke + "60" : "var(--map-cell-border)",
-                    background: isActive ? sc.stroke + "0d" : "var(--map-cell-bg)",
-                    boxShadow: isActive ? `0 0 10px ${sc.glow}` : "none",
-                  }}>
-                  <div className="flex items-center gap-1.5 mb-0.5">
-                    {isActive && <span className="w-1 h-1 rounded-full animate-ping" style={{ background: sc.stroke }} />}
-                    <span className="text-[8px] font-mono font-bold uppercase" style={{ color: sc.text }}>
-                      {route.severity}
-                    </span>
-                  </div>
-                  <div className="text-[8px] font-mono leading-tight" style={{ color: "var(--text-secondary)" }}>{route.label}</div>
-                  <div className="text-[7px] font-mono mt-0.5" style={{ color: "var(--text-muted)" }}>
-                    {route.from.toUpperCase()} → {route.to.toUpperCase()}
+                    <span className="text-[7px] font-mono text-[var(--text-muted)]">VOL {loc.volume}</span>
                   </div>
                 </div>
               );
@@ -500,12 +369,11 @@ export default function WorldThreatMap() {
           </div>
 
           {/* Footer */}
-          <div className="px-3 py-2 border-t" style={{ borderColor: "var(--map-side-border)" }}>
-            <div className="text-[8px] font-mono text-center uppercase tracking-widest" style={{ color: "var(--text-muted)" }}>
+          <div className="px-3 py-2 border-t border-[var(--border)]">
+            <div className="text-[8px] font-mono text-center uppercase tracking-wider text-[var(--text-muted)]">
               BeaconTrap · Global Intel Layer · Live
             </div>
           </div>
-
         </div>
       </div>
     </div>

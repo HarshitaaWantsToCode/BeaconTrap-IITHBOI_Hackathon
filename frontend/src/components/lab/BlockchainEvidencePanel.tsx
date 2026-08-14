@@ -12,7 +12,7 @@ export default function BlockchainEvidencePanel() {
 
   if (!caseData) {
     return (
-      <div className="text-center py-10 text-xs font-mono text-text-muted">
+      <div className="text-center py-10 text-xs font-mono text-[var(--text-muted)]">
         NO CASE DATA LOADED FOR EVIDENCE LEDGER
       </div>
     );
@@ -21,15 +21,11 @@ export default function BlockchainEvidencePanel() {
   const handleAnchor = async () => {
     setLocalError(null);
     try {
-      // Anchor a hash of the case's own report content — this is the exact
-      // evidence being committed to the chain, not a placeholder.
       const reportPayload = caseData.analystReport || JSON.stringify(caseData);
       const reportBytes = new TextEncoder().encode(reportPayload);
 
       const result = await anchorEvidence(caseData.id, reportBytes);
       if (result) {
-        // Ask the backend to independently verify this tx against Sepolia
-        // before trusting it — never just take the frontend's word for it.
         try {
           const verifyRes = await fetch(`${API_BASE_URL}/api/v1/cases/${caseData.id}/verify-anchor`, {
             method: "POST",
@@ -59,11 +55,11 @@ export default function BlockchainEvidencePanel() {
   const isBusy = status === "connecting" || status === "anchoring";
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-2 border-b border-card-border pb-3">
+    <div className="space-y-6 font-mono">
+      <div className="flex items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
         <div className="flex items-center gap-2">
-          <Fingerprint className="w-5 h-5 text-primary" />
-          <h3 className="text-sm font-bold uppercase tracking-wider text-text-primary font-mono">
+          <Fingerprint className="w-5 h-5 text-[var(--accent)]" />
+          <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text-primary)] font-mono">
             Evidence Ledger & Blockchain Anchoring
           </h3>
         </div>
@@ -72,7 +68,7 @@ export default function BlockchainEvidencePanel() {
           <button
             onClick={handleAnchor}
             disabled={isBusy}
-            className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-md bg-primary text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-sm bg-[var(--accent)] text-[var(--btn-copilot-text)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             {isBusy ? (
               <>
@@ -90,55 +86,56 @@ export default function BlockchainEvidencePanel() {
       </div>
 
       {(error || localError) && (
-        <div className="text-xs font-mono text-rose-400 bg-rose-500/5 border border-rose-500/20 rounded-md p-3">
+        <div className="text-xs font-mono text-[var(--severity-critical)] bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 rounded-sm p-3">
           {error || localError}
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-card-secondary border border-card-border p-5 rounded-lg space-y-4">
-          <h4 className="text-xs font-bold uppercase text-text-muted font-mono tracking-widest">
+        <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-5 rounded-sm space-y-4">
+          <h4 className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider">
             Block Ledger Receipt
           </h4>
 
           <div className="space-y-3 font-mono text-xs">
             <div>
-              <span className="text-text-muted text-[10px] block">TRANSACTION HASH</span>
+              <span className="text-[var(--text-muted)] text-[10px] block">TRANSACTION HASH</span>
               {caseData.blockchainTxHash ? (
                 <a
                   href={`https://sepolia.etherscan.io/tx/${caseData.blockchainTxHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline break-all block"
+                  className="text-[var(--accent)] hover:underline break-all block"
                 >
                   {caseData.blockchainTxHash}
                 </a>
               ) : (
-                <span className="text-text-primary break-all block">
+                <span className="text-[var(--text-primary)] break-all block">
                   {isBusy ? "Awaiting MetaMask confirmation..." : "Not yet anchored"}
                 </span>
               )}
             </div>
             <div>
-              <span className="text-text-muted text-[10px] block">BLOCK ANCHOR INDEX</span>
-              <span className="text-text-primary block">{caseData.blockchainBlock ?? "Pending mine..."}</span>
+              <span className="text-[var(--text-muted)] text-[10px] block">BLOCK ANCHOR INDEX</span>
+              <span className="text-[var(--text-primary)] block">{caseData.blockchainBlock ?? "Pending mine..."}</span>
             </div>
             <div>
-              <span className="text-text-muted text-[10px] block">ANCHOR TIMESTAMP</span>
-              <span className="text-text-primary block">
+              <span className="text-[var(--text-muted)] text-[10px] block">ANCHOR TIMESTAMP</span>
+              <span className="text-[var(--text-primary)] block">
                 {caseData.blockchainTimestamp ? new Date(caseData.blockchainTimestamp).toLocaleString() : "N/A"}
               </span>
             </div>
           </div>
         </div>
-        <div className="bg-rose-500/5 border border-rose-500/20 p-5 rounded-lg space-y-3">
-          <div className="flex items-center gap-2 text-rose-400">
+
+        <div className="bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 p-5 rounded-sm space-y-3">
+          <div className="flex items-center gap-2 text-[var(--severity-critical)]">
             <AlertTriangle className="w-4 h-4" />
             <h4 className="text-xs font-bold font-mono uppercase tracking-wider">
               Chain-of-Custody Integrity Guarantee
             </h4>
           </div>
-          <p className="text-xs text-text-secondary leading-relaxed font-mono">
+          <p className="text-xs text-[var(--text-muted)] leading-relaxed font-mono">
             This malware report has been cryptographically signed and hash-anchored onto the distributed evidence ledger. This record guarantees immutable verification of intelligence findings across judicial proceedings.
           </p>
         </div>
@@ -146,4 +143,3 @@ export default function BlockchainEvidencePanel() {
     </div>
   );
 }
-

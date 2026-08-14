@@ -16,25 +16,20 @@ import {
   Network,
   Clock,
   Fingerprint,
-  Layers,
-  FileText,
-  AlertTriangle,
   ArrowRight,
   Download
 } from "lucide-react";
 import ExecutiveReportPrintView from "./components/ExecutiveReportPrintView";
 import AICopilot from "./components/copilot/AICopilot";
 import { SocDashboardPayload } from "./types/dashboard";
-import ThreatCorrelationGraph from "./components/ThreatCorrelationGraph";
 import { LandingPage } from "./components/landing/LandingPage";
 import { AnalysisProvider, useAnalysis } from "./context/AnalysisContext";
 import { ThemeToggleSwitch } from "./components/ThemeToggleSwitch";
 import { UserAuthModal } from "./components/auth/UserAuthModal";
 import { SystemSettingsModal } from "./components/settings/SystemSettingsModal";
 import { ServerTelemetryModal } from "./components/server/ServerTelemetryModal";
-
-
-
+import { MultiSpeakerNarrator } from './components/copilot/MultiSpeakerNarrator';
+import { useTranslation } from 'react-i18next';
 
 // Modular Lab Components
 import SecurityAnalystPanel from "./components/lab/SecurityAnalystPanel";
@@ -124,7 +119,6 @@ function AnalysisLabWorkspace() {
 
   const currentRole = user?.role || "ANALYST";
 
-  // Determine initial active sub-tab based on user role
   const defaultSubTab = useMemo(() => {
     if (currentRole === "BANK_OFFICER") return "officer";
     if (currentRole === "CITIZEN") return "citizen";
@@ -135,7 +129,6 @@ function AnalysisLabWorkspace() {
     "analyst" | "officer" | "citizen" | "campaign" | "timeline" | "ledger"
   >(defaultSubTab);
 
-  // Sync tab if user switches role dynamically via IAM modal
   useEffect(() => {
     if (currentRole === "BANK_OFFICER" && activeSubTab === "analyst") {
       setActiveSubTab("officer");
@@ -146,82 +139,103 @@ function AnalysisLabWorkspace() {
 
   if (!caseData) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-center space-y-4">
-        <Shield className="w-16 h-16 text-text-muted opacity-40 animate-pulse" />
-        <h3 className="text-lg font-bold font-mono text-text-primary">NO ACTIVE CASE LOADED</h3>
-        <p className="text-sm text-text-muted max-w-md">
-          Please submit a target binary APK via the sandbox submission gateway to begin telemetry compilation.
+      <div className="flex flex-col items-center justify-center py-20 text-center space-y-4 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm p-12">
+        <Shield className="w-12 h-12 text-[var(--text-muted)] opacity-40" />
+        <h3 className="text-base font-mono font-bold text-[var(--text-primary)]">NO ACTIVE CASE LOADED</h3>
+        <p className="text-xs font-mono text-[var(--text-muted)] max-w-md">
+          Submit a target Android binary (.apk) via the submission gateway to compile static and dynamic forensics telemetry.
         </p>
       </div>
     );
   }
 
-  // Filter available tabs according to RBAC constraints
   const allTabs = [
-    { id: "analyst", label: t('security_analyst'), icon: Cpu, roles: ["ANALYST", "ADMIN"] },
-    { id: "officer", label: t('bank_officer'), icon: Briefcase, roles: ["ANALYST", "BANK_OFFICER", "ADMIN"] },
-    { id: "citizen", label: t('citizen_impact'), icon: Globe, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] },
-    { id: "campaign", label: t('campaign_dna'), icon: Network, roles: ["ANALYST", "BANK_OFFICER", "ADMIN"] },
-    { id: "timeline", label: t('timeline'), icon: Clock, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] },
-    { id: "ledger", label: t('evidence_ledger'), icon: Fingerprint, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] }
+    { id: "analyst", label: t('security_analyst') || "Forensic Analysis", icon: Cpu, roles: ["ANALYST", "ADMIN"] },
+    { id: "officer", label: t('bank_officer') || "GRC Compliance", icon: Briefcase, roles: ["ANALYST", "BANK_OFFICER", "ADMIN"] },
+    { id: "citizen", label: t('citizen_impact') || "Citizen Exposure", icon: Globe, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] },
+    { id: "campaign", label: t('campaign_dna') || "Campaign DNA", icon: Network, roles: ["ANALYST", "BANK_OFFICER", "ADMIN"] },
+    { id: "timeline", label: t('timeline') || "Event Timeline", icon: Clock, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] },
+    { id: "ledger", label: t('evidence_ledger') || "Evidence Ledger", icon: Fingerprint, roles: ["ANALYST", "BANK_OFFICER", "CITIZEN", "AUDITOR", "ADMIN"] }
   ];
 
   const allowedTabs = allTabs.filter(tab => tab.roles.includes(currentRole));
 
   return (
-    <div className="space-y-6 max-w-[1600px] mx-auto animate-fadeIn">
+    <div className="space-y-4 max-w-[1600px] mx-auto">
       {/* Target APK Identification Header */}
-      <div className="bg-card border border-card-border rounded-xl p-6 backdrop-blur-md relative overflow-hidden flex flex-col md:flex-row justify-between gap-6">
+      <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm p-5 flex flex-col md:flex-row justify-between gap-6">
         <div className="space-y-2">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-rose-500/10 text-rose-400 border border-rose-500/20">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-sm bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border border-[var(--severity-critical)]/30 uppercase">
               CRITICAL RISKS TARGET DETECTED
             </span>
-            <span className="text-xs font-mono text-text-muted">
-              PKG: {caseData.packageName} v{caseData.versionCode}
+            <span className="text-xs font-mono text-[var(--text-muted)]">
+              PKG: <code className="text-[var(--text-primary)] font-mono">{caseData.packageName} v{caseData.versionCode}</code>
             </span>
-            <span className="text-xs font-mono font-bold px-2.5 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
-              PERSONA: {currentRole}
+            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-sm bg-[var(--bg-panel-alt)] text-[var(--text-muted)] border border-[var(--border)]">
+              ROLE: {currentRole}
             </span>
           </div>
-          <h2 className="text-2xl font-extrabold tracking-tight text-text-primary">
-            {t('lab_metrics')}: {caseData.fileName}
+          <h2 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
+            {caseData.fileName}
           </h2>
-          <p className="text-xs font-mono text-text-secondary truncate max-w-2xl">
+          <p className="text-xs font-mono text-[var(--text-muted)] truncate max-w-2xl">
             SHA256: {caseData.sha256}
           </p>
         </div>
 
-        <div className="flex gap-4 items-center flex-wrap">
-          <div className="text-right">
-            <div className="text-xs font-mono text-text-muted">{t('threat_index')}</div>
-            <div className="text-3xl font-extrabold text-rose-500 font-mono tracking-tight">
-              {caseData.riskScore}/100
+        <div className="flex gap-6 items-center flex-wrap">
+          {/* Signal Bar Risk Meter */}
+          <div className="text-right flex flex-col justify-center">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">TROJAN RISK SCORE</div>
+            <div className="flex items-baseline gap-2 justify-end">
+              <span className="text-3xl font-mono font-bold text-[var(--accent)]">
+                {caseData.riskScore}
+              </span>
+              <span className="text-xs font-mono text-[var(--text-muted)]">/100</span>
+            </div>
+            {/* Segmented meter bar */}
+            <div className="flex gap-1 mt-1 justify-end">
+              {[20, 40, 60, 80, 100].map((step) => (
+                <div
+                  key={step}
+                  className={`w-4 h-1.5 rounded-xs ${
+                    caseData.riskScore >= step
+                      ? step >= 80
+                        ? "bg-[var(--severity-critical)]"
+                        : step >= 50
+                        ? "bg-[var(--severity-high)]"
+                        : "bg-[var(--severity-low)]"
+                      : "bg-[var(--border)]"
+                  }`}
+                />
+              ))}
             </div>
           </div>
-          <div className="w-[3px] h-12 bg-card-border" />
+
+          <div className="w-[1px] h-10 bg-[var(--border)]" />
           <div>
-            <div className="text-xs font-mono text-text-muted">{t('malware_type')}</div>
-            <div className="text-sm font-extrabold text-primary font-mono uppercase">
+            <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">MALWARE CLASSIFICATION</div>
+            <div className="text-sm font-bold text-[var(--accent)] font-mono uppercase">
               {caseData.threatFamily}
             </div>
-            <span className="text-[10px] font-mono text-text-secondary uppercase">
+            <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">
               Confidence {caseData.threatConfidence}%
             </span>
           </div>
-          <div className="w-[3px] h-12 bg-card-border md:block hidden no-print" />
+          <div className="w-[1px] h-10 bg-[var(--border)] md:block hidden no-print" />
           <button
             onClick={() => window.print()}
-            className="flex items-center gap-2 bg-card-secondary hover:bg-primary/10 border border-card-border hover:border-primary/50 text-text-secondary hover:text-text-primary font-bold px-4 py-2.5 rounded-lg text-sm transition-all shadow-sm cursor-pointer no-print"
+            className="flex items-center gap-2 bg-[var(--bg-panel-alt)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-mono font-medium px-3.5 py-2 rounded-sm text-xs transition-colors cursor-pointer no-print"
           >
-            <Download className="w-4 h-4 text-primary" />
-            <span>{t('export_dossier')}</span>
+            <Download className="w-3.5 h-3.5 text-[var(--accent)]" />
+            <span>EXPORT DOSSIER</span>
           </button>
         </div>
       </div>
 
-      {/* Main Tab Deck Header - Role Filtered */}
-      <div className="flex border-b border-card-border pb-3 mb-6 gap-2 overflow-x-auto">
+      {/* Main Tab Bar */}
+      <div className="flex border-b border-[var(--border)] pb-1 gap-1 overflow-x-auto">
         {allowedTabs.map((tab) => {
           const TabIcon = tab.icon;
           const isSelected = activeSubTab === tab.id;
@@ -229,21 +243,21 @@ function AnalysisLabWorkspace() {
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider border rounded-lg transition-all duration-200 shrink-0 cursor-pointer ${
+              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-mono font-medium uppercase tracking-wider border-b-2 transition-colors shrink-0 cursor-pointer ${
                 isSelected
-                  ? "bg-primary/10 text-primary border-primary/40 shadow-sm font-bold"
-                  : "bg-transparent border-transparent text-text-secondary hover:text-text-primary hover:bg-primary/10"
+                  ? "border-[var(--accent)] text-[var(--text-primary)] bg-[var(--bg-panel)]"
+                  : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel)]"
               }`}
             >
-              <TabIcon className="w-4 h-4" />
+              <TabIcon className={`w-3.5 h-3.5 ${isSelected ? "text-[var(--accent)]" : "text-[var(--text-muted)]"}`} />
               <span>{tab.label}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Sub-panel Content switches */}
-      <div className="bg-card border border-card-border rounded-xl p-6 backdrop-blur-md min-h-[500px]">
+      {/* Workspace Panel */}
+      <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm p-5 min-h-[500px]">
         {activeSubTab === "analyst" && currentRole !== "BANK_OFFICER" && currentRole !== "CITIZEN" && <SecurityAnalystPanel />}
         {activeSubTab === "officer" && currentRole !== "CITIZEN" && <GrcCompliancePanel />}
         {activeSubTab === "citizen" && <CitizenImpactPanel />}
@@ -271,12 +285,8 @@ function AnalysisLabWorkspace() {
   );
 }
 
-import { MultiSpeakerNarrator } from '@/components/copilot/MultiSpeakerNarrator';
-import { useTranslation } from 'react-i18next';
-
 function MainAppShell() {
   const { triggerAnalysis, casesAnalyzed, language, setLanguage } = useAnalysis();
-
   const { t } = useTranslation();
   const [activeView, setActiveView] = useState<"LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB">("LANDING");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
@@ -290,10 +300,10 @@ function MainAppShell() {
 
   const [copilotBriefingText, setCopilotBriefingText] = useState<Record<string, string>>({
     en: "Active campaigns detected targeting mobile banking applications via OTP interception and accessibility abuse. Immediate review of high-risk cases recommended.",
-    hi: "ओटीपी इंटरसेप्शन और एक्सेसिबिलिटी दुरुपयोग के माध्यम से बैंकिंग अनुप्रयोगों को लक्षित करने वाले सक्रिय अभियानों का पता चला है। उच्च जोखिम वाले मामलों की तत्काल समीक्षा की सिफारिश की जाती है।",
-    te: "OTP అంతరాయం మరియు యాక్సెసిబిలిటీ దుర్వినియోగం ద్వారా బ్యాంకింగ్ అప్లికేషన్‌లను లక్ష్యంగా చేసుకునే క్రియాశీల ప్రచారాలు కనుగొనబడ్డాయి. అధిక ప్రమాదం ఉన్న కేసుల తక్షణ సమీక్ష సిఫార్సు చేయబడింది.",
-    kn: "OTP ಪ್ರತಿಬಂಧ ಮತ್ತು ಪ್ರವೇಶಿಸುವಿಕೆ ದುರುಪಯೋಗದ ಮೂಲಕ ಬ್ಯಾಂಕಿಂಗ್ ಅಪ್ಲಿಕೇಶನ್‌ಗಳನ್ನು ಗುರಿಯಾಗಿಸುವ ಸಕ್ರಿಯ ಪ್ರಚಾರಗಳನ್ನು ಪತ್ತೆಹಚ್ಚಲಾಗಿದೆ. ಹೆಚ್ಚಿನ ಅಪಾಯದ ಪ್ರಕರಣಗಳ ತಕ್ಷಣದ ಪರಿಶೀಲನೆಯನ್ನು ಶಿಫಾರಸು ಮಾಡಲಾಗಿದೆ.",
-    ta: "OTP இடைமறிப்பு மற்றும் அணுகல் துஷ்பிரயோகம் மூலம் வங்கி பயன்பாடுகளை இலக்காகக் கொண்ட செயலில் உள்ள பிரச்சாரங்கள் கண்டறியப்பட்டுள்ளன. அதிக ஆபத்துள்ள வழக்குகளை உடனடியாக மதிப்பாய்வு செய்ய பரிந்துரைக்கப்படுகிறது."
+    hi: "ओटीपी इंटरसेप्शन और एक्सेसिबिलिटी दुरुपयोग के माध्यम से बैंकिंग अनुप्रयोगों को लक्षित करने वाले सक्रिय अभियानों का पता चला है।",
+    te: "OTP అంతరాయం మరియు యాక్సెసిబిలిటీ దుర్వినియోగం ద్వారా బ్యాంకింగ్ అప్లికేషన్‌లను లక్ష్యంగా చేసుకునే ప్రచారాలు కనుగొనబడ్డాయి.",
+    kn: "OTP ಪ್ರತಿಬಂಧ ಮತ್ತು ಪ್ರವೇಶಿಸುವಿಕೆ ದುರುಪಯೋಗದ ಮೂಲಕ ಬ್ಯಾಂಕಿಂಗ್ ಅಪ್ಲಿಕೇಶನ್‌ಗಳನ್ನು ಗುರಿಯಾಗಿಸುವ ಸಕ್ರಿಯ ಪ್ರಚಾರಗಳು ಪತ್ತೆಯಾಗಿವೆ.",
+    ta: "OTP இடைமறிப்பு மற்றும் அணுகல் துஷ்பிரயோகம் மூலம் வங்கி பயன்பாடுகளை இலக்காகக் கொண்ட பிரச்சாரங்கள் கண்டறியப்பட்டுள்ளன."
   });
 
   useEffect(() => {
@@ -307,13 +317,6 @@ function MainAppShell() {
       .catch(err => console.error("Failed to load briefing for narrator", err));
   }, []);
 
-  const showNotification = (msg: string) => {
-    setHeaderNotify(msg);
-    setTimeout(() => {
-      setHeaderNotify(null);
-    }, 3500);
-  };
-
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setUploadFile(e.target.files[0]);
@@ -322,35 +325,37 @@ function MainAppShell() {
 
   const startUpload = async () => {
     if (!uploadFile) return;
-    setUploadStatus("Uploading & analyzing target APK with static and AI pipeline...");
+    setUploadStatus("Uploading target APK binary & compiling static/dynamic heuristics...");
     try {
       await triggerAnalysis(uploadFile);
-      setUploadStatus(`Analysis complete for ${uploadFile.name}! Redirecting to Analysis Lab...`);
+      setUploadStatus(`Forensic compilation complete for ${uploadFile.name}. Opening Analysis Lab...`);
       setTimeout(() => {
         setActiveView("ANALYSIS_LAB");
       }, 800);
     } catch (err: any) {
-      setUploadStatus(`Analysis failed: ${err?.message || "Sandbox analysis error"}`);
+      setUploadStatus(`Analysis error: ${err?.message || "Sandbox processing failed"}`);
     }
   };
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background text-text-primary">
-      {/* Interactive Modals */}
+    <div className="flex h-screen overflow-hidden bg-[var(--bg-base)] text-[var(--text-primary)]">
+      {/* Modals */}
       <UserAuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       <SystemSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
       <ServerTelemetryModal isOpen={isServerOpen} onClose={() => setIsServerOpen(false)} />
 
-      {/* Sidebar Section */}
-      <aside className="w-64 bg-card border-r border-card-border flex flex-col">
-        <div className="p-6 border-b border-card-border flex items-center gap-3">
-          <Shield className="w-8 h-8 text-primary" />
+      {/* Sidebar Navigation */}
+      <aside className="w-60 bg-[var(--bg-base)] border-r border-[var(--border)] flex flex-col shrink-0">
+        <div className="p-4 border-b border-[var(--border)] flex items-center gap-3">
+          <div className="w-8 h-8 rounded-sm bg-[var(--bg-panel)] border border-[var(--border)] flex items-center justify-center text-[var(--accent)]">
+            <Shield className="w-5 h-5" />
+          </div>
           <div>
-            <h1 className="font-extrabold tracking-wider text-sm text-text-primary uppercase">
-              BeaconTrap
+            <h1 className="font-bold tracking-wider text-xs text-[var(--text-primary)] font-mono">
+              BEACONTRAP
             </h1>
-            <p className="text-[10px] font-mono text-text-muted">
-              MALWARE INTEL v1.0
+            <p className="text-[10px] font-mono text-[var(--text-muted)]">
+              SOC FORENSICS v1.0
             </p>
           </div>
         </div>
@@ -358,23 +363,24 @@ function MainAppShell() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-background-secondary via-background to-background">
-        {/* Header */}
-        <header className="h-16 border-b border-card-border px-8 flex items-center justify-between relative">
-            <div className="hidden md:flex items-center gap-2">
-              <span className="text-[10px] font-mono text-text-muted uppercase tracking-widest bg-card-secondary px-2 py-1 rounded">
-                {t('system_connected')}
-              </span>
-            </div>
+      <main className="flex-1 flex flex-col overflow-hidden bg-[var(--bg-base)]">
+        {/* Top Header Bar */}
+        <header className="h-12 border-b border-[var(--border)] px-6 flex items-center justify-between bg-[var(--bg-base)]">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[var(--accent-cool)]"></span>
+            <span className="text-[11px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
+              SOC NODE ONLINE // OPERATIONAL
+            </span>
+          </div>
 
           {headerNotify && (
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-card border border-primary/45 px-4 py-2 rounded-lg text-xs font-mono text-primary shadow-[0_0_15px_var(--primary-glow)] z-[200] flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
+            <div className="bg-[var(--bg-panel)] border border-[var(--accent)]/40 px-3 py-1 text-xs font-mono text-[var(--accent)] flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]"></span>
               <span>{headerNotify}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-4 text-text-muted">
+          <div className="flex items-center gap-3 text-[var(--text-muted)]">
             <MultiSpeakerNarrator 
               langCode={language} 
               textToRead={copilotBriefingText[language] || copilotBriefingText.en || ""} 
@@ -383,48 +389,45 @@ function MainAppShell() {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-card border border-card-border text-xs px-2 py-1 rounded text-text-primary focus:outline-none focus:border-primary/50"
+              className="bg-[var(--bg-panel)] border border-[var(--border)] text-xs font-mono px-2 py-1 rounded-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/50"
             >
-              <option value="en">{t('lang_en')}</option>
-              <option value="hi">{t('lang_hi')}</option>
-              <option value="kn">{t('lang_kn')}</option>
-              <option value="ta">{t('lang_ta')}</option>
-              <option value="te">{t('lang_te')}</option>
+              <option value="en">{t('lang_en') || "English"}</option>
+              <option value="hi">{t('lang_hi') || "Hindi"}</option>
+              <option value="kn">{t('lang_kn') || "Kannada"}</option>
+              <option value="ta">{t('lang_ta') || "Tamil"}</option>
+              <option value="te">{t('lang_te') || "Telugu"}</option>
             </select>
 
-            {/* Sun to Moon Animated Light/Dark Mode Toggle */}
             <ThemeToggleSwitch />
 
-            {/* Interactive Header Action Icons */}
             <button 
               onClick={() => setIsServerOpen(true)}
-              className="p-2 rounded-lg hover:bg-card-bg-secondary text-text-muted hover:text-text-primary transition-colors cursor-pointer"
-              title="Infrastructure & Server Telemetry Node Status"
+              className="p-1.5 rounded-sm hover:bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+              title="Infrastructure Telemetry"
             >
               <Server className="w-4 h-4" />
             </button>
 
             <button 
               onClick={() => setIsAuthOpen(true)}
-              className="p-2 rounded-lg hover:bg-card-bg-secondary text-text-muted hover:text-text-primary transition-colors cursor-pointer"
-              title="User Identity, Clearance & Role Session (IAM)"
+              className="p-1.5 rounded-sm hover:bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+              title="Identity & Role Access"
             >
               <Users className="w-4 h-4" />
             </button>
 
             <button 
               onClick={() => setIsSettingsOpen(true)}
-              className="p-2 rounded-lg hover:bg-card-bg-secondary text-text-muted hover:text-text-primary transition-colors cursor-pointer"
-              title="System Heuristics, AI & Web3 Settings"
+              className="p-1.5 rounded-sm hover:bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
+              title="System Configuration"
             >
               <Settings className="w-4 h-4" />
             </button>
           </div>
         </header>
 
-
-        {/* View Switches & Dynamic Content */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-8">
+        {/* Dynamic View Panels */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6">
           {activeView === "LANDING" && (
             <LandingPage
               onLaunchDashboard={() => setActiveView("DASHBOARD")}
@@ -445,19 +448,18 @@ function MainAppShell() {
             />
           )}
 
-
           {activeView === "UPLOAD" && (
-            <div className="max-w-2xl mx-auto space-y-8 py-12">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-extrabold tracking-tight">
-                  APK SUBMISSION SANDBOX
+            <div className="max-w-2xl mx-auto space-y-6 py-8">
+              <div className="space-y-1">
+                <h2 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
+                  APK Forensic Sandbox Gateway
                 </h2>
-                <p className="text-sm text-text-muted font-mono">
-                  SUBMIT ANDROID APPLICATION PACKAGES (APK) FOR FORENSIC DECOMPILATION AND EMULATION
+                <p className="text-xs font-mono text-[var(--text-muted)]">
+                  Upload target Android binaries (.apk) for static decompilation, YARA matching, and dynamic behavior emulation.
                 </p>
               </div>
 
-              <div className="border-2 border-dashed border-card-border hover:border-primary/50 transition-colors rounded-xl p-12 text-center bg-card/30 backdrop-blur-md">
+              <div className="border border-dashed border-[var(--border)] hover:border-[var(--accent)]/60 transition-colors rounded-sm p-8 text-center bg-[var(--bg-panel)]">
                 <input
                   type="file"
                   id="apk-upload"
@@ -465,33 +467,33 @@ function MainAppShell() {
                   className="hidden"
                   onChange={handleFileUpload}
                 />
-                <label htmlFor="apk-upload" className="cursor-pointer space-y-4 block">
-                  <div className="mx-auto w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-                    <Shield className="w-6 h-6" />
+                <label htmlFor="apk-upload" className="cursor-pointer space-y-3 block">
+                  <div className="mx-auto w-10 h-10 rounded-sm bg-[var(--bg-panel-alt)] border border-[var(--border)] flex items-center justify-center text-[var(--accent)]">
+                    <Shield className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="text-primary font-bold hover:underline">
-                      Click to choose a file
+                    <span className="text-[var(--text-primary)] font-mono text-xs font-bold hover:underline">
+                      Select Android APK binary file
                     </span>{" "}
-                    or drag and drop
+                    <span className="text-[var(--text-muted)] text-xs">or drag and drop</span>
                   </div>
-                  <div className="text-xs text-text-muted">
-                    Only Android .apk files up to 200MB
+                  <div className="text-[11px] font-mono text-[var(--text-muted)]">
+                    Maximum file size: 200MB (.apk format)
                   </div>
                 </label>
               </div>
 
               {uploadFile && (
-                <div className="p-4 bg-card/50 border border-card-border rounded-lg flex items-center justify-between">
+                <div className="p-3 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-bold">{uploadFile.name}</p>
-                    <p className="text-xs text-text-muted">
-                      {(uploadFile.size / (1024 * 1024)).toFixed(2)} MB
+                    <p className="text-xs font-mono font-bold text-[var(--text-primary)]">{uploadFile.name}</p>
+                    <p className="text-[10px] font-mono text-[var(--text-muted)]">
+                      Size: {(uploadFile.size / (1024 * 1024)).toFixed(2)} MB
                     </p>
                   </div>
                   <button
                     onClick={startUpload}
-                    className="bg-primary hover:bg-primary-hover text-[var(--btn-copilot-text)] px-4 py-2 rounded-md text-sm font-bold transition-all shadow-[0_0_15px_var(--primary-glow)]"
+                    className="bg-[var(--accent)] hover:bg-[var(--primary-hover)] text-[var(--btn-copilot-text)] px-3.5 py-1.5 rounded-sm text-xs font-mono font-bold transition-colors cursor-pointer"
                   >
                     START ANALYSIS
                   </button>
@@ -499,13 +501,13 @@ function MainAppShell() {
               )}
 
               {uploadStatus && (
-                <div className="p-4 bg-card border border-primary/20 rounded-lg text-sm font-mono text-primary flex items-center justify-between">
-                  <span className="animate-pulse">{uploadStatus}</span>
+                <div className="p-3 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm text-xs font-mono text-[var(--accent)] flex items-center justify-between">
+                  <span>{uploadStatus}</span>
                   <button
                     onClick={() => setActiveView("ANALYSIS_LAB")}
-                    className="flex items-center gap-1.5 text-xs text-primary font-bold hover:underline"
+                    className="flex items-center gap-1 text-xs font-mono text-[var(--text-primary)] hover:underline"
                   >
-                    Go to Lab <ArrowRight className="w-3.5 h-3.5" />
+                    View Lab <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               )}

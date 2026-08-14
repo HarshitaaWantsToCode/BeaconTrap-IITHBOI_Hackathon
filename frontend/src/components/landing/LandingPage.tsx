@@ -1,26 +1,14 @@
 import React, { useState } from "react";
 import { 
-  ShieldCheck, 
-  Sparkles, 
   Cpu, 
   Lock, 
   Share2, 
-  Users, 
   FileCode2, 
   ArrowRight, 
   Activity, 
-  Layers, 
-  CheckCircle2, 
-  AlertTriangle, 
-  Zap, 
   Terminal, 
-  Globe,
-  Radio,
-  FileText,
-  ShieldAlert,
   Play
 } from "lucide-react";
-import { CursorHaloGlow } from "./CursorHaloGlow";
 import { useTranslation } from "react-i18next";
 
 interface LandingPageProps {
@@ -35,9 +23,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onSelectSampleApk
 }) => {
   const { t } = useTranslation();
-  const [selectedDemoApk, setSelectedDemoApk] = useState<string>("01_Official_BOI_Mobile.apk");
+  const [selectedDemoApk, setSelectedDemoApk] = useState<string>("08_Anubis_Overlay_Trojan.apk");
 
-  // Sample data specs for the interactive playground on landing page
   const demoApkData: Record<string, {
     name: string;
     pkg: string;
@@ -60,7 +47,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       name: "04_Game_Mod_Booster.apk",
       pkg: "com.speed.gamebooster.mod",
       risk: 48,
-      malwareType: "Potentially Unwanted Program (PUA) / Adware",
+      malwareType: "Potentially Unwanted Application (PUA)",
       permissions: ["android.permission.INTERNET", "android.permission.ACCESS_NETWORK_STATE", "android.permission.WAKE_LOCK", "android.permission.RECEIVE_BOOT_COMPLETED"],
       summary: "Adware and performance mod requesting persistent background wake locks and boot receivers.",
       status: "SUSPICIOUS"
@@ -85,378 +72,232 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     }
   };
 
-  const activeDemo = demoApkData[selectedDemoApk] || demoApkData["01_Official_BOI_Mobile.apk"];
+  const activeDemo = demoApkData[selectedDemoApk] || demoApkData["08_Anubis_Overlay_Trojan.apk"];
 
   return (
-    <div className="relative min-h-screen bg-[var(--bg-page)] text-[var(--text-primary)] overflow-x-hidden selection:bg-cyan-500/30 selection:text-cyan-300 font-sans transition-colors duration-300">
-      {/* Interactive Cursor Halo Glow Backdrop */}
-      <CursorHaloGlow />
+    <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] font-sans space-y-8 max-w-7xl mx-auto">
+      {/* Top operational banner band */}
+      <div className="border border-[var(--border)] bg-[var(--bg-panel)] rounded-sm p-6 space-y-4">
+        <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
+          <span className="w-2 h-2 rounded-full bg-[var(--accent-cool)]"></span>
+          <span>IITH BOI CYBER SECURITY FORENSICS CONSOLE // NODE v3.8.26</span>
+        </div>
 
-      {/* Decorative Grid & Vignette Background */}
-      <div 
-        className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-25"
-        style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, var(--primary) 1px, transparent 0)`,
-          backgroundSize: "32px 32px"
-        }}
-      />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent blur-3xl pointer-events-none" />
-      <div className="absolute top-[800px] right-0 w-[600px] h-[600px] bg-lime-500/5 dark:bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
-
-      {/* Hero Section */}
-      <section className="relative pt-12 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center space-y-6">
-          
-          {/* Institutional Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 backdrop-blur-md shadow-[0_0_20px_rgba(6,182,212,0.15)] animate-pulse">
-            <ShieldCheck className="w-4 h-4 text-cyan-400" />
-            <span className="text-xs font-mono font-bold tracking-wider uppercase text-cyan-300">
-              IITH BOI Cyber Security Hackathon 2026 // Production Release v3.8.26
-            </span>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div className="space-y-2 max-w-3xl">
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight left-aligned" style={{ color: "var(--text-primary)" }}>
+              BeaconTrap Forensics Console — Android Malware & Banking Trojan Intelligence
+            </h1>
+            <p className="text-xs sm:text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+              Operational malware analysis platform for security analysts and fraud investigation officers. Decompiles Android APKs, calculates trojan risk indices, extracts IOC signatures, and maps ATT&CK matrix techniques.
+            </p>
           </div>
 
-          {/* Main Title */}
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold font-mono tracking-tight text-text-primary max-w-5xl mx-auto leading-tight">
-            BEACONTRAP <br />
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-400 bg-clip-text text-transparent">
-              Autonomous AI & Blockchain
-            </span> <br />
-            Mobile Malware Intelligence
-          </h1>
-
-          {/* Subtitle */}
-          <p className="max-w-3xl mx-auto text-base sm:text-xl text-[var(--text-secondary)] font-sans leading-relaxed">
-            Next-generation automated static & dynamic Android APK decompilation, real-time Gemini AI threat dossier generation, multilingual voice narration, and Ethereum smart contract evidence anchoring.
-          </p>
-
-          {/* Call to Actions */}
-          <div className="pt-4 flex flex-wrap justify-center items-center gap-4">
+          <div className="flex flex-wrap gap-2 shrink-0 font-mono">
             <button
               onClick={onLaunchDashboard}
-              className="px-8 py-4 rounded-xl font-mono text-sm font-bold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 shadow-[0_0_25px_rgba(6,182,212,0.4)] transition-all duration-200 hover:scale-105 flex items-center gap-2 cursor-pointer"
+              className="px-4 py-2.5 rounded-sm text-xs font-bold bg-[var(--accent)] hover:bg-[var(--primary-hover)] text-[var(--btn-copilot-text)] transition-colors flex items-center gap-2 cursor-pointer"
             >
-              <Zap className="w-5 h-5 fill-current" />
-              Launch SOC Command Center
-              <ArrowRight className="w-4 h-4" />
+              <Activity className="w-4 h-4" />
+              <span>SOC COMMAND CENTER</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </button>
 
             <button
               onClick={onUploadApk}
-              className="px-8 py-4 rounded-xl font-mono text-sm font-bold bg-card border border-card-border hover:border-cyan-500/50 text-[var(--text-primary)] hover:bg-card-bg-secondary transition-all duration-200 hover:scale-105 flex items-center gap-2 cursor-pointer backdrop-blur-md"
+              className="px-4 py-2.5 rounded-sm text-xs font-medium bg-[var(--bg-panel-alt)] border border-[var(--border)] transition-colors flex items-center gap-2 cursor-pointer"
+              style={{ color: "var(--text-primary)" }}
             >
-              <FileCode2 className="w-5 h-5 text-cyan-400" />
-              Upload APK for Analysis
+              <FileCode2 className="w-4 h-4 text-[var(--accent)]" />
+              <span>UPLOAD APK</span>
             </button>
           </div>
+        </div>
 
-          {/* Real-time Telemetry Metrics Pill */}
-          <div className="pt-8 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto font-mono text-xs">
-            <div className="p-4 rounded-xl bg-card border border-card-border backdrop-blur-md flex flex-col items-center">
-              <span className="text-text-muted uppercase text-[10px] tracking-wider mb-1">Threat Database</span>
-              <span className="text-xl font-black text-cyan-400">12,408 Signatures</span>
+        {/* Telemetry Metrics Bar with High Contrast Text */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-2 border-t border-[var(--border)] font-mono text-xs">
+          <div className="p-3 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm">
+            <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--text-muted)" }}>YARA SIGNATURE ENGINE</div>
+            <div className="text-base font-bold mt-0.5" style={{ color: "var(--text-primary)" }}>12,408 Signatures</div>
+          </div>
+          <div className="p-3 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm">
+            <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--text-muted)" }}>MITRE ATT&CK MATRIX</div>
+            <div className="text-base font-bold mt-0.5" style={{ color: "var(--accent-cool)" }}>100% Coverage</div>
+          </div>
+          <div className="p-3 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm">
+            <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--text-muted)" }}>CHAIN OF CUSTODY</div>
+            <div className="text-base font-bold mt-0.5" style={{ color: "var(--text-primary)" }}>Ethereum Smart Contract</div>
+          </div>
+          <div className="p-3 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm">
+            <div className="text-[10px] uppercase tracking-wider font-semibold" style={{ color: "var(--text-muted)" }}>ADVISORY LANGUAGES</div>
+            <div className="text-base font-bold mt-0.5" style={{ color: "var(--accent)" }}>5 Regional Dialects</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Forensic Sample Telemetry Sandbox Panel */}
+      <div className="border border-[var(--border)] bg-[var(--bg-panel)] rounded-sm p-5 space-y-4 font-mono">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
+          <div>
+            <div className="flex items-center gap-2 text-[var(--accent)] font-mono text-[10px] uppercase tracking-wider font-bold">
+              <Terminal className="w-3.5 h-3.5" /> SAMPLE BINARY TELEMETRY MATRIX
             </div>
-            <div className="p-4 rounded-xl bg-card border border-card-border backdrop-blur-md flex flex-col items-center">
-              <span className="text-text-muted uppercase text-[10px] tracking-wider mb-1">MITRE ATT&CK</span>
-              <span className="text-xl font-black text-emerald-400">100% Coverage</span>
-            </div>
-            <div className="p-4 rounded-xl bg-card border border-card-border backdrop-blur-md flex flex-col items-center">
-              <span className="text-text-muted uppercase text-[10px] tracking-wider mb-1">Evidence Ledger</span>
-              <span className="text-xl font-black text-indigo-400">Ethereum Anchored</span>
-            </div>
-            <div className="p-4 rounded-xl bg-card border border-card-border backdrop-blur-md flex flex-col items-center">
-              <span className="text-text-muted uppercase text-[10px] tracking-wider mb-1">Multilingual Voice</span>
-              <span className="text-xl font-black text-rose-400">5 Languages</span>
-            </div>
+            <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>
+              Forensic Sample Telemetry Sandbox
+            </h2>
           </div>
 
+          <div className="flex flex-wrap gap-1.5 font-mono text-xs">
+            {Object.keys(demoApkData).map((apkKey) => (
+              <button
+                key={apkKey}
+                onClick={() => setSelectedDemoApk(apkKey)}
+                className={`px-3 py-1.5 rounded-sm transition-colors cursor-pointer ${
+                  selectedDemoApk === apkKey
+                    ? "bg-[var(--accent)] text-[var(--btn-copilot-text)] font-bold"
+                    : "bg-[var(--bg-panel-alt)] border border-[var(--border)]"
+                }`}
+                style={{ color: selectedDemoApk === apkKey ? "var(--btn-copilot-text)" : "var(--text-muted)" }}
+              >
+                {apkKey.split('_')[1]}
+              </button>
+            ))}
+          </div>
         </div>
-      </section>
 
-      {/* Interactive Telemetry Playground Section */}
-      <section className="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="relative border border-card-border bg-card/80 rounded-2xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl overflow-hidden">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-          
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 border-b border-card-border pb-6 mb-6">
-            <div>
-              <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-1">
-                <Terminal className="w-4 h-4" /> Live Interactive Threat Matrix Sandbox
+        {/* Live Preview Specs */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 font-mono text-xs">
+          {/* Left Risk Rating Card */}
+          <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm flex flex-col justify-between space-y-4">
+            <div className="flex justify-between items-center">
+              <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>THREAT SCORE INDEX</span>
+              <span className={`px-2 py-0.5 rounded-sm text-[10px] font-bold uppercase ${
+                activeDemo.status === "CLEAN" ? "bg-[var(--severity-low)]/15 text-[var(--severity-low)] border border-[var(--severity-low)]/30" :
+                activeDemo.status === "SUSPICIOUS" ? "bg-[var(--severity-medium)]/15 text-[var(--severity-medium)] border border-[var(--severity-medium)]/30" :
+                "bg-[var(--severity-critical)]/15 text-[var(--severity-critical)] border border-[var(--severity-critical)]/30"
+              }`}>
+                {activeDemo.status}
+              </span>
+            </div>
+
+            <div className="text-center py-2 space-y-2">
+              <div className="flex items-baseline justify-center gap-1">
+                <span className="text-5xl font-mono font-bold text-[var(--accent)]">
+                  {activeDemo.risk}
+                </span>
+                <span className="text-sm font-mono" style={{ color: "var(--text-muted)" }}>/100</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold font-mono text-[var(--text-primary)]">
-                Instant Telemetry Preview
-              </h2>
-              <p className="text-sm text-[var(--text-secondary)] font-sans mt-1">
-                Select a sample APK to inspect how BeaconTrap extracts permissions, calculates threat scores, and generates AI dossiers in real time.
+
+              {/* Horizontal Segmented Bar Gauge */}
+              <div className="flex gap-1 justify-center max-w-[160px] mx-auto pt-1">
+                {[20, 40, 60, 80, 100].map((step) => (
+                  <div
+                    key={step}
+                    className={`flex-1 h-2 rounded-xs ${
+                      activeDemo.risk >= step
+                        ? step >= 80
+                          ? "bg-[var(--severity-critical)]"
+                          : step >= 50
+                          ? "bg-[var(--severity-high)]"
+                          : "bg-[var(--severity-low)]"
+                        : "bg-[var(--border)]"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <p className="text-xs font-sans font-semibold pt-1" style={{ color: "var(--text-primary)" }}>
+                {activeDemo.malwareType}
               </p>
             </div>
 
-            {/* Selector Buttons */}
-            <div className="flex flex-wrap gap-2">
-              {Object.keys(demoApkData).map((apkKey) => (
-                <button
-                  key={apkKey}
-                  onClick={() => setSelectedDemoApk(apkKey)}
-                  className={`px-3 py-2 rounded-lg font-mono text-xs transition-all cursor-pointer ${
-                    selectedDemoApk === apkKey
-                      ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400 font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)]"
-                      : "bg-card-bg-secondary text-text-muted border border-card-border hover:border-cyan-500/40"
-                  }`}
-                >
-                  {apkKey.split('_')[1]}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Active Preview Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 font-mono text-xs">
-            {/* Left: Score Card */}
-            <div className="p-6 rounded-xl border border-card-border bg-card-bg-secondary flex flex-col justify-between space-y-4">
-              <div className="flex justify-between items-start">
-                <span className="text-[10px] text-text-muted uppercase tracking-widest">Threat Index Score</span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  activeDemo.status === "CLEAN" ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" :
-                  activeDemo.status === "SUSPICIOUS" ? "bg-amber-500/20 text-amber-400 border border-amber-500/30" :
-                  "bg-rose-500/20 text-rose-400 border border-rose-500/30 animate-pulse"
-                }`}>
-                  {activeDemo.status}
-                </span>
-              </div>
-
-              <div className="text-center py-4">
-                <span className={`text-6xl font-black font-mono ${
-                  activeDemo.risk < 35 ? "text-emerald-400" :
-                  activeDemo.risk < 70 ? "text-amber-400" : "text-rose-500"
-                }`}>
-                  {activeDemo.risk}
-                </span>
-                <span className="text-sm font-bold text-text-muted"> / 100</span>
-                <p className="text-xs text-text-secondary font-sans mt-2 font-semibold">
-                  {activeDemo.malwareType}
-                </p>
-              </div>
-
-              <button
-                onClick={() => {
-                  if (onSelectSampleApk) onSelectSampleApk(activeDemo.name);
-                  onLaunchDashboard();
-                }}
-                className="w-full py-2.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 hover:border-cyan-400 transition-all font-bold uppercase text-[11px] flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <Play className="w-3.5 h-3.5 fill-current" />
-                Analyze Deep Technical Lab
-              </button>
-            </div>
-
-            {/* Middle & Right: Telemetry & Permissions */}
-            <div className="lg:col-span-2 space-y-4">
-              <div className="p-4 rounded-xl border border-card-border bg-card-bg-secondary space-y-2">
-                <div className="flex justify-between items-center text-text-muted text-[10px] uppercase">
-                  <span>Target Package</span>
-                  <span>Extracted Binary Attributes</span>
-                </div>
-                <div className="text-sm font-bold text-cyan-300 font-mono break-all">
-                  {activeDemo.pkg}
-                </div>
-                <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed pt-1">
-                  {activeDemo.summary}
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl border border-card-border bg-card-bg-secondary space-y-2">
-                <span className="text-[10px] text-text-muted uppercase tracking-widest block">
-                  Extracted Android Manifest Permissions ({activeDemo.permissions.length})
-                </span>
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {activeDemo.permissions.map((perm, idx) => (
-                    <span
-                      key={idx}
-                      className={`px-2 py-1 rounded text-[10px] font-mono border ${
-                        perm.includes("ACCESSIBILITY") || perm.includes("SMS") || perm.includes("ALERT")
-                          ? "bg-rose-500/10 text-rose-300 border-rose-500/30 font-bold"
-                          : "bg-cyan-500/10 text-cyan-300 border-cyan-500/20"
-                      }`}
-                    >
-                      {perm}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Feature Capabilities Grid */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center space-y-3 mb-12">
-          <div className="text-cyan-400 font-mono text-xs uppercase tracking-widest font-bold">
-            Comprehensive Cyber Defense Architecture
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-mono text-[var(--text-primary)]">
-            Core Threat Intelligence Engine Features
-          </h2>
-          <p className="text-base text-[var(--text-secondary)] max-w-2xl mx-auto font-sans">
-            Engineered specifically for the Indian banking ecosystem and law enforcement agencies to counter mobile Trojans.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          
-          {/* Card 1 */}
-          <div className="group relative border border-card-border hover:border-cyan-500/50 bg-card rounded-2xl p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/10">
-            <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400 mb-4 group-hover:scale-110 transition-transform">
-              <Cpu className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold font-mono text-[var(--text-primary)] mb-2">
-              Static & Dynamic Decompilation
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-              Automated binary XML manifest parsing, DEX string extraction, obfuscation index calculation, and malicious package detection without needing emulation overhead.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="group relative border border-card-border hover:border-cyan-500/50 bg-card rounded-2xl p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/10">
-            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400 mb-4 group-hover:scale-110 transition-transform">
-              <Sparkles className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold font-mono text-[var(--text-primary)] mb-2">
-              Multilingual AI Copilot & Voice Narrator
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-              Powered by Google Gemini models with native 5-language voice narration (English, Hindi, Telugu, Kannada, Tamil) for instant executive briefings and field advisories.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="group relative border border-card-border hover:border-cyan-500/50 bg-card rounded-2xl p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/10">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 mb-4 group-hover:scale-110 transition-transform">
-              <Lock className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold font-mono text-[var(--text-primary)] mb-2">
-              Ethereum Smart Contract Evidence Ledger
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-              Immutable SHA-256 evidence anchoring on Ethereum blockchain smart contracts (`EvidenceAnchor.sol`), ensuring cryptographic chain of custody for legal prosecution.
-            </p>
-          </div>
-
-          {/* Card 4 */}
-          <div className="group relative border border-card-border hover:border-cyan-500/50 bg-card rounded-2xl p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/10">
-            <div className="w-12 h-12 rounded-xl bg-rose-500/10 border border-rose-500/20 flex items-center justify-center text-rose-400 mb-4 group-hover:scale-110 transition-transform">
-              <Share2 className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold font-mono text-[var(--text-primary)] mb-2">
-              Graph DNA Malware Network Topology
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-              Interactive force-directed graph mapping relationships between malware hashes, command-and-control IP addresses, malicious domains, and Trojan family clusters.
-            </p>
-          </div>
-
-          {/* Card 5 */}
-          <div className="group relative border border-card-border hover:border-cyan-500/50 bg-card rounded-2xl p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/10">
-            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4 group-hover:scale-110 transition-transform">
-              <Users className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold font-mono text-[var(--text-primary)] mb-2">
-              Role-Tailored Intelligence Views
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-              Dedicated operational dashboards designed specifically for Security Analysts (technical forensics), Bank Executive Officers (GRC compliance), and Citizen Impact alerts.
-            </p>
-          </div>
-
-          {/* Card 6 */}
-          <div className="group relative border border-card-border hover:border-cyan-500/50 bg-card rounded-2xl p-6 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 shadow-lg hover:shadow-cyan-500/10">
-            <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-110 transition-transform">
-              <Activity className="w-6 h-6" />
-            </div>
-            <h3 className="text-lg font-bold font-mono text-[var(--text-primary)] mb-2">
-              Automated MITRE ATT&CK Mapping
-            </h3>
-            <p className="text-xs text-[var(--text-secondary)] font-sans leading-relaxed">
-              Instant alignment with MITRE Mobile framework techniques (T1400 Accessibility Abuse, T1417 Input Interception, T1624 Overlay Injection, T1475 Malicious APK Delivery).
-            </p>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Architecture Breakdown Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-card-border">
-        <div className="text-center space-y-3 mb-12">
-          <div className="text-cyan-400 font-mono text-xs uppercase tracking-widest font-bold">
-            End-to-End Execution Flow
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold font-mono text-[var(--text-primary)]">
-            Intelligence Ingestion Pipeline
-          </h2>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 font-mono text-xs">
-          
-          <div className="p-5 rounded-xl bg-card border border-card-border flex flex-col items-center text-center space-y-2">
-            <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">1</div>
-            <span className="font-bold text-text-primary uppercase text-[11px]">APK Ingestion</span>
-            <span className="text-[10px] text-text-muted font-sans">Multi-part client drag & drop upload with client SHA-256 calculation.</span>
-          </div>
-
-          <div className="p-5 rounded-xl bg-card border border-card-border flex flex-col items-center text-center space-y-2">
-            <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">2</div>
-            <span className="font-bold text-text-primary uppercase text-[11px]">Static Parser</span>
-            <span className="text-[10px] text-text-muted font-sans">Extract permissions, activities, receivers, and DEX strings via zip engine.</span>
-          </div>
-
-          <div className="p-5 rounded-xl bg-card border border-card-border flex flex-col items-center text-center space-y-2">
-            <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">3</div>
-            <span className="font-bold text-text-primary uppercase text-[11px]">Heuristic Rules</span>
-            <span className="text-[10px] text-text-muted font-sans">Calculate risk score, malware family, and IOC severity ratings.</span>
-          </div>
-
-          <div className="p-5 rounded-xl bg-card border border-card-border flex flex-col items-center text-center space-y-2">
-            <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">4</div>
-            <span className="font-bold text-text-primary uppercase text-[11px]">AI Copilot Dossier</span>
-            <span className="text-[10px] text-text-muted font-sans">Gemini LLM synthesizes multilingual reports and TTS audio scripts.</span>
-          </div>
-
-          <div className="p-5 rounded-xl bg-card border border-card-border flex flex-col items-center text-center space-y-2">
-            <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">5</div>
-            <span className="font-bold text-text-primary uppercase text-[11px]">Blockchain Ledger</span>
-            <span className="text-[10px] text-text-muted font-sans">Anchor forensic digest hash into Ethereum smart contract block.</span>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-t border-card-border bg-card/60 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto backdrop-blur-md">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6 font-mono text-xs">
-          <div className="flex items-center gap-3">
-            <ShieldCheck className="w-6 h-6 text-cyan-400" />
-            <div>
-              <span className="font-bold text-text-primary uppercase text-sm block">BeaconTrap Cyber Intel</span>
-              <span className="text-text-muted text-[10px]">Built for IITH & Bank of India Cyber Security Hackathon 2026</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
             <button
-              onClick={onLaunchDashboard}
-              className="px-4 py-2 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 transition-all font-bold cursor-pointer uppercase text-[11px]"
+              onClick={() => {
+                if (onSelectSampleApk) onSelectSampleApk(activeDemo.name);
+                onLaunchDashboard();
+              }}
+              className="w-full py-2 bg-[var(--bg-panel)] border border-[var(--border)] transition-colors font-mono font-medium text-xs flex items-center justify-center gap-2 cursor-pointer rounded-sm"
+              style={{ color: "var(--text-primary)" }}
             >
-              Open Dashboard
-            </button>
-            <button
-              onClick={onUploadApk}
-              className="px-4 py-2 rounded-lg bg-card-bg-secondary hover:bg-card border border-card-border text-[var(--text-primary)] transition-all font-bold cursor-pointer uppercase text-[11px]"
-            >
-              Upload APK
+              <Play className="w-3 h-3 text-[var(--accent)]" />
+              <span>OPEN ANALYSIS LAB</span>
             </button>
           </div>
+
+          {/* Right Details */}
+          <div className="lg:col-span-2 space-y-3">
+            <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-1.5">
+              <div className="flex justify-between items-center text-[10px] uppercase" style={{ color: "var(--text-muted)" }}>
+                <span>TARGET PACKAGE NAME</span>
+                <span>FILE: {activeDemo.name}</span>
+              </div>
+              <div className="text-xs font-mono font-bold text-[var(--accent)] break-all">
+                {activeDemo.pkg}
+              </div>
+              <p className="text-xs font-sans leading-relaxed pt-1" style={{ color: "var(--text-muted)" }}>
+                {activeDemo.summary}
+              </p>
+            </div>
+
+            <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-2">
+              <span className="text-[10px] uppercase tracking-wider block" style={{ color: "var(--text-muted)" }}>
+                EXTRACTED MANIFEST PERMISSIONS ({activeDemo.permissions.length})
+              </span>
+              <div className="flex flex-wrap gap-1.5">
+                {activeDemo.permissions.map((perm, idx) => (
+                  <span
+                    key={idx}
+                    className={`px-2 py-1 rounded-sm text-[10px] font-mono border ${
+                      perm.includes("ACCESSIBILITY") || perm.includes("SMS") || perm.includes("ALERT")
+                        ? "bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border-[var(--severity-critical)]/30 font-bold"
+                        : "bg-[var(--bg-panel)] border-[var(--border)]"
+                    }`}
+                    style={
+                      !perm.includes("ACCESSIBILITY") && !perm.includes("SMS") && !perm.includes("ALERT")
+                        ? { color: "var(--text-muted)" }
+                        : {}
+                    }
+                  >
+                    {perm}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
-      </footer>
+      </div>
+
+      {/* Forensics Feature Modules */}
+      <div className="space-y-3 font-mono">
+        <div className="text-[10px] font-mono font-semibold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+          FORENSIC ENGINE CAPABILITIES
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm space-y-2">
+            <Cpu className="w-5 h-5 text-[var(--accent)]" />
+            <h3 className="text-sm font-mono font-bold" style={{ color: "var(--text-primary)" }}>Static & Dynamic Decompilation</h3>
+            <p className="text-xs leading-relaxed font-sans" style={{ color: "var(--text-muted)" }}>
+              Automated binary XML manifest parsing, DEX string extraction, obfuscation index calculation, and dangerous permission flag checks.
+            </p>
+          </div>
+
+          <div className="p-4 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm space-y-2">
+            <Lock className="w-5 h-5 text-[var(--accent-cool)]" />
+            <h3 className="text-sm font-mono font-bold" style={{ color: "var(--text-primary)" }}>Ethereum Evidence Ledger</h3>
+            <p className="text-xs leading-relaxed font-sans" style={{ color: "var(--text-muted)" }}>
+              Immutable SHA-256 digest hashing anchored onto Ethereum smart contracts (`EvidenceAnchor.sol`), ensuring courtroom chain-of-custody admissibility.
+            </p>
+          </div>
+
+          <div className="p-4 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm space-y-2">
+            <Share2 className="w-5 h-5 text-[var(--severity-high)]" />
+            <h3 className="text-sm font-mono font-bold" style={{ color: "var(--text-primary)" }}>Graph DNA & C2 Topology</h3>
+            <p className="text-xs leading-relaxed font-sans" style={{ color: "var(--text-muted)" }}>
+              Interactive network topology graph mapping connections between malware samples, C2 IP addresses, exfiltration domains, and trojan clusters.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

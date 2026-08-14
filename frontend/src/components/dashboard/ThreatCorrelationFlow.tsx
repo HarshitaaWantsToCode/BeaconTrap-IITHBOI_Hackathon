@@ -22,12 +22,12 @@ interface ThreatCorrelationFlowProps {
 }
 
 const NODE_COLORS: Record<CorrelationFlowNode["type"], { border: string; bg: string; text: string }> = {
-  apk: { border: "var(--node-center-stroke)", bg: "var(--node-center-fill)", text: "var(--node-center-stroke)" },
-  domain: { border: "var(--node-domain-stroke)", bg: "var(--node-domain-fill)", text: "var(--node-domain-stroke)" },
-  ip: { border: "var(--node-ip-stroke)", bg: "var(--node-ip-fill)", text: "var(--node-ip-stroke)" },
-  family: { border: "var(--node-family-stroke)", bg: "var(--node-family-fill)", text: "var(--node-family-stroke)" },
-  mitre: { border: "var(--node-mitre-stroke)", bg: "var(--node-mitre-fill)", text: "var(--node-mitre-stroke)" },
-  campaign: { border: "var(--node-sample-stroke)", bg: "var(--node-sample-fill)", text: "var(--node-sample-stroke)" },
+  apk: { border: "var(--severity-critical)", bg: "var(--bg-panel-alt)", text: "var(--severity-critical)" },
+  domain: { border: "var(--severity-high)", bg: "var(--bg-panel-alt)", text: "var(--severity-high)" },
+  ip: { border: "var(--severity-critical)", bg: "var(--bg-panel-alt)", text: "var(--severity-critical)" },
+  family: { border: "var(--accent)", bg: "var(--bg-panel-alt)", text: "var(--accent)" },
+  mitre: { border: "var(--accent-cool)", bg: "var(--bg-panel-alt)", text: "var(--accent-cool)" },
+  campaign: { border: "var(--accent-cool)", bg: "var(--bg-panel-alt)", text: "var(--accent-cool)" },
 };
 
 function IntelNode({ data }: { data: { label: string; sublabel?: string; type: CorrelationFlowNode["type"]; risk: number } }) {
@@ -35,27 +35,26 @@ function IntelNode({ data }: { data: { label: string; sublabel?: string; type: C
 
   return (
     <div
-      className="rounded-xl border-2 px-3 py-2 min-w-[120px] max-w-[160px] shadow-lg transition-colors duration-200"
+      className="rounded-sm border px-3 py-2 min-w-[120px] max-w-[160px] transition-colors font-mono"
       style={{
         borderColor: colors.border,
         background: colors.bg,
-        boxShadow: `0 0 20px ${colors.border}33`,
       }}
     >
-      <Handle type="target" position={Position.Top} className="!bg-[var(--card-border)] !w-2 !h-2 !border-0" />
-      <div className="text-[8px] font-mono uppercase tracking-widest text-text-muted mb-0.5">
+      <Handle type="target" position={Position.Top} className="!bg-[var(--border)] !w-2 !h-2 !border-0" />
+      <div className="text-[8px] font-mono uppercase tracking-wider text-[var(--text-muted)] mb-0.5 font-semibold">
         {data.type.replace("_", " ")}
       </div>
       <div className="text-[10px] font-mono font-bold truncate" style={{ color: colors.text }}>
         {data.label}
       </div>
       {data.sublabel && (
-        <div className="text-[8px] font-mono text-text-muted truncate">{data.sublabel}</div>
+        <div className="text-[8px] font-mono text-[var(--text-muted)] truncate">{data.sublabel}</div>
       )}
       <div className="text-[8px] font-mono mt-1" style={{ color: colors.text }}>
         Risk: {data.risk}
       </div>
-      <Handle type="source" position={Position.Bottom} className="!bg-[var(--card-border)] !w-2 !h-2 !border-0" />
+      <Handle type="source" position={Position.Bottom} className="!bg-[var(--border)] !w-2 !h-2 !border-0" />
     </div>
   );
 }
@@ -91,9 +90,9 @@ export default function ThreatCorrelationFlow({ nodes: rawNodes, edges: rawEdges
       target: e.target,
       label: e.label,
       animated: true,
-      style: { stroke: "var(--primary)", strokeWidth: 1.5 },
+      style: { stroke: "var(--accent)", strokeWidth: 1.5 },
       labelStyle: { fill: "var(--text-muted)", fontSize: 8, fontFamily: "monospace" },
-      labelBgStyle: { fill: "var(--card)", fillOpacity: 0.85 },
+      labelBgStyle: { fill: "var(--bg-panel)", fillOpacity: 0.85 },
     }));
 
     return { nodes: flowNodes, edges: flowEdges };
@@ -106,7 +105,7 @@ export default function ThreatCorrelationFlow({ nodes: rawNodes, edges: rawEdges
       badge="CORRELATION ENGINE"
       noPadding
     >
-      <div className="h-[380px] transition-colors duration-200" style={{ backgroundColor: "var(--graph-bg)" }}>
+      <div className="h-[380px] transition-colors" style={{ backgroundColor: "var(--bg-base)" }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -117,13 +116,13 @@ export default function ThreatCorrelationFlow({ nodes: rawNodes, edges: rawEdges
           minZoom={0.4}
           maxZoom={1.8}
         >
-          <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="var(--reactflow-dot-color)" />
-          <Controls className="!bg-card/85 !border-card-border !rounded-lg [&>button]:!bg-card [&>button]:!border-card-border [&>button]:!text-text-secondary [&>button:hover]:!text-primary transition-all duration-200" />
+          <Background variant={BackgroundVariant.Dots} gap={20} size={1} color="var(--border)" />
+          <Controls className="!bg-[var(--bg-panel)] !border-[var(--border)] !rounded-sm [&>button]:!bg-[var(--bg-panel)] [&>button]:!border-[var(--border)] [&>button]:!text-[var(--text-muted)] [&>button:hover]:!text-[var(--accent)] transition-all" />
           <MiniMap
             nodeColor={(n) => NODE_COLORS[(n.data as { type: CorrelationFlowNode["type"] }).type]?.border ?? "var(--text-muted)"}
-            maskColor="rgba(2, 6, 23, 0.7)"
-            bgColor="rgba(11, 17, 30, 0.9)"
-            className="!border-card-border !rounded-lg transition-all duration-200"
+            maskColor="rgba(0, 0, 0, 0.4)"
+            bgColor="var(--bg-panel)"
+            className="!border-[var(--border)] !rounded-sm transition-all"
           />
         </ReactFlow>
       </div>
