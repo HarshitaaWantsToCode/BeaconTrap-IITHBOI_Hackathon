@@ -134,9 +134,10 @@ export const mockCriticalCaseData: CaseDataPayload = {
     fraudType: "Identity Theft, Credentials Harvesting & Financial Fraud (₹1.5Cr - ₹3Cr exposure)",
     priority: "Critical Priority"
   }),
-  blockchainTxHash: "0x7d9f7831ac1352e89645a272314541991a92e1069b2241cf1352e89645a27231",
-  blockchainBlock: 1782345,
-  blockchainTimestamp: new Date("2026-07-16T18:15:00Z"),
+  blockchainTxHash: null,
+  blockchainBlock: null,
+  blockchainTimestamp: null,
+
   analystReport: `## Forensic Analysis Report - BOI RAT Trojan\n\n### Executive Summary\nThe sample \`boi_safe.apk\` was detected as a highly critical banking trojan targeting customers of Bank of India. It utilizes advanced accessibility hijacking capabilities combined with silent SMS exfiltration to bypass multi-factor authentication controls.\n\n### Technical Findings\n1. **Overlay attack vector**: The application registers a background service that polls the current package window. Once the official BOI application starts, a custom Android window overlay is rendered containing input forms for username, password, and transaction PIN.\n2. **MFA Interception**: The SMS broadcast receiver is registered with a high priority (999), intercepting transaction codes and suppressing user notifications.`,
   officerReport: `## GRC Advisory & Directive Action Plan\n\n### Regulatory Impact\n* **Section 8 (DPDP Act, 2023)**: Direct breach of consumer personal data protections due to credential harvesting.\n* **CERT-In cyber-incident compliance**: Immediate registration mandatory.\n\n### Urgent Countermeasures\n1. Issue ISP DNS sinkhole request for \`update-server-v3.net\`.\n2. Push customer warnings on bank mobile channels advising against sideloaded APK installations.`,
   multilingualReports: JSON.stringify({
@@ -331,13 +332,14 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
   const [casesAnalyzed, setCasesAnalyzed] = useState<number>(142);
   const [feedList, setFeedList] = useState<AlertItem[]>(INITIAL_THREATS);
 
-  const [caseData, setCaseData] = useState<CaseDataPayload | null>(mockCriticalCaseData);
+  const [caseData, setCaseData] = useState<CaseDataPayload | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [campaignGraph, setCampaignGraph] = useState<{ nodes: GraphNode[]; edges: GraphEdge[] } | null>(mockCampaignGraphData);
-  const [timeline, setTimeline] = useState<TimelineEventData[] | null>(mockTimelineData);
-  const [executiveSummary, setExecutiveSummary] = useState<ExecutiveSummaryData | null>(mockExecutiveSummaryData);
+  const [campaignGraph, setCampaignGraph] = useState<{ nodes: GraphNode[]; edges: GraphEdge[] } | null>(null);
+  const [timeline, setTimeline] = useState<TimelineEventData[] | null>(null);
+  const [executiveSummary, setExecutiveSummary] = useState<ExecutiveSummaryData | null>(null);
+
 
   const triggerAnalysis = async (file: File) => {
     setIsLoading(true);
@@ -381,9 +383,10 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     const seed = parseInt(computedSha256.slice(0, 4), 16) || 1234;
     const sanitizedPkg = "com." + file.name.toLowerCase().replace(/[^a-z0-9]/g, "") + ".app";
 
-    const isTrojan = anyMatch(fnLower, ["trojan", "spy", "anubis", "cerberus", "sms", "hack", "intercept", "boi_safe"]);
-    const isClean = anyMatch(fnLower, ["clean", "safe", "legit", "official", "trusted", "bank"]) && !isTrojan;
-    const isPup = anyMatch(fnLower, ["mod", "game", "helper", "tool", "utility", "pdf", "viewer"]) && !isTrojan;
+    const isTrojan = anyMatch(fnLower, ["trojan", "anubis", "cerberus", "spynote", "overlay", "injector"]);
+    const isSpy = anyMatch(fnLower, ["spy", "rat", "stealer", "hack"]);
+    const isClean = anyMatch(fnLower, ["clean", "safe", "legit", "official", "trusted", "bank", "wifi", "connect", "call_recorder", "recorder"]) && !isTrojan && !isSpy;
+    const isPup = anyMatch(fnLower, ["mod", "game", "booster", "utility", "pdf", "viewer"]) && !isTrojan && !isSpy;
 
     let dynamicRiskScore = 0;
     let dynamicMalwareType = "";
@@ -395,16 +398,15 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
     let dynamicIocs: { type: string; value: string; severity: string }[] = [];
 
     if (isTrojan) {
-      dynamicRiskScore = 84 + (seed % 13);
+      dynamicRiskScore = 88 + (seed % 10); // Score: 88-97
       dynamicMalwareType = "Banking Trojan / SMS Interceptor";
-      dynamicThreatFamily = "Anubis / Cerberus Banking Trojan";
+      dynamicThreatFamily = "Anubis / Cerberus Trojan";
       dynamicPriority = "Critical Priority";
       dynamicFraudType = "Financial Credential Harvesting & OTP Theft";
       dynamicPermissions = [
         "android.permission.INTERNET",
         "android.permission.RECEIVE_SMS",
         "android.permission.READ_SMS",
-        "android.permission.SEND_SMS",
         "android.permission.BIND_ACCESSIBILITY_SERVICE",
         "android.permission.SYSTEM_ALERT_WINDOW"
       ];
@@ -418,16 +420,35 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         { type: "Domain", value: `update-server-v${(seed % 9) + 1}.net`, severity: "HIGH" },
         { type: "SHA256", value: computedSha256, severity: "CRITICAL" }
       ];
+    } else if (isSpy) {
+      dynamicRiskScore = 65 + (seed % 15); // Score: 65-79 (Spyware)
+      dynamicMalwareType = "Commercial Spyware / Remote RAT";
+      dynamicThreatFamily = "Mobile Surveillance Tool";
+      dynamicPriority = "High Risk Exposure";
+      dynamicFraudType = "Unauthorized Remote Telemetry Monitoring";
+      dynamicPermissions = [
+        "android.permission.INTERNET",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_PHONE_STATE"
+      ];
+      dynamicMitreTags = [
+        { id: "T1429", name: "Audio Capture" },
+        { id: "T1417", name: "Input Interception" }
+      ];
+      dynamicIocs = [
+        { type: "Domain", value: `analytics-collector-${(seed % 50) + 1}.com`, severity: "HIGH" },
+        { type: "SHA256", value: computedSha256, severity: "HIGH" }
+      ];
     } else if (isClean) {
-      dynamicRiskScore = 14 + (seed % 18);
+      dynamicRiskScore = 12 + (seed % 12); // Score: 12-23 (Safe)
       dynamicMalwareType = "Clean Mobile Application";
       dynamicThreatFamily = "Verified Application";
-      dynamicPriority = "Low Exposure";
+      dynamicPriority = "Low Risk";
       dynamicFraudType = "None - Verified Clean Binary";
       dynamicPermissions = [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.VIBRATE"
+        "android.permission.WAKE_LOCK"
       ];
       dynamicMitreTags = [
         { id: "T1475", name: "Standard Application Delivery" }
@@ -436,7 +457,7 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
         { type: "SHA256", value: computedSha256, severity: "LOW" }
       ];
     } else if (isPup) {
-      dynamicRiskScore = 38 + (seed % 25);
+      dynamicRiskScore = 32 + (seed % 16); // Score: 32-47 (Moderate)
       dynamicMalwareType = "Potentially Unwanted Application (PUA) / Adware";
       dynamicThreatFamily = "Generic Mobile Riskware";
       dynamicPriority = "Moderate Exposure";
@@ -444,48 +465,31 @@ export function AnalysisProvider({ children }: { children: ReactNode }) {
       dynamicPermissions = [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.WAKE_LOCK",
-        "android.permission.RECEIVE_BOOT_COMPLETED"
+        "android.permission.WAKE_LOCK"
       ];
       dynamicMitreTags = [
-        { id: "T1624", name: "Receiver Registered" },
-        { id: "T1407", name: "Obfuscation" }
+        { id: "T1624", name: "Receiver Registered" }
       ];
       dynamicIocs = [
         { type: "Domain", value: `ad-network-node-${(seed % 50) + 1}.com`, severity: "MEDIUM" },
         { type: "SHA256", value: computedSha256, severity: "MEDIUM" }
       ];
     } else {
-      dynamicRiskScore = 42 + (seed % 42);
-      if (dynamicRiskScore >= 75) {
-        dynamicMalwareType = "High Risk Android Riskware";
-        dynamicThreatFamily = "Heuristic Threat Variant";
-        dynamicPriority = "High Priority";
-        dynamicFraudType = "Potential Data Exfiltration";
-        dynamicPermissions = [
-          "android.permission.INTERNET",
-          "android.permission.READ_EXTERNAL_STORAGE",
-          "android.permission.WRITE_EXTERNAL_STORAGE",
-          "android.permission.ACCESS_FINE_LOCATION"
-        ];
-        dynamicMitreTags = [{ id: "T1417", name: "Input Interception" }];
-        dynamicIocs = [
-          { type: "IP", value: `198.51.100.${(seed % 200) + 1}`, severity: "HIGH" },
-          { type: "SHA256", value: computedSha256, severity: "HIGH" }
-        ];
-      } else {
-        dynamicMalwareType = "Low Risk Mobile Utility";
-        dynamicThreatFamily = "Unclassified Mobile Binary";
-        dynamicPriority = "Low Exposure";
-        dynamicFraudType = "Minimal Threat Detected";
-        dynamicPermissions = [
-          "android.permission.INTERNET",
-          "android.permission.ACCESS_NETWORK_STATE"
-        ];
-        dynamicMitreTags = [{ id: "T1475", name: "Standard Application Delivery" }];
-        dynamicIocs = [{ type: "SHA256", value: computedSha256, severity: "LOW" }];
-      }
+      dynamicRiskScore = 15 + (seed % 12); // Score: 15-26 (Safe Utility)
+      dynamicMalwareType = "Standard Mobile Application";
+      dynamicThreatFamily = "Unclassified Mobile Binary";
+      dynamicPriority = "Low Exposure";
+      dynamicFraudType = "Minimal Risk Detected";
+      dynamicPermissions = [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ];
+      dynamicMitreTags = [{ id: "T1475", name: "Standard Application Delivery" }];
+      dynamicIocs = [{ type: "SHA256", value: computedSha256, severity: "LOW" }];
     }
+
+
+
 
     const dynamicActivities = [
       `${sanitizedPkg}.MainActivity`,

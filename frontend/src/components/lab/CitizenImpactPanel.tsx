@@ -19,6 +19,15 @@ export default function CitizenImpactPanel() {
 
   const isMalicious = caseData.riskScore > 50;
 
+  // Compute dynamic reports if multilingual reports are missing or generic
+  const defaultSummary = isMalicious
+    ? `Critical security advisory for ${caseData.fileName} (${caseData.packageName}). Risk score ${caseData.riskScore}/100. Intercepts sensitive credentials and OTP authentication codes.`
+    : `Security verification complete for ${caseData.fileName} (${caseData.packageName}). Assigned risk index ${caseData.riskScore}/100. Standard application permissions without banking trojan vectors.`;
+
+  const defaultAdvisory = isMalicious
+    ? `IMMEDIATE ACTION REQUIRED: Uninstall ${caseData.fileName} immediately. Revoke accessibility and SMS permissions to prevent financial fraud.`
+    : `VERDICT: ${caseData.fileName} poses low security exposure to your mobile device. Ensure application is downloaded from verified sources.`;
+
   return (
     <div className="space-y-6 font-mono">
       <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
@@ -64,15 +73,15 @@ export default function CitizenImpactPanel() {
           </div>
           <div>
             <span className="text-xs font-mono font-bold uppercase tracking-wider block opacity-80">
-              SAFETY VERDICT FOR CITIZENS
+              SAFETY VERDICT FOR {caseData.fileName}
             </span>
             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-[var(--text-primary)]">
               {isMalicious ? "⚠️ DO NOT INSTALL THIS APPLICATION" : "✅ VERIFIED SAFE APPLICATION"}
             </h2>
             <p className="text-xs text-[var(--text-muted)] mt-1 font-sans">
               {isMalicious
-                ? "This application is a fake banking app that steals your money, reads OTP passwords, and controls your phone."
-                : "This app passes security verifications and poses no threat to your mobile device."}
+                ? `The application ${caseData.fileName} contains high-risk malware indicators. Do not run on devices with banking apps.`
+                : `The application ${caseData.fileName} (${caseData.packageName}) passes security verifications and poses low risk.`}
             </p>
           </div>
         </div>
@@ -88,37 +97,49 @@ export default function CitizenImpactPanel() {
       {/* What can this app do to your phone? - Graphical Cards */}
       <div className="space-y-3">
         <h4 className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider">
-          What Can This Fake App Do to Your Smartphone?
+          {isMalicious ? "What Can This Fake App Do to Your Smartphone?" : "Application Security & Telemetry Overview"}
         </h4>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 font-sans">
           <div className="p-4 rounded-sm bg-[var(--bg-panel-alt)] border border-[var(--border)] space-y-2">
-            <div className="flex items-center gap-2.5 text-[var(--severity-critical)]">
+            <div className={`flex items-center gap-2.5 ${isMalicious ? "text-[var(--severity-critical)]" : "text-[var(--accent-cool)]"}`}>
               <MessageSquareCode className="w-5 h-5" />
-              <h5 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase">Reads Bank OTP SMS</h5>
+              <h5 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase">
+                {isMalicious ? "Reads Bank OTP SMS" : "SMS & Communication Integrity"}
+              </h5>
             </div>
             <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-              Silently reads confidential OTP (One Time Passwords) sent by your bank to authorize unauthorized money transfers.
+              {isMalicious
+                ? "Silently reads confidential OTP (One Time Passwords) sent by your bank to authorize unauthorized money transfers."
+                : "No unauthorized SMS listening or OTP interception privileges requested by this application."}
             </p>
           </div>
 
           <div className="p-4 rounded-sm bg-[var(--bg-panel-alt)] border border-[var(--border)] space-y-2">
-            <div className="flex items-center gap-2.5 text-[var(--severity-critical)]">
+            <div className={`flex items-center gap-2.5 ${isMalicious ? "text-[var(--severity-critical)]" : "text-[var(--accent-cool)]"}`}>
               <Eye className="w-5 h-5" />
-              <h5 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase">Records Keystrokes & Passwords</h5>
+              <h5 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase">
+                {isMalicious ? "Records Keystrokes & Passwords" : "Accessibility Framework"}
+              </h5>
             </div>
             <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-              Captures your PIN, net banking passwords, and personal information whenever you type on your keyboard.
+              {isMalicious
+                ? "Captures your PIN, net banking passwords, and personal information whenever you type on your keyboard."
+                : "No accessibility service abuse detected. App cannot monitor or record keyboard entries."}
             </p>
           </div>
 
           <div className="p-4 rounded-sm bg-[var(--bg-panel-alt)] border border-[var(--border)] space-y-2">
-            <div className="flex items-center gap-2.5 text-[var(--severity-medium)]">
+            <div className={`flex items-center gap-2.5 ${isMalicious ? "text-[var(--severity-medium)]" : "text-[var(--accent-cool)]"}`}>
               <Smartphone className="w-5 h-5" />
-              <h5 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase">Shows Fake Bank Screens</h5>
+              <h5 className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase">
+                {isMalicious ? "Shows Fake Bank Screens" : "Window Overlays"}
+              </h5>
             </div>
             <p className="text-xs text-[var(--text-muted)] leading-relaxed">
-              Puts a fake login window over your real banking apps to trick you into entering your account credentials.
+              {isMalicious
+                ? "Puts a fake login window over your real banking apps to trick you into entering your account credentials."
+                : "No system alert window privileges detected. App cannot inject overlay windows over banking apps."}
             </p>
           </div>
         </div>
@@ -133,23 +154,23 @@ export default function CitizenImpactPanel() {
 
           <div className="space-y-3">
             <div className="p-3 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm">
-              <span className="text-[var(--text-muted)] text-[10px] block">AFFECTED POPULATION</span>
-              <span className="text-sm font-bold text-[var(--severity-critical)] block mt-0.5">
-                {citizenImpact.affectedPopulation || "Retail Banking Customers"}
+              <span className="text-[var(--text-muted)] text-[10px] block">TARGET BINARY</span>
+              <span className="text-sm font-bold text-[var(--text-primary)] block mt-0.5">
+                {caseData.fileName}
               </span>
             </div>
 
             <div className="p-3 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm">
-              <span className="text-[var(--text-muted)] text-[10px] block">TARGET CUSTOMER GROUP</span>
-              <span className="text-[var(--text-primary)] block mt-0.5">
-                {citizenImpact.targetGroup || "Mobile UPI & Netbanking Users"}
+              <span className="text-[var(--text-muted)] text-[10px] block">AFFECTED EXPOSURE RATING</span>
+              <span className={`text-xs font-bold block mt-0.5 ${isMalicious ? "text-[var(--severity-critical)]" : "text-[var(--accent-cool)]"}`}>
+                {citizenImpact.affectedPopulation || (isMalicious ? "High Device Exposure" : "Low Exposure Rating")}
               </span>
             </div>
 
             <div className="p-3 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm">
               <span className="text-[var(--text-muted)] text-[10px] block">FRAUD VECTORS IDENTIFIED</span>
               <span className="text-[var(--text-muted)] block mt-0.5">
-                {citizenImpact.fraudType || "Phishing APK via WhatsApp / SMS links"}
+                {citizenImpact.fraudType || (isMalicious ? "Credentials Harvesting & OTP Theft" : "Standard Utility Behavior - No Banking Fraud Detected")}
               </span>
             </div>
           </div>
@@ -165,14 +186,16 @@ export default function CitizenImpactPanel() {
             <div className="p-4 rounded-sm bg-[var(--bg-panel)] border border-[var(--border)] space-y-1">
               <h5 className="text-xs font-bold text-[var(--accent)] uppercase font-mono">Threat Alert Summary:</h5>
               <p className="text-sm text-[var(--text-primary)] leading-relaxed">
-                {multilingualReports[language]?.summary || multilingualReports["en"]?.summary}
+                {multilingualReports[language]?.summary || defaultSummary}
               </p>
             </div>
 
-            <div className="p-4 rounded-sm bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 space-y-1">
-              <h5 className="text-xs font-bold text-[var(--severity-critical)] uppercase font-mono">Immediate Action Required:</h5>
-              <p className="text-sm text-[var(--severity-critical)] font-semibold leading-relaxed">
-                {multilingualReports[language]?.advisory || multilingualReports["en"]?.advisory}
+            <div className={`p-4 rounded-sm border space-y-1 ${isMalicious ? "bg-[var(--severity-critical)]/10 border-[var(--severity-critical)]/30" : "bg-[var(--severity-low)]/10 border-[var(--severity-low)]/30"}`}>
+              <h5 className={`text-xs font-bold uppercase font-mono ${isMalicious ? "text-[var(--severity-critical)]" : "text-[var(--severity-low)]"}`}>
+                {isMalicious ? "Immediate Action Required:" : "Safety Advisory:"}
+              </h5>
+              <p className={`text-sm font-semibold leading-relaxed ${isMalicious ? "text-[var(--severity-critical)]" : "text-[var(--severity-low)]"}`}>
+                {multilingualReports[language]?.advisory || defaultAdvisory}
               </p>
             </div>
           </div>

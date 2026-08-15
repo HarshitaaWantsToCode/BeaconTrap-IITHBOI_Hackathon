@@ -23,8 +23,10 @@ import ExecutiveReportPrintView from "./components/ExecutiveReportPrintView";
 import AICopilot from "./components/copilot/AICopilot";
 import { SocDashboardPayload } from "./types/dashboard";
 import { LandingPage } from "./components/landing/LandingPage";
+import { DemoWalkthroughPage } from "./components/landing/DemoWalkthroughPage";
 import { AnalysisProvider, useAnalysis } from "./context/AnalysisContext";
 import { ThemeToggleSwitch } from "./components/ThemeToggleSwitch";
+
 import { UserAuthModal } from "./components/auth/UserAuthModal";
 import { SystemSettingsModal } from "./components/settings/SystemSettingsModal";
 import { ServerTelemetryModal } from "./components/server/ServerTelemetryModal";
@@ -114,7 +116,8 @@ function AnalysisLabWorkspace() {
     campaignGraph,
     timeline,
     executiveSummary,
-    language
+    language,
+    setLanguage
   } = useAnalysis();
 
   const currentRole = user?.role || "ANALYST";
@@ -166,8 +169,12 @@ function AnalysisLabWorkspace() {
       <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm p-5 flex flex-col md:flex-row justify-between gap-6">
         <div className="space-y-2">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-sm bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border border-[var(--severity-critical)]/30 uppercase">
-              CRITICAL RISKS TARGET DETECTED
+            <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-sm uppercase border ${
+              caseData.riskScore > 50
+                ? "bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border-[var(--severity-critical)]/30"
+                : "bg-[var(--accent-cool)]/10 text-[var(--accent-cool)] border-[var(--accent-cool)]/30"
+            }`}>
+              {caseData.riskScore > 50 ? "CRITICAL RISKS TARGET DETECTED" : "VERIFIED LOW RISK TARGET"}
             </span>
             <span className="text-xs font-mono text-[var(--text-muted)]">
               PKG: <code className="text-[var(--text-primary)] font-mono">{caseData.packageName} v{caseData.versionCode}</code>
@@ -176,6 +183,7 @@ function AnalysisLabWorkspace() {
               ROLE: {currentRole}
             </span>
           </div>
+
           <h2 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
             {caseData.fileName}
           </h2>
@@ -223,14 +231,34 @@ function AnalysisLabWorkspace() {
               Confidence {caseData.threatConfidence}%
             </span>
           </div>
-          <div className="w-[1px] h-10 bg-[var(--border)] md:block hidden no-print" />
-          <button
-            onClick={() => window.print()}
-            className="flex items-center gap-2 bg-[var(--bg-panel-alt)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-mono font-medium px-3.5 py-2 rounded-sm text-xs transition-colors cursor-pointer no-print"
-          >
-            <Download className="w-3.5 h-3.5 text-[var(--accent)]" />
-            <span>EXPORT DOSSIER</span>
-          </button>
+          <div className="flex items-center gap-2 no-print">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="bg-[var(--bg-panel)] border border-[var(--border)] text-xs font-mono px-2 py-1 rounded-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/50 cursor-pointer"
+              title="Select Dossier Export Language"
+            >
+              <option value="en">English</option>
+              <option value="hi">हिंदी (Hindi)</option>
+              <option value="kn">ಕನ್ನಡ (Kannada)</option>
+              <option value="ta">தமிழ் (Tamil)</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="bn">বাংলা (Bengali)</option>
+              <option value="mr">मराठी (Marathi)</option>
+              <option value="gu">ગુજરાતી (Gujarati)</option>
+              <option value="ml">മലയാളം (Malayalam)</option>
+              <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+              <option value="or">ଓଡ଼ିଆ (Odia)</option>
+            </select>
+
+            <button
+              onClick={() => window.print()}
+              className="flex items-center gap-2 bg-[var(--bg-panel-alt)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-mono font-medium px-3.5 py-2 rounded-sm text-xs transition-colors cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-[var(--accent)]" />
+              <span>EXPORT DOSSIER</span>
+            </button>
+          </div>
         </div>
       </div>
 
@@ -288,10 +316,11 @@ function AnalysisLabWorkspace() {
 function MainAppShell() {
   const { triggerAnalysis, casesAnalyzed, language, setLanguage } = useAnalysis();
   const { t } = useTranslation();
-  const [activeView, setActiveView] = useState<"LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB">("LANDING");
+  const [activeView, setActiveView] = useState<"LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB" | "DEMO_WALKTHROUGH">("LANDING");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [uploadStatus, setUploadStatus] = useState<string>("");
   const [headerNotify, setHeaderNotify] = useState<string | null>(null);
+
   
   // Modals state
   const [isAuthOpen, setIsAuthOpen] = useState(false);
@@ -389,13 +418,20 @@ function MainAppShell() {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-[var(--bg-panel)] border border-[var(--border)] text-xs font-mono px-2 py-1 rounded-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/50"
+              className="bg-[var(--bg-panel)] border border-[var(--border)] text-xs font-mono px-2 py-1 rounded-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/50 cursor-pointer"
+              title="Select Console Language"
             >
               <option value="en">{t('lang_en') || "English"}</option>
-              <option value="hi">{t('lang_hi') || "Hindi"}</option>
-              <option value="kn">{t('lang_kn') || "Kannada"}</option>
-              <option value="ta">{t('lang_ta') || "Tamil"}</option>
-              <option value="te">{t('lang_te') || "Telugu"}</option>
+              <option value="hi">{t('lang_hi') || "हिंदी (Hindi)"}</option>
+              <option value="kn">{t('lang_kn') || "ಕನ್ನಡ (Kannada)"}</option>
+              <option value="ta">{t('lang_ta') || "தமிழ் (Tamil)"}</option>
+              <option value="te">{t('lang_te') || "తెలుగు (Telugu)"}</option>
+              <option value="bn">{t('lang_bn') || "বাংলা (Bengali)"}</option>
+              <option value="mr">{t('lang_mr') || "मराठी (Marathi)"}</option>
+              <option value="gu">{t('lang_gu') || "ગુજરાતી (Gujarati)"}</option>
+              <option value="ml">{t('lang_ml') || "മലയാളം (Malayalam)"}</option>
+              <option value="pa">{t('lang_pa') || "ਪੰਜਾਬੀ (Punjabi)"}</option>
+              <option value="or">{t('lang_or') || "ଓଡ଼ିଆ (Odia)"}</option>
             </select>
 
             <ThemeToggleSwitch />
@@ -447,6 +483,13 @@ function MainAppShell() {
               onNavigateToUpload={() => setActiveView("UPLOAD")}
             />
           )}
+
+          {activeView === "DEMO_WALKTHROUGH" && (
+            <DemoWalkthroughPage
+              onGoToLiveLab={() => setActiveView("ANALYSIS_LAB")}
+            />
+          )}
+
 
           {activeView === "UPLOAD" && (
             <div className="max-w-2xl mx-auto space-y-6 py-8">

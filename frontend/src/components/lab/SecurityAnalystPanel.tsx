@@ -177,10 +177,15 @@ export default function SecurityAnalystPanel() {
           </h3>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-sm bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 text-[var(--severity-critical)] font-bold">
-            {highRiskCount} HIGH RISK PERMISSIONS DETECTED
+          <span className={`text-[10px] font-mono px-2.5 py-0.5 rounded-sm border font-bold uppercase ${
+            highRiskCount > 0
+              ? "bg-[var(--severity-critical)]/10 border-[var(--severity-critical)]/30 text-[var(--severity-critical)]"
+              : "bg-[var(--accent-cool)]/10 border-[var(--accent-cool)]/30 text-[var(--accent-cool)]"
+          }`}>
+            {highRiskCount > 0 ? `${highRiskCount} HIGH RISK PERMISSIONS DETECTED` : "NO HIGH RISK PERMISSIONS DETECTED"}
           </span>
         </div>
+
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

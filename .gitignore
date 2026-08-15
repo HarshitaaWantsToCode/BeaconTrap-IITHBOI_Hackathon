@@ -55,3 +55,4 @@ frontend/dist/
 # IDE
 .vscode/
 .idea/
+*.pdf

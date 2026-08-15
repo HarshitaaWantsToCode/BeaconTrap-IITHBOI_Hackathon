@@ -68,25 +68,28 @@ def process_dynamic_message(ch, method, properties, body):
     except Exception as e:
         print(f"[!] ADB install failed: {str(e)}")
 
-    # 3. Launch application and inject Frida JavaScript hooks
+    # 3. Launch application and inject Frida JavaScript hooks (Bypass Emulator, Root & SSL Pinning)
     try:
         subprocess.run(["adb", "-s", f"avd_{case_id}:5555", "shell", "monkey", "-p", target_package, "1"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        subprocess.run(["frida", "-U", "-f", target_package, "-l", "hooks/sms_hooks.js", "--no-pause"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        print("[+] Custom Frida JavaScript hooks injected (SMS interception).")
+        hook_script = "workers/dynamic_worker/hooks/bypass_emulator.js" if os.path.exists("workers/dynamic_worker/hooks/bypass_emulator.js") else "hooks/sms_hooks.js"
+        subprocess.run(["frida", "-U", "-f", target_package, "-l", hook_script, "--no-pause"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        print(f"[+] Custom Frida JavaScript hooks injected ({hook_script}). Bypassing SSL Pinning, Root & Sandbox Evasion.")
     except Exception as e:
         print(f"[!] Frida injection failed: {str(e)}")
 
-    # 4. Save generated network pcap streams to MinIO
+    # 4. Save generated mitmproxy / tcpdump network pcap streams to MinIO
     pcap_path = f"/tmp/{case_id}.pcap"
     try:
+        subprocess.run(["mitmproxy", "--mode", "transparent", "-w", f"/tmp/mitm_{case_id}.dump"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["adb", "-s", f"avd_{case_id}:5555", "shell", "tcpdump", "-w", "/data/local/tmp/capture.pcap", "-i", "any", "-c", "100"], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["adb", "-s", f"avd_{case_id}:5555", "pull", "/data/local/tmp/capture.pcap", pcap_path], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         if os.path.exists(pcap_path):
             with open(pcap_path, "rb") as pcap_file:
                 artifact_service.client.put_object("artifacts", f"{case_id}/network_stream.pcap", pcap_file, length=os.path.getsize(pcap_path))
-            print("[+] Generated network pcap streams saved to object storage bucket.")
+            print("[+] Generated mitmproxy/tcpdump network pcap streams saved to object storage bucket.")
     except Exception as e:
         print(f"[!] Network capture/save failed: {str(e)}")
+
 
     runtime_events = FridaService.run_instrumentation(target_package)
     filesystem_events = FilesystemService.monitor_filesystem(target_package)

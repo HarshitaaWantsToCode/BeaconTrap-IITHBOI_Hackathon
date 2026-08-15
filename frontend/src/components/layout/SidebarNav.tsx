@@ -5,8 +5,8 @@ import { LayoutDashboard, Upload, FlaskConical, Terminal, Activity } from "lucid
 import { useTranslation } from "react-i18next";
 
 interface SidebarNavProps {
-  activeView: "LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB";
-  onViewChange: (view: "LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB") => void;
+  activeView: "LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB" | "DEMO_WALKTHROUGH";
+  onViewChange: (view: "LANDING" | "DASHBOARD" | "UPLOAD" | "ANALYSIS_LAB" | "DEMO_WALKTHROUGH") => void;
 }
 
 export default function SidebarNav({ activeView, onViewChange }: SidebarNavProps) {
@@ -24,6 +24,12 @@ export default function SidebarNav({ activeView, onViewChange }: SidebarNavProps
       icon: LayoutDashboard,
     },
     {
+      id: "DEMO_WALKTHROUGH" as const,
+      label: "Demo Walkthrough",
+      icon: Activity,
+      badge: "MOCK",
+    },
+    {
       id: "UPLOAD" as const,
       label: t('upload_apk') || "Upload APK",
       icon: Upload,
@@ -35,6 +41,7 @@ export default function SidebarNav({ activeView, onViewChange }: SidebarNavProps
       badge: "LIVE",
     },
   ];
+
 
   return (
     <nav className="flex-1 px-3 py-5 space-y-6 overflow-y-auto bg-[var(--bg-base)]">
