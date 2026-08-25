@@ -43,10 +43,10 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
             </span>
           </div>
           <h2 className="text-2xl font-extrabold font-mono tracking-tight text-[var(--text-primary)]">
-            {(t('soc_command_center') || "SOC COMMAND CENTER").toUpperCase()}
+            {(t('soc_command_center') || "SOC Command Center").toUpperCase()}
           </h2>
-          <p className="text-xs text-[var(--text-muted)] font-mono mt-1">
-            {t('node_ind') || "NODE IND: LEAP-205_BOI // THREAT INTELLIGENCE OPERATIONS // LIVE TELEMETRY"}
+          <p className="text-xs text-[var(--text-muted)] mt-1">
+            {t('node_ind') || "Threat Intelligence & Live Telemetry Feed"}
           </p>
         </div>
         

@@ -78,11 +78,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     <div className="min-h-screen bg-[var(--bg-base)] text-[var(--text-primary)] font-sans space-y-8 max-w-7xl mx-auto">
       {/* Top operational banner band */}
       <div className="border border-[var(--border)] bg-[var(--bg-panel)] rounded-sm p-6 space-y-4">
-        <div className="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)]">
-          <span className="w-2 h-2 rounded-full bg-[var(--accent-cool)]"></span>
-          <span>IITH BOI CYBER SECURITY FORENSICS CONSOLE // NODE v3.8.26</span>
-        </div>
-
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
           <div className="space-y-2 max-w-3xl">
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight left-aligned" style={{ color: "var(--text-primary)" }}>

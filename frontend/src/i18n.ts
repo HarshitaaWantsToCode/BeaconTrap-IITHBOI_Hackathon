@@ -4,8 +4,8 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   en: {
     translation: {
-      "system_connected": "SYSTEM CONNECTED // ONLINE",
-      "node_ind": "NODE IND: LEAP-205_BOI // THREAT INTELLIGENCE OPERATIONS // LIVE TELEMETRY",
+      "system_connected": "Online",
+      "node_ind": "Threat Intelligence & Live Telemetry",
       "beacontrap_ai": "BEACONTRAP AI INTELLIGENCE BRIEFING",
       "copilot_active": "COPILOT ACTIVE",
       "confidence": "CONFIDENCE",

@@ -435,17 +435,22 @@ export default function ExecutiveReportPrintView({
             letterSpacing: 1, marginBottom: 12, borderBottom: `1px solid ${BORDER}`, paddingBottom: 6 }}>
             {tr("risk_score_decomp")}
           </div>
-          {scoreBreakdown.map((item, i) => (
-            <div key={i} style={{ marginBottom: 12 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                <span style={{ fontSize: 10, fontWeight: 600, color: ACCENT }}>{item.name}</span>
-                <span style={{ fontSize: 10, fontWeight: 700, color: item.color, fontFamily: MONO_FONT }}>
-                  {item.score || 0}/{item.max}
-                </span>
+          {scoreBreakdown.map((item, i) => {
+            const rawScore = Math.min(100, Math.max(0, item.score || 0));
+            // Normalized points contributed out of item.max
+            const contributedPoints = Math.round((rawScore / 100) * item.max);
+            return (
+              <div key={i} style={{ marginBottom: 12 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                  <span style={{ fontSize: 10, fontWeight: 600, color: ACCENT }}>{item.name}</span>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: item.color, fontFamily: MONO_FONT }}>
+                    {contributedPoints} / {item.max} pts ({rawScore}%)
+                  </span>
+                </div>
+                <ScoreBar value={rawScore} max={100} color={item.color} />
               </div>
-              <ScoreBar value={Math.round(((item.score || 0) / item.max) * 100)} color={item.color} />
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Classification matrix table */}
@@ -513,10 +518,26 @@ export default function ExecutiveReportPrintView({
               {tr("threat_vector_analysis")}
             </div>
             {[
-              { label: "OTP Interception",    value: threatNarrative?.otpTheft, severity: "CRITICAL" },
-              { label: "Accessibility Abuse", value: threatNarrative?.accessibilityAbuse, severity: "HIGH" },
-              { label: "Credential Theft",    value: threatNarrative?.credentialTheft, severity: "HIGH" },
-              { label: "Fraud Risk Profile",  value: threatNarrative?.fraudRisks, severity: "MEDIUM" },
+              { 
+                label: "OTP Interception",    
+                value: threatNarrative?.otpTheft, 
+                severity: (threatNarrative?.otpTheft && !threatNarrative.otpTheft.toLowerCase().includes("no ") && !threatNarrative.otpTheft.toLowerCase().includes("not detected")) ? "CRITICAL" : "SAFE" 
+              },
+              { 
+                label: "Accessibility Abuse", 
+                value: threatNarrative?.accessibilityAbuse, 
+                severity: (threatNarrative?.accessibilityAbuse && !threatNarrative.accessibilityAbuse.toLowerCase().includes("no ") && !threatNarrative.accessibilityAbuse.toLowerCase().includes("not detected")) ? "HIGH" : "SAFE" 
+              },
+              { 
+                label: "Credential Theft",    
+                value: threatNarrative?.credentialTheft, 
+                severity: (threatNarrative?.credentialTheft && !threatNarrative.credentialTheft.toLowerCase().includes("no ") && !threatNarrative.credentialTheft.toLowerCase().includes("not detected")) ? "HIGH" : "SAFE" 
+              },
+              { 
+                label: "Fraud Risk Profile",  
+                value: threatNarrative?.fraudRisks, 
+                severity: rm.label 
+              },
             ].map((v, i) => (
               <div key={i} style={{ padding: "8px 0", borderBottom: `1px solid ${BORDER}`, fontSize: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
@@ -769,11 +790,11 @@ export default function ExecutiveReportPrintView({
           pageFont={pageFont}
           headers={["Priority", "Action Item", "Owner", "Timeline", "Status"]}
           rows={[
-            [<SeverityBadge label="CRITICAL" pageFont={pageFont} />, "Block identified C2 IPs at perimeter firewall", "Network Security Team", "Immediate (0-2 hrs)", "Required"],
-            [<SeverityBadge label="CRITICAL" pageFont={pageFont} />, "Add malicious domains to DNS blocklist", "IT Security", "Immediate (0-4 hrs)", "Required"],
-            [<SeverityBadge label="HIGH" pageFont={pageFont} />, "Alert fraud monitoring system with IOC signatures", "Fraud Analytics", "Same Day", "Required"],
-            [<SeverityBadge label="HIGH" pageFont={pageFont} />, "Issue customer advisory for suspicious app", "Digital Banking", "24 Hours", "Urgent"],
-            [<SeverityBadge label="HIGH" pageFont={pageFont} />, "Escalate to CERT-In via cybersecurity reporting portal", "CISO Office", "24 Hours", "Urgent"],
+            ...(ipIocs.length > 0 ? [[<SeverityBadge label="CRITICAL" pageFont={pageFont} />, `Block ${ipIocs.length} identified C2 IP(s) at perimeter firewall`, "Network Security Team", "Immediate (0-2 hrs)", "Required"]] : []),
+            ...(domainIocs.length > 0 ? [[<SeverityBadge label="CRITICAL" pageFont={pageFont} />, `Add ${domainIocs.length} malicious domain(s) to DNS blocklist`, "IT Security", "Immediate (0-4 hrs)", "Required"]] : []),
+            [<SeverityBadge label="HIGH" pageFont={pageFont} />, "Alert fraud monitoring system with sample signature digest", "Fraud Analytics", "Same Day", "Required"],
+            [<SeverityBadge label="HIGH" pageFont={pageFont} />, "Issue customer advisory regarding unauthorized application", "Digital Banking", "24 Hours", "Urgent"],
+            [<SeverityBadge label={rm.label === "CRITICAL" ? "CRITICAL" : "HIGH"} pageFont={pageFont} />, "Escalate incident details to CERT-In via reporting portal", "CISO Office", "24 Hours", "Urgent"],
           ]}
         />
         <PageFooter caseId={cid} pageFont={pageFont} />

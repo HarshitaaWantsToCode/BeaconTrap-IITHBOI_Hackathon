@@ -152,7 +152,7 @@ export default function WorldThreatMap() {
             Global Threat Intelligence Map
           </span>
           <span className="text-[9px] font-mono border border-[var(--border)] px-2 py-0.5 rounded-sm uppercase tracking-wider text-[var(--text-muted)]">
-            LIVE · NODE IND LEAP-205
+            Live Global Telemetry
           </span>
         </div>
         <div className="flex items-center gap-6 font-mono text-[10px]">

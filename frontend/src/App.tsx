@@ -383,9 +383,6 @@ function MainAppShell() {
             <h1 className="font-bold tracking-wider text-xs text-[var(--text-primary)] font-mono">
               BEACONTRAP
             </h1>
-            <p className="text-[10px] font-mono text-[var(--text-muted)]">
-              SOC FORENSICS v1.0
-            </p>
           </div>
         </div>
         <SidebarNav activeView={activeView} onViewChange={setActiveView} />
@@ -395,12 +392,7 @@ function MainAppShell() {
       <main className="flex-1 flex flex-col overflow-hidden bg-[var(--bg-base)]">
         {/* Top Header Bar */}
         <header className="h-12 border-b border-[var(--border)] px-6 flex items-center justify-between bg-[var(--bg-base)]">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[var(--accent-cool)]"></span>
-            <span className="text-[11px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-              SOC NODE ONLINE // OPERATIONAL
-            </span>
-          </div>
+          <div className="flex items-center gap-2"></div>
 
           {headerNotify && (
             <div className="bg-[var(--bg-panel)] border border-[var(--accent)]/40 px-3 py-1 text-xs font-mono text-[var(--accent)] flex items-center gap-2">
