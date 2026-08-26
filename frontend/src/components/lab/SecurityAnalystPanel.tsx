@@ -190,12 +190,12 @@ export default function SecurityAnalystPanel() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Permission Threat Distribution Pie Chart */}
-        <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-4 rounded-sm flex flex-col justify-between space-y-4">
+        <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-5 rounded-2xl flex flex-col justify-between space-y-4 shadow-md">
           <div>
-            <h4 className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider mb-1">
+            <h4 className="text-xs font-bold uppercase text-indigo-300 font-mono tracking-wider mb-1">
               Permission Risk Breakdown
             </h4>
-            <p className="text-[10px] text-[var(--text-muted)] font-mono mb-2">
+            <p className="text-[10px] text-slate-300 font-mono mb-2">
               Proportion of banking exploit vectors vs standard app permissions.
             </p>
           </div>
@@ -223,9 +223,9 @@ export default function SecurityAnalystPanel() {
                       contentStyle={{
                         backgroundColor: "var(--bg-panel)",
                         borderColor: "var(--border)",
-                        borderRadius: "4px",
+                        borderRadius: "12px",
                         fontSize: "11px",
-                        color: "var(--text-primary)"
+                        color: "#FFFFFF"
                       }}
                     />
                   </PieChart>
@@ -233,8 +233,8 @@ export default function SecurityAnalystPanel() {
 
                 {/* Non-overlapping center text */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                  <span className="text-xl font-bold font-mono text-[var(--text-primary)] leading-none">{permissions.length}</span>
-                  <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wider leading-none mt-1">PERMISSIONS</span>
+                  <span className="text-xl font-bold font-mono text-white leading-none">{permissions.length}</span>
+                  <span className="text-[9px] font-mono text-indigo-300 uppercase tracking-wider leading-none mt-1">PERMISSIONS</span>
                 </div>
               </div>
 
@@ -243,23 +243,23 @@ export default function SecurityAnalystPanel() {
                 {categories.filter(c => c.count > 0).map((cat, idx) => (
                   <div key={idx} className="flex items-center justify-between text-[11px] font-mono">
                     <div className="flex items-center gap-2">
-                      <span className="w-2.5 h-2.5 rounded-xs shrink-0" style={{ backgroundColor: cat.color }} />
-                      <span className="text-[var(--text-primary)] font-medium truncate">{cat.title}</span>
+                      <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: cat.color }} />
+                      <span className="text-white font-medium truncate">{cat.title}</span>
                     </div>
-                    <span className="text-[var(--text-muted)] font-bold">{cat.count}</span>
+                    <span className="text-indigo-300 font-bold">{cat.count}</span>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="py-12 text-center text-xs font-mono text-[var(--text-muted)]">
+            <div className="py-12 text-center text-xs font-mono text-slate-400">
               No permission data available.
             </div>
           )}
 
-          <div className="pt-2 border-t border-[var(--border)] flex justify-between text-[10px] font-mono text-[var(--text-muted)]">
+          <div className="pt-2 border-t border-[var(--border)] flex justify-between text-[10px] font-mono text-slate-300">
             <span>Primary Exploitation Vector:</span>
-            <span className="font-bold text-[var(--accent)]">
+            <span className="font-bold text-indigo-400">
               {permissions.some(p => p.includes("BIND_ACCESSIBILITY_SERVICE")) ? "ACCESSIBILITY ABUSE" : "SMS INTERCEPTION"}
             </span>
           </div>
@@ -267,28 +267,28 @@ export default function SecurityAnalystPanel() {
 
         {/* Categorized Risk Analysis */}
         <div className="lg:col-span-2 space-y-3">
-          <h4 className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider">
+          <h4 className="text-xs font-bold uppercase text-indigo-300 font-mono tracking-wider">
             Permission Risk Vectors & Exploit Technical Details
           </h4>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
             {categories.map((cat, idx) => {
               const IconComponent = cat.icon;
               return (
                 <div
                   key={idx}
-                  className={`border rounded-sm p-3.5 space-y-2 ${
+                  className={`border rounded-2xl p-4 space-y-2.5 shadow-md ${
                     cat.count > 0 ? "bg-[var(--bg-panel-alt)] border-[var(--border)]" : "bg-[var(--bg-panel)] border-[var(--border)] opacity-60"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <div className={`p-1 rounded-sm ${cat.badgeBg} ${cat.badgeText}`}>
-                        <IconComponent className="w-3.5 h-3.5" />
+                      <div className={`p-1.5 rounded-xl ${cat.badgeBg} ${cat.badgeText}`}>
+                        <IconComponent className="w-4 h-4" />
                       </div>
-                      <span className="text-xs font-bold text-[var(--text-primary)] font-mono">{cat.title}</span>
+                      <span className="text-xs font-bold text-white font-mono">{cat.title}</span>
                     </div>
-                    <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-sm border ${cat.badgeBg} ${cat.badgeBorder} ${cat.badgeText}`}>
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border ${cat.badgeBg} ${cat.badgeBorder} ${cat.badgeText}`}>
                       {cat.count}
                     </span>
                   </div>
@@ -296,19 +296,19 @@ export default function SecurityAnalystPanel() {
                   {cat.count > 0 ? (
                     <div className="space-y-2 mt-2">
                       {cat.items.map((item, iIdx) => (
-                        <div key={iIdx} className="p-2 rounded-sm bg-[var(--bg-panel)] border border-[var(--border)] space-y-1">
-                          <div className="text-[11px] font-mono font-bold text-[var(--text-primary)] truncate flex items-center justify-between">
+                        <div key={iIdx} className="p-2.5 rounded-xl bg-[var(--bg-panel)] border border-[var(--border)] space-y-1">
+                          <div className="text-[11px] font-mono font-bold text-white truncate flex items-center justify-between">
                             <code>{item.name}</code>
-                            <span className="text-[9px] text-[var(--severity-critical)] font-mono">DANGER</span>
+                            <span className="text-[9px] text-rose-400 font-mono font-bold px-1.5 py-0.5 rounded bg-rose-950/60 border border-rose-500/30">DANGER</span>
                           </div>
-                          <p className="text-[10px] text-[var(--text-muted)] font-sans leading-relaxed">
-                            <span className="font-mono text-[var(--text-muted)]">Impact:</span> {item.impact}
+                          <p className="text-[10px] text-slate-300 font-sans leading-relaxed">
+                            <span className="font-mono text-indigo-300 font-semibold">Impact:</span> {item.impact}
                           </p>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-[10px] font-mono text-[var(--text-muted)] italic">
+                    <p className="text-[10px] font-mono text-slate-400 italic">
                       No permissions requested matching vector.
                     </p>
                   )}

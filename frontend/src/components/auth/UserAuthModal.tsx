@@ -27,27 +27,27 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
   };
 
   return (
-    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 backdrop-blur-md p-4 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-lg rounded-2xl border border-card-border bg-card p-6 shadow-2xl space-y-6 font-sans text-text-primary">
+    <div className="fixed inset-0 z-[300] flex items-center justify-center bg-black/75 backdrop-blur-md p-4 animate-in fade-in duration-200">
+      <div className="relative w-full max-w-lg rounded-2xl border border-[var(--border)] bg-[var(--bg-panel)] p-6 sm:p-7 shadow-2xl space-y-6 font-sans text-white">
         
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-card-border pb-4">
+        <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400">
+            <div className="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/30 text-indigo-400">
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold font-mono uppercase tracking-wider text-text-primary">
+              <h3 className="text-base font-bold font-mono uppercase tracking-wider text-white">
                 User Authentication & Session
               </h3>
-              <p className="text-xs text-text-muted font-mono">
+              <p className="text-xs text-indigo-300 font-mono">
                 BeaconTrap Identity & Access Management (IAM)
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg border border-card-border hover:bg-card-bg-secondary text-text-muted hover:text-text-primary transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg border border-[var(--border)] hover:bg-[var(--bg-panel-alt)] text-indigo-300 hover:text-white transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -55,49 +55,49 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
 
         {/* Auth Status Notification Toast */}
         {authStatus && (
-          <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 shrink-0" />
+          <div className="p-3.5 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-emerald-300 text-xs font-mono flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
             <span>{authStatus}</span>
           </div>
         )}
 
         {/* User Identity Card */}
-        <div className="p-4 rounded-xl border border-card-border bg-card-bg-secondary space-y-3">
+        <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--bg-panel-alt)] space-y-3 shadow-md">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-bold flex items-center justify-center font-mono text-sm">
+              <div className="w-10 h-10 rounded-full bg-[#6366F1]/20 border border-[#6366F1]/40 text-indigo-300 font-bold flex items-center justify-center font-mono text-sm">
                 {user.name.split(' ').map(n => n[0]).join('')}
               </div>
               <div>
-                <h4 className="text-sm font-bold font-mono text-text-primary flex items-center gap-1.5">
+                <h4 className="text-sm font-bold font-mono text-white flex items-center gap-1.5">
                   {user.name}
-                  <BadgeCheck className="w-4 h-4 text-cyan-400 fill-cyan-400/20" />
+                  <BadgeCheck className="w-4 h-4 text-indigo-400 fill-indigo-400/20" />
                 </h4>
-                <p className="text-xs text-text-muted font-sans">{user.organization}</p>
+                <p className="text-xs text-slate-300 font-sans">{user.organization}</p>
               </div>
             </div>
-            <span className={`px-2.5 py-1 rounded text-[10px] font-mono font-bold uppercase ${
-              isAuthenticated ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-rose-500/20 text-rose-400 border border-rose-500/30"
+            <span className={`px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase ${
+              isAuthenticated ? "bg-emerald-950/60 text-emerald-300 border border-emerald-500/40" : "bg-rose-950/60 text-rose-300 border border-rose-500/40"
             }`}>
               {isAuthenticated ? "Session Active" : "Guest Mode"}
             </span>
           </div>
 
-          <div className="pt-2 border-t border-card-border text-xs font-mono space-y-1">
-            <div className="flex justify-between text-text-muted text-[11px]">
+          <div className="pt-2 border-t border-[var(--border)] text-xs font-mono space-y-1">
+            <div className="flex justify-between text-indigo-300 text-[11px]">
               <span>Security Clearance:</span>
-              <span className="text-cyan-300 font-bold">{user.clearanceLevel}</span>
+              <span className="text-white font-bold">{user.clearanceLevel}</span>
             </div>
-            <div className="flex justify-between text-text-muted text-[11px]">
+            <div className="flex justify-between text-indigo-300 text-[11px]">
               <span>Session Logged At:</span>
-              <span className="text-text-secondary">{user.lastLogin}</span>
+              <span className="text-slate-300">{user.lastLogin}</span>
             </div>
           </div>
         </div>
 
         {/* Operational Persona / Role Switcher */}
         <div className="space-y-2">
-          <label className="text-xs font-mono uppercase tracking-wider text-text-muted block">
+          <label className="text-xs font-mono uppercase tracking-wider text-indigo-300 font-bold block">
             Select Active Security Persona (RBAC Scope)
           </label>
           <div className="grid grid-cols-2 gap-2">
@@ -115,15 +115,15 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
                   onClick={() => handleRoleChange(roleSpec.id as any)}
                   className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-cyan-500/15 border-cyan-400 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] font-bold"
-                      : "bg-card-bg-secondary border-card-border hover:border-cyan-500/40 text-text-muted"
+                      ? "bg-[#6366F1] border-[#818CF8] text-white shadow-[0_0_15px_rgba(99,102,241,0.25)] font-bold"
+                      : "bg-[var(--bg-panel-alt)] border-[var(--border)] hover:border-[#818CF8]/40 text-slate-300"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-mono uppercase">{roleSpec.label}</span>
-                    {isSelected && <UserCheck className="w-3.5 h-3.5 text-cyan-400" />}
+                    <span className="text-xs font-mono uppercase font-bold">{roleSpec.label}</span>
+                    {isSelected && <UserCheck className="w-3.5 h-3.5 text-white" />}
                   </div>
-                  <p className="text-[10px] text-text-muted font-sans leading-tight">
+                  <p className="text-[10px] text-indigo-200 font-sans leading-tight">
                     {roleSpec.desc}
                   </p>
                 </button>
@@ -133,17 +133,17 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
         </div>
 
         {/* JWT Token Hash Display */}
-        <div className="p-3 rounded-xl border border-card-border bg-card-bg-secondary space-y-1.5">
-          <div className="flex justify-between items-center text-[10px] font-mono text-text-muted">
-            <span className="flex items-center gap-1"><Key className="w-3 h-3 text-cyan-400" /> JWT Session Token Digest</span>
+        <div className="p-3.5 rounded-2xl border border-[var(--border)] bg-[var(--bg-panel-alt)] space-y-1.5">
+          <div className="flex justify-between items-center text-[10px] font-mono text-indigo-300 font-bold">
+            <span className="flex items-center gap-1"><Key className="w-3 h-3 text-indigo-400" /> JWT Session Token Digest</span>
             <button 
               onClick={copyToken}
-              className="text-cyan-400 hover:underline uppercase text-[10px] font-bold cursor-pointer"
+              className="text-indigo-300 hover:text-white uppercase text-[10px] font-bold cursor-pointer"
             >
               {copied ? "Copied!" : "Copy JWT"}
             </button>
           </div>
-          <p className="text-[10px] font-mono text-text-muted break-all line-clamp-2 bg-background p-2 rounded border border-card-border">
+          <p className="text-[10px] font-mono text-slate-300 break-all line-clamp-2 bg-[var(--bg-panel)] p-2.5 rounded-xl border border-[var(--border)]">
             {user.jwtToken}
           </p>
         </div>
@@ -156,7 +156,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
                 logout();
                 setAuthStatus("Signed out. Switched to Guest Investigator mode.");
               }}
-              className="px-4 py-2 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/40 text-xs font-mono font-bold flex items-center gap-2 cursor-pointer transition-all"
+              className="px-4 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/60 text-rose-300 border border-rose-500/40 text-xs font-mono font-bold flex items-center gap-2 cursor-pointer transition-all"
             >
               <LogOut className="w-4 h-4" /> Sign Out Session
             </button>
@@ -167,7 +167,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
 
                 setAuthStatus("Authenticated successfully as Lead Analyst!");
               }}
-              className="px-4 py-2 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 text-xs font-mono font-bold flex items-center gap-2 cursor-pointer transition-all"
+              className="px-4 py-2.5 rounded-xl bg-[#6366F1] hover:bg-[#4F46E5] text-white border border-transparent text-xs font-mono font-bold flex items-center gap-2 cursor-pointer transition-all shadow-[0_0_15px_rgba(99,102,241,0.35)]"
             >
               <RefreshCw className="w-4 h-4" /> Re-authenticate Session
             </button>
@@ -175,7 +175,7 @@ export const UserAuthModal: React.FC<UserAuthModalProps> = ({ isOpen, onClose })
 
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-card-bg-secondary hover:bg-card-border text-text-primary text-xs font-mono font-bold border border-card-border cursor-pointer transition-all"
+            className="px-4 py-2.5 rounded-xl bg-[var(--bg-panel-alt)] hover:bg-[var(--border)] text-white text-xs font-mono font-bold border border-[var(--border)] cursor-pointer transition-all"
           >
             Close Window
           </button>

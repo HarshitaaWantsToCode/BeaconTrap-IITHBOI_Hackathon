@@ -91,33 +91,42 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
       </div>
 
       {/* Main Workspace Render */}
-      <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm p-6 space-y-6">
+      <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-2xl p-6 sm:p-8 space-y-6 shadow-2xl">
         {/* TAB 1: FORENSIC ANALYSIS */}
         {activeDemoTab === "ANALYSIS" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center gap-2">
-                <Cpu className="w-5 h-5 text-[var(--accent)]" />
-                <h3 className="text-base font-bold uppercase text-[var(--text-primary)]">Static & Dynamic Forensic Findings</h3>
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <div className="flex items-center gap-2.5">
+                <Cpu className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-base font-black tracking-wide uppercase text-white font-mono">
+                  Static & Dynamic Forensic Findings
+                </h3>
               </div>
-              <span className="text-xs font-bold text-[var(--severity-critical)] bg-[var(--severity-critical)]/10 px-2.5 py-1 border border-[var(--severity-critical)]/30 rounded-sm">
+              <span className="text-xs font-mono font-black text-rose-400 bg-rose-950/60 px-3 py-1 border border-rose-500/40 rounded-full shadow-[0_0_10px_rgba(244,63,94,0.25)]">
                 TROJAN RISK: 92/100
               </span>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-2">
-                <span className="text-[10px] text-[var(--text-muted)] uppercase block">Binary Identity</span>
-                <div className="text-sm font-bold text-[var(--text-primary)]">{mockCriticalCaseData.fileName}</div>
-                <div className="text-xs text-[var(--accent)]">PKG: {mockCriticalCaseData.packageName}</div>
-                <div className="text-[10px] text-[var(--text-muted)] break-all pt-2">SHA256: {mockCriticalCaseData.sha256}</div>
+              <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-2.5 shadow-md">
+                <span className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider block font-mono">Binary Identity</span>
+                <div className="text-base font-black text-white font-mono">{mockCriticalCaseData.fileName}</div>
+                <div className="text-xs text-indigo-300 font-mono font-semibold">PKG: {mockCriticalCaseData.packageName}</div>
+                <div className="text-[10px] text-slate-300 font-mono break-all pt-2 leading-relaxed">
+                  <span className="text-indigo-300 font-bold">SHA256:</span> {mockCriticalCaseData.sha256}
+                </div>
               </div>
 
-              <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-2 col-span-2">
-                <span className="text-[10px] text-[var(--text-muted)] uppercase block">Extracted Dangerous Permissions</span>
+              <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-3 col-span-2 shadow-md">
+                <span className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider block font-mono">
+                  Extracted Dangerous Permissions
+                </span>
                 <div className="flex flex-wrap gap-2 pt-1">
                   {JSON.parse(mockCriticalCaseData.permissions).map((perm: string, idx: number) => (
-                    <span key={idx} className="px-2.5 py-1 text-xs bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border border-[var(--severity-critical)]/20 rounded-xs">
+                    <span
+                      key={idx}
+                      className="px-3 py-1.5 text-xs font-mono font-bold bg-rose-950/50 text-rose-300 border border-rose-500/40 rounded-xl shadow-sm"
+                    >
                       {perm}
                     </span>
                   ))}
@@ -125,9 +134,11 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
               </div>
             </div>
 
-            <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-2">
-              <span className="text-[10px] text-[var(--text-muted)] uppercase block">AI Threat Narrative & De-Obfuscation Analysis</span>
-              <p className="text-xs leading-relaxed text-[var(--text-primary)] font-sans">
+            <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-2 shadow-md">
+              <span className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider block font-mono">
+                AI Threat Narrative & De-Obfuscation Analysis
+              </span>
+              <p className="text-xs leading-relaxed text-white font-sans font-medium">
                 {JSON.parse(mockCriticalCaseData.threatNarrative || "{}").behavior}
               </p>
             </div>
@@ -137,28 +148,36 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
         {/* TAB 2: GRC COMPLIANCE */}
         {activeDemoTab === "GRC" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-[var(--severity-high)]" />
-                <h3 className="text-base font-bold uppercase text-[var(--text-primary)]">GRC Compliance & Regulatory Directives</h3>
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <div className="flex items-center gap-2.5">
+                <FileText className="w-5 h-5 text-amber-400" />
+                <h3 className="text-base font-black tracking-wide uppercase text-white font-mono">
+                  GRC Compliance & Regulatory Directives
+                </h3>
               </div>
-              <span className="text-xs font-bold text-[var(--accent)]">RBI / CERT-In / DPDP Act 2023</span>
+              <span className="text-xs font-mono font-black text-indigo-300 bg-indigo-950/60 px-3 py-1 border border-indigo-500/40 rounded-full">
+                RBI / CERT-In / DPDP Act 2023
+              </span>
             </div>
 
-            <div className="p-5 bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 rounded-sm space-y-2">
-              <h4 className="text-sm font-bold text-[var(--severity-critical)] uppercase">DPDP Act 2023 — Section 8 Breach Notice</h4>
-              <p className="text-xs text-[var(--text-muted)] font-sans leading-relaxed">
+            <div className="p-5 bg-rose-950/40 border border-rose-500/40 rounded-2xl space-y-2 shadow-md">
+              <h4 className="text-sm font-black text-rose-300 uppercase font-mono">
+                DPDP Act 2023 — Section 8 Breach Notice
+              </h4>
+              <p className="text-xs text-slate-200 font-sans leading-relaxed">
                 Direct violation of consumer personal data protections due to unauthorized SMS interception and background overlay injection targeting banking credentials.
               </p>
             </div>
 
-            <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-3">
-              <h4 className="text-xs font-bold uppercase text-[var(--text-muted)]">Mandatory Executive Action Plan</h4>
-              <ul className="text-xs space-y-2 font-sans text-[var(--text-primary)]">
+            <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-3 shadow-md">
+              <h4 className="text-xs font-black uppercase text-indigo-300 font-mono tracking-wider">
+                Mandatory Executive Action Plan
+              </h4>
+              <ul className="text-xs space-y-2.5 font-sans text-white">
                 {mockExecutiveSummaryData.recommendedActions.map((action, idx) => (
-                  <li key={idx} className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[var(--accent-cool)] shrink-0" />
-                    <span>{action}</span>
+                  <li key={idx} className="flex items-center gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="font-medium text-white">{action}</span>
                   </li>
                 ))}
               </ul>
@@ -169,25 +188,27 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
         {/* TAB 3: CITIZEN EXPOSURE */}
         {activeDemoTab === "CITIZEN" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center gap-2">
-                <Globe className="w-5 h-5 text-[var(--accent-cool)]" />
-                <h3 className="text-base font-bold uppercase text-[var(--text-primary)]">Citizen Impact & Risk Exposure Assessment</h3>
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <div className="flex items-center gap-2.5">
+                <Globe className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-base font-black tracking-wide uppercase text-white font-mono">
+                  Citizen Impact & Risk Exposure Assessment
+                </h3>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
-              <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-1">
-                <span className="text-[10px] text-[var(--text-muted)] uppercase block">Estimated Population Exposure</span>
-                <span className="text-base font-bold text-[var(--severity-critical)]">5,000+ Active Mobile Devices</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs font-mono">
+              <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-1.5 shadow-md">
+                <span className="text-[10px] text-indigo-300 uppercase block font-bold">Estimated Population Exposure</span>
+                <span className="text-base font-black text-rose-400">5,000+ Active Mobile Devices</span>
               </div>
-              <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-1">
-                <span className="text-[10px] text-[var(--text-muted)] uppercase block">Estimated Financial Exposure</span>
-                <span className="text-base font-bold text-[var(--accent)]">₹1.5Cr - ₹3.0Cr</span>
+              <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-1.5 shadow-md">
+                <span className="text-[10px] text-indigo-300 uppercase block font-bold">Estimated Financial Exposure</span>
+                <span className="text-base font-black text-indigo-300">₹1.5Cr - ₹3.0Cr</span>
               </div>
-              <div className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-1">
-                <span className="text-[10px] text-[var(--text-muted)] uppercase block">Target Demographic</span>
-                <span className="text-xs font-bold text-[var(--text-primary)]">Retail Banking Consumers</span>
+              <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-1.5 shadow-md">
+                <span className="text-[10px] text-indigo-300 uppercase block font-bold">Target Demographic</span>
+                <span className="text-sm font-bold text-white">Retail Banking Consumers</span>
               </div>
             </div>
           </div>
@@ -196,24 +217,32 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
         {/* TAB 4: CAMPAIGN DNA */}
         {activeDemoTab === "CAMPAIGN" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center gap-2">
-                <Network className="w-5 h-5 text-[var(--accent)]" />
-                <h3 className="text-base font-bold uppercase text-[var(--text-primary)]">Campaign DNA Relationship Graph</h3>
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <div className="flex items-center gap-2.5">
+                <Network className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-base font-black tracking-wide uppercase text-white font-mono">
+                  Campaign DNA Relationship Graph
+                </h3>
               </div>
-              <span className="text-xs text-[var(--text-muted)]">Neo4j Cypher Engine</span>
+              <span className="text-xs font-mono text-indigo-300 bg-indigo-950/60 px-3 py-1 border border-indigo-500/40 rounded-full">
+                Neo4j Cypher Engine
+              </span>
             </div>
 
-            <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-3">
-              <span className="text-xs font-bold uppercase text-[var(--text-muted)]">Correlated Shared Infrastructure Nodes</span>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs pt-2">
+            <div className="p-6 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-4 shadow-md">
+              <span className="text-xs font-black uppercase text-indigo-300 font-mono tracking-wider">
+                Correlated Shared Infrastructure Nodes
+              </span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono pt-2">
                 {mockCampaignGraphData.nodes.map((node) => (
-                  <div key={node.id} className="p-3 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm flex justify-between items-center">
+                  <div key={node.id} className="p-4 bg-[var(--bg-panel)] border border-[var(--border)] rounded-xl flex justify-between items-center shadow-sm">
                     <div>
-                      <div className="font-bold text-[var(--text-primary)]">{node.label}</div>
-                      <div className="text-[10px] text-[var(--text-muted)]">NODE TYPE: {node.group.toUpperCase()}</div>
+                      <div className="font-black text-white">{node.label}</div>
+                      <div className="text-[10px] text-indigo-300 mt-0.5">NODE TYPE: {node.group.toUpperCase()}</div>
                     </div>
-                    <span className="text-xs font-bold text-[var(--accent)]">{node.risk}/100</span>
+                    <span className="text-xs font-black text-indigo-300 bg-indigo-950 px-2.5 py-1 rounded-lg border border-indigo-500/40">
+                      {node.risk}/100
+                    </span>
                   </div>
                 ))}
               </div>
@@ -224,23 +253,25 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
         {/* TAB 5: EVENT TIMELINE */}
         {activeDemoTab === "TIMELINE" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5 text-[var(--accent)]" />
-                <h3 className="text-base font-bold uppercase text-[var(--text-primary)]">Chronological Investigation Timeline</h3>
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <div className="flex items-center gap-2.5">
+                <Clock className="w-5 h-5 text-indigo-400" />
+                <h3 className="text-base font-black tracking-wide uppercase text-white font-mono">
+                  Chronological Investigation Timeline
+                </h3>
               </div>
             </div>
 
-            <div className="space-y-3 text-xs">
+            <div className="space-y-3.5 text-xs font-mono">
               {mockTimelineData.map((ev) => (
-                <div key={ev.id} className="p-3.5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm flex items-start gap-4">
-                  <div className="w-2 h-2 rounded-full bg-[var(--accent)] mt-1.5 shrink-0" />
-                  <div className="space-y-1 flex-1">
+                <div key={ev.id} className="p-4 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl flex items-start gap-4 shadow-md">
+                  <div className="w-2.5 h-2.5 rounded-full bg-indigo-400 mt-1.5 shrink-0 shadow-[0_0_8px_#818CF8]" />
+                  <div className="space-y-1.5 flex-1">
                     <div className="flex justify-between items-center">
-                      <span className="font-bold text-[var(--text-primary)]">{ev.event}</span>
-                      <span className="text-[10px] text-[var(--text-muted)]">{ev.timestamp}</span>
+                      <span className="font-black text-white text-sm">{ev.event}</span>
+                      <span className="text-[10px] text-indigo-300 font-bold">{ev.timestamp}</span>
                     </div>
-                    <p className="text-[11px] text-[var(--text-muted)] font-sans">{ev.description}</p>
+                    <p className="text-xs text-slate-200 font-sans leading-relaxed">{ev.description}</p>
                   </div>
                 </div>
               ))}
@@ -251,26 +282,30 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
         {/* TAB 6: EVIDENCE LEDGER */}
         {activeDemoTab === "LEDGER" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-[var(--accent-cool)]" />
-                <h3 className="text-base font-bold uppercase text-[var(--text-primary)]">Blockchain Evidence Anchoring Receipt</h3>
+            <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <div className="flex items-center gap-2.5">
+                <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                <h3 className="text-base font-black tracking-wide uppercase text-white font-mono">
+                  Blockchain Evidence Anchoring Receipt
+                </h3>
               </div>
-              <span className="text-xs text-[var(--accent-cool)] font-bold">Ethereum Sepolia Verified</span>
+              <span className="text-xs text-emerald-300 font-black bg-emerald-950/60 px-3 py-1 border border-emerald-500/40 rounded-full">
+                Ethereum Sepolia Verified
+              </span>
             </div>
 
-            <div className="p-5 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm space-y-4 text-xs">
+            <div className="p-6 bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-2xl space-y-4 text-xs font-mono shadow-md">
               <div>
-                <span className="text-[10px] text-[var(--text-muted)] block">VERIFIED CONTRACT ADDRESS</span>
-                <span className="text-[var(--accent)] text-xs font-mono font-bold break-all">0xd9aa91a39248916D946C75Abf875F2b1660a8732</span>
+                <span className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider block">VERIFIED CONTRACT ADDRESS</span>
+                <span className="text-indigo-300 text-xs font-mono font-black break-all">0xd9aa91a39248916D946C75Abf875F2b1660a8732</span>
               </div>
               <div>
-                <span className="text-[10px] text-[var(--text-muted)] block">SEPOLIA BLOCK INDEX</span>
-                <span className="text-[var(--text-primary)] font-bold">Block #1782345</span>
+                <span className="text-[10px] text-indigo-300 font-bold uppercase tracking-wider block">SEPOLIA BLOCK INDEX</span>
+                <span className="text-white font-black text-sm">Block #1782345</span>
               </div>
-              <div className="p-3 bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 rounded-sm flex items-center gap-3">
-                <AlertTriangle className="w-4 h-4 text-[var(--severity-critical)] shrink-0" />
-                <span className="text-[11px] text-[var(--text-muted)] font-sans">
+              <div className="p-4 bg-rose-950/30 border border-rose-500/40 rounded-xl flex items-center gap-3">
+                <AlertTriangle className="w-5 h-5 text-rose-400 shrink-0" />
+                <span className="text-xs text-slate-200 font-sans leading-relaxed">
                   Courtroom Chain-of-Custody Integrity Guaranteed via cryptographic hash anchoring.
                 </span>
               </div>
