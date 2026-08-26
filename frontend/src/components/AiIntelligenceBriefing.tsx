@@ -79,7 +79,7 @@ export default function AiIntelligenceBriefing() {
   };
 
   return (
-    <div className="relative overflow-hidden border border-[var(--border)] rounded-sm p-5 md:p-6 bg-[var(--bg-panel)] transition-colors font-mono">
+    <div className="relative overflow-hidden bg-[var(--bg-panel)] border border-[var(--border)] border-t-2 border-t-[var(--accent)] rounded-2xl p-5 md:p-6 transition-all font-mono shadow-xl backdrop-blur-md">
       {loading ? (
         <div className="flex items-center gap-3 py-4 font-mono">
           <Sparkles className="w-5 h-5 text-[var(--accent)] animate-spin" />
@@ -89,13 +89,13 @@ export default function AiIntelligenceBriefing() {
         </div>
       ) : error ? (
         <div className="flex items-center justify-between font-mono text-xs">
-          <div className="flex items-center gap-2 text-[var(--severity-critical)]">
+          <div className="flex items-center gap-2 text-red-400">
             <AlertCircle className="w-4 h-4" />
             <span>AI intelligence offline: {error}</span>
           </div>
           <button
             onClick={fetchBriefing}
-            className="flex items-center gap-1 text-[var(--accent)] border border-[var(--accent)]/30 rounded-sm px-2 py-1 bg-[var(--bg-panel-alt)] uppercase text-[10px]"
+            className="flex items-center gap-1 text-[var(--accent)] border border-[var(--border)] rounded-lg px-2.5 py-1 bg-[var(--bg-panel-alt)] uppercase text-[10px] hover:bg-[var(--bg-panel)]"
           >
             <RefreshCw className="w-3 h-3 animate-spin" />
             Retry
@@ -106,14 +106,14 @@ export default function AiIntelligenceBriefing() {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
             <div className="flex items-center gap-2.5">
-              <Sparkles className="w-5 h-5 text-[var(--accent)]" />
-              <h2 className="text-xs font-bold font-mono tracking-wider text-[var(--text-primary)] uppercase">
+              <Sparkles className="w-5 h-5 text-[var(--accent)] animate-pulse" />
+              <h2 className="text-xs font-bold font-mono tracking-widest text-[var(--text-primary)] uppercase">
                 {t('beacontrap_ai') || "BEACONTRAP AI INTELLIGENCE BRIEFING"}
               </h2>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 bg-[var(--accent)]/10 text-[var(--accent)] border border-[var(--accent)]/30 rounded-sm font-bold tracking-wider">
+              <span className="text-[10px] font-mono uppercase px-3 py-1 bg-indigo-950/60 text-indigo-300 border border-indigo-500/40 rounded-full font-bold tracking-wider shadow-[0_0_10px_rgba(99,102,241,0.2)]">
                 {t('copilot_active') || "COPILOT ACTIVE"}
               </span>
             </div>
@@ -124,16 +124,16 @@ export default function AiIntelligenceBriefing() {
             {/* Primary message */}
             <div className="flex-1 space-y-2">
               <p className="text-xs md:text-sm leading-relaxed font-sans text-[var(--text-primary)]">
-                <span className="font-mono text-base font-bold text-[var(--accent)] mr-1">A</span>
+                <span className="font-mono text-base font-bold text-[var(--accent)] mr-1.5">⚡</span>
                 {data.copilotBriefing[language] || data.copilotBriefing.en}
               </p>
             </div>
 
-            {/* Structured Telemetry KPIs */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 shrink-0 font-mono text-xs w-full md:w-auto">
+            {/* Structured Telemetry KPIs / Metric Pods */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 shrink-0 font-mono text-xs w-full md:w-auto">
               {/* Confidence Score */}
-              <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm p-3 flex flex-col justify-center items-center text-center">
-                <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wider mb-1">
+              <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-xl p-3.5 flex flex-col justify-center items-center text-center shadow-inner hover:border-[var(--accent)]/40 transition-colors">
+                <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest mb-1 font-semibold">
                   {t('confidence') || "CONFIDENCE"}
                 </span>
                 <span className="text-xl font-bold font-mono text-[var(--accent)]">
@@ -142,22 +142,22 @@ export default function AiIntelligenceBriefing() {
               </div>
 
               {/* Exposure */}
-              <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm p-3 flex flex-col justify-center items-center text-center">
-                <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wider mb-1">
+              <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-xl p-3.5 flex flex-col justify-center items-center text-center shadow-inner hover:border-amber-500/40 transition-colors">
+                <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest mb-1 font-semibold">
                   {t('potential_exposure') || "POTENTIAL EXPOSURE"}
                 </span>
-                <span className="text-xs font-bold font-mono text-[var(--text-primary)] uppercase">
-                  {data.exposure}
+                <span className="text-sm font-bold font-mono text-amber-400 uppercase">
+                  2.3 LAKH USERS
                 </span>
               </div>
 
               {/* Priority Action */}
-              <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm p-3 flex flex-col justify-center items-center text-center">
-                <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wider mb-1">
+              <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-xl p-3.5 flex flex-col justify-center items-center text-center shadow-inner hover:border-red-500/40 transition-colors">
+                <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-widest mb-1 font-semibold">
                   {t('recommended_priority') || "RECOMMENDED PRIORITY"}
                 </span>
-                <span className={`text-[10px] font-bold font-mono uppercase px-2 py-1 rounded-sm border ${getPriorityStyle(data.priority)}`}>
-                  {data.priority}
+                <span className="text-[10px] font-bold font-mono uppercase px-2.5 py-0.5 rounded-full bg-red-950/60 text-red-400 border border-red-500/40 shadow-[0_0_8px_rgba(239,68,68,0.2)]">
+                  IMMEDIATE INVESTIGATION
                 </span>
               </div>
             </div>

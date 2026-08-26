@@ -36,26 +36,29 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
         className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-[var(--border)] pb-5"
       >
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <Radio className="w-4 h-4 text-[var(--severity-critical)] animate-pulse" />
-            <span className="text-[9px] font-mono text-[var(--severity-critical)] uppercase tracking-widest font-bold">
+          <div className="flex items-center gap-2 mb-1.5">
+            <Radio className="w-4 h-4 text-red-500 animate-pulse" />
+            <span className="text-[10px] font-mono text-red-400 uppercase tracking-widest font-bold bg-red-950/40 border border-red-500/30 px-2.5 py-0.5 rounded-full">
               {t('cmd_active') || "COMMAND CENTER ACTIVE"}
             </span>
           </div>
-          <h2 className="text-2xl font-extrabold font-mono tracking-tight text-[var(--text-primary)]">
+          <h2 className="text-2xl font-extrabold font-mono tracking-tight text-[var(--text-primary)] flex items-center gap-3">
             {(t('soc_command_center') || "SOC Command Center").toUpperCase()}
+            <span className="text-xs font-mono px-2.5 py-0.5 rounded-full bg-indigo-950/60 text-indigo-300 border border-indigo-500/30 font-semibold">
+              DEFCON-2
+            </span>
           </h2>
-          <p className="text-xs text-[var(--text-muted)] mt-1">
-            {t('node_ind') || "Threat Intelligence & Live Telemetry Feed"}
+          <p className="text-xs font-mono text-[var(--text-muted)] mt-1">
+            {t('node_ind') || "Threat Intelligence & Live Telemetry Feed"} — Node: IND-LEAP-205_BOI
           </p>
         </div>
         
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 flex-wrap">
           {/* Lens Filter Switcher */}
-          <div className="flex gap-1 bg-[var(--bg-panel-alt)] p-1 rounded-sm border border-[var(--border)] font-mono">
+          <div className="flex gap-1.5 bg-[var(--bg-panel)] p-1.5 rounded-xl border border-[var(--border)] font-mono shadow-inner">
             {[
               { id: "ALL", label: t('all_analytics') || "All Analytics", icon: Database },
-              { id: "GLOBAL", label: t('global_map') || "Global Map", icon: Map },
+              { id: "GLOBAL", label: t('global_map') || "Global Intel Map", icon: Map },
               { id: "TACTICAL", label: t('tactical') || "Tactical Matrices", icon: BarChart3 }
             ].map((lens) => {
               const Icon = lens.icon;
@@ -64,10 +67,10 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
                 <button
                   key={lens.id}
                   onClick={() => setDashboardLens(lens.id as LensType)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-xs font-mono font-bold transition-all cursor-pointer ${
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
                     isSelected
-                      ? "bg-[var(--accent)] text-[var(--btn-copilot-text)]"
-                      : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel)]"
+                      ? "bg-[#6366F1] text-white shadow-[0_0_15px_rgba(99,102,241,0.45)]"
+                      : "text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel-alt)]"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -79,9 +82,9 @@ export default function SocCommandCenter({ data, onNavigateToUpload }: SocComman
 
           <button
             onClick={onNavigateToUpload}
-            className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[var(--primary-hover)] text-[var(--btn-copilot-text)] font-mono text-xs font-bold px-4 py-2.5 rounded-sm transition-colors cursor-pointer"
+            className="flex items-center gap-2 bg-[#6366F1] hover:bg-[#4F46E5] text-white font-mono text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-[0_0_15px_rgba(99,102,241,0.35)] hover:shadow-[0_0_20px_rgba(99,102,241,0.55)] cursor-pointer"
           >
-            <Upload className="w-4 h-4" />
+            <Upload className="w-4 h-4 text-white" />
             {t('upload_new') || "UPLOAD NEW APK"}
           </button>
         </div>

@@ -4,208 +4,174 @@
 
 :root,
 html.dark {
-  /* Dark Mode — Near-black Plum / Aubergine Base (#151118) + Soft Mint (#98E2C6) & Dusty Pink (#F2A6C4) Accent */
-  --bg-base: #151118;
-  --bg-panel: #1C1721;
-  --bg-panel-alt: #241E2A;
-  --border: #322B3A;
-  --text-primary: #E5DFEC;
-  --text-muted: #8D8398;
-  --accent: #98E2C6;       /* Soft Mint */
-  --accent-cool: #F2A6C4;  /* Dusty Pink */
-  --accent-warm: #E06D85;  /* Muted Rose-Dust */
+  /* Dark Mode — GovTech Royal Purple SOC Theme (#131034 base) */
+  --bg-base: #131034;
+  --bg-panel: #1E1B4B;
+  --bg-panel-alt: #2E2868;
+  --border: rgba(199, 210, 254, 0.18);
+  --text-primary: #FFFFFF;
+  --text-muted: #A5B4FC;
+  --accent: #818CF8;       /* Royal Purple / Bright Violet */
+  --accent-cool: #10B981;  /* Emerald */
+  --accent-warm: #F59E0B;  /* Amber */
 
-  --severity-critical: #E06D85;
-  --severity-high: #E89568;
-  --severity-medium: #DDB967;
-  --severity-low: #98E2C6;
+  --severity-critical: #F43F5E;
+  --severity-high: #FB923C;
+  --severity-medium: #FBBF24;
+  --severity-low: #34D399;
 
   /* Backward compatibility aliases */
-  --background: #151118;
-  --foreground: #E5DFEC;
-  --card: #1C1721;
-  --card-border: #322B3A;
-  --card-bg-secondary: #241E2A;
-  --primary: #98E2C6;
-  --primary-hover: #7FD2B4;
-  --primary-glow: transparent;
-  --critical: #E06D85;
-  --high: #E89568;
-  --medium: #DDB967;
-  --low: #98E2C6;
-  --safe: #98E2C6;
+  --background: #131034;
+  --foreground: #FFFFFF;
+  --card: #1E1B4B;
+  --card-border: rgba(199, 210, 254, 0.18);
+  --card-bg-secondary: #2E2868;
+  --primary: #6366F1;
+  --primary-hover: #4F46E5;
+  --primary-glow: rgba(99, 102, 241, 0.35);
+  --critical: #F43F5E;
+  --high: #FB923C;
+  --medium: #FBBF24;
+  --low: #34D399;
+  --safe: #34D399;
 
-  --bg-page: #151118;
-  --bg-sidebar: #151118;
-  --sidebar-border: #322B3A;
-  --sidebar-text: #8D8398;
-  --sidebar-text-active: #E5DFEC;
-  --sidebar-item-hover: #1C1721;
-  --sidebar-active-bg: #1C1721;
-  --sidebar-active-border: #98E2C6;
+  --bg-page: #131034;
+  --bg-sidebar: #0F0C2C;
+  --sidebar-border: rgba(199, 210, 254, 0.15);
+  --sidebar-text: #A5B4FC;
+  --sidebar-text-active: #FFFFFF;
+  --sidebar-item-hover: #1E1B4B;
+  --sidebar-active-bg: rgba(99, 102, 241, 0.2);
+  --sidebar-active-border: #818CF8;
   
-  --bg-header: #151118;
-  --header-border: #322B3A;
-  --bg-main: #151118;
-  --briefing-bg: #1C1721;
+  --bg-header: #0F0C2C;
+  --header-border: rgba(199, 210, 254, 0.15);
+  --bg-main: #131034;
+  --briefing-bg: #1E1B4B;
   
-  --text-secondary: #8D8398;
-  --card-dot-color: #98E2C6;
-  --btn-copilot-text: #151118;
+  --text-secondary: #A5B4FC;
+  --card-dot-color: #818CF8;
+  --btn-copilot-text: #FFFFFF;
 
-  --shadow-card: none;
-  --radius-card: 4px;
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  --radius-card: 12px;
 
   /* SVG maps & charts variables */
-  --map-bg: #151118;
-  --map-continent-fill: #241E2A;
-  --map-continent-stroke: #322B3A;
-  --map-grid-line: rgba(50, 43, 58, 0.6);
-  --map-side-bg: #1C1721;
-  --map-side-border: #322B3A;
-  --graph-bg: #151118;
-  --graph-grid-line: rgba(50, 43, 58, 0.4);
+  --map-bg: #131034;
+  --map-continent-fill: #2E2868;
+  --map-continent-stroke: rgba(199, 210, 254, 0.2);
+  --map-grid-line: rgba(199, 210, 254, 0.12);
+  --map-side-bg: #1E1B4B;
+  --map-side-border: rgba(199, 210, 254, 0.18);
+  --graph-bg: #131034;
+  --graph-grid-line: rgba(199, 210, 254, 0.12);
 
   /* Node graph colors */
-  --node-center-stroke: #E06D85;
-  --node-center-fill: #241E2A;
-  --node-domain-stroke: #E89568;
-  --node-domain-fill: #241E2A;
-  --node-ip-stroke: #E06D85;
-  --node-ip-fill: #241E2A;
-  --node-family-stroke: #98E2C6;
-  --node-family-fill: #241E2A;
-  --node-mitre-stroke: #F2A6C4;
-  --node-mitre-fill: #241E2A;
-  --node-sample-stroke: #98E2C6;
-  --node-sample-fill: #241E2A;
+  --node-center-stroke: #F43F5E;
+  --node-center-fill: #2E2868;
+  --node-domain-stroke: #FB923C;
+  --node-domain-fill: #2E2868;
+  --node-ip-stroke: #F43F5E;
+  --node-ip-fill: #2E2868;
+  --node-family-stroke: #818CF8;
+  --node-family-fill: #2E2868;
+  --node-mitre-stroke: #10B981;
+  --node-mitre-fill: #2E2868;
+  --node-sample-stroke: #818CF8;
+  --node-sample-fill: #2E2868;
 
   /* MITRE cells background & border */
-  --mitre-critical-bg: rgba(224, 109, 133, 0.15);
-  --mitre-critical-text: #E06D85;
-  --mitre-critical-border: rgba(224, 109, 133, 0.35);
-  --mitre-high-bg: rgba(232, 149, 104, 0.15);
-  --mitre-high-text: #E89568;
-  --mitre-high-border: rgba(232, 149, 104, 0.35);
-  --mitre-medium-bg: rgba(221, 185, 103, 0.15);
-  --mitre-medium-text: #DDB967;
-  --mitre-medium-border: rgba(221, 185, 103, 0.35);
-  --mitre-low-bg: #241E2A;
-  --mitre-low-text: #8D8398;
-  --mitre-low-border: #322B3A;
+  --mitre-critical-bg: rgba(244, 63, 94, 0.2);
+  --mitre-critical-text: #FDA4AF;
+  --mitre-critical-border: rgba(244, 63, 94, 0.4);
+  --mitre-high-bg: rgba(251, 146, 60, 0.2);
+  --mitre-high-text: #FDBA74;
+  --mitre-high-border: rgba(251, 146, 60, 0.4);
+  --mitre-medium-bg: rgba(251, 191, 36, 0.2);
+  --mitre-medium-text: #FDE68A;
+  --mitre-medium-border: rgba(251, 191, 36, 0.4);
+  --mitre-low-bg: #2E2868;
+  --mitre-low-text: #C7D2FE;
+  --mitre-low-border: rgba(199, 210, 254, 0.18);
 }
-
-/*
-  =============================================================================
-  SAVED BACKUP: SWAPPED LIGHT MODE V2 — WHITE BASE (#FFFFFF) + LILAC PANELS (#F3F0F7)
-  =============================================================================
-  --bg-base: #FFFFFF;
-  --bg-panel: #F3F0F7;
-  --bg-panel-alt: #E7E2F0;
-  --border: #DAD4E6;
-  --text-primary: #241F2E;
-  --text-muted: #756E85;
-  --accent: #6B4EFF;
-  =============================================================================
-*/
 
 html.light,
 :root.light,
 .light {
-  /* LIGHT MODE GLASSMORPHISM: Gradient Base (#f5f2ff, #ece8ff) + Glassmorphic Cards */
-  --bg-base: linear-gradient(135deg, #f5f2ff, #ece8ff);
-  --bg-panel: rgba(255, 255, 255, 0.75);
-  --bg-panel-alt: rgba(235, 230, 245, 0.65);
-  --border: rgba(255, 255, 255, 0.45);
-  --text-primary: #241F2E;
-  --text-muted: #6C647C;
-  --accent: #6B4EFF;
-  --accent-cool: #2D7A6E;
-  --accent-warm: #D9622B;
+  /* LIGHT MODE (Royal Purple / Fintech BharatFinance Aesthetic) */
+  --bg-base: #1E1B4B;       /* Rich Deep Royal Indigo Base */
+  --bg-panel: #2E2868;      /* Royal Purple Panel */
+  --bg-panel-alt: #3B3380;  /* Slightly Lighter Purple Section */
+  --border: rgba(255, 255, 255, 0.18);
+  --text-primary: #FFFFFF;
+  --text-muted: #C7D2FE;
+  
+  --accent: #818CF8;
+  --accent-cool: #10B981;
+  --accent-warm: #F59E0B;
 
-  --severity-critical: #D9622B;
-  --severity-high: #E07A38;
-  --severity-medium: #D99B26;
-  --severity-low: #2D7A6E;
+  --severity-critical: #F43F5E;
+  --severity-high: #FB923C;
+  --severity-medium: #FBBF24;
+  --severity-low: #34D399;
 
-  --background: #f5f2ff;
-  --foreground: #241F2E;
-  --card: rgba(255, 255, 255, 0.75);
-  --card-border: rgba(255, 255, 255, 0.45);
-  --card-bg-secondary: rgba(235, 230, 245, 0.65);
-  --primary: #6B4EFF;
-  --primary-hover: #5639E0;
-  --primary-glow: transparent;
-  --critical: #D9622B;
-  --high: #E07A38;
-  --medium: #D99B26;
-  --low: #2D7A6E;
-  --safe: #2D7A6E;
+  --background: #1E1B4B;
+  --foreground: #FFFFFF;
+  --card: #FFFFFF;
+  --card-border: rgba(255, 255, 255, 0.18);
+  --card-bg-secondary: #F8FAFC;
+  
+  --primary: #6366F1;
+  --primary-hover: #4F46E5;
+  --primary-glow: rgba(99, 102, 241, 0.35);
+  
+  --critical: #F43F5E;
+  --high: #FB923C;
+  --medium: #FBBF24;
+  --low: #34D399;
+  --safe: #34D399;
 
-  --bg-page: transparent;
-  --bg-sidebar: rgba(255, 255, 255, 0.55);
-  --sidebar-border: rgba(255, 255, 255, 0.35);
-  --sidebar-text: #6C647C;
-  --sidebar-text-active: #241F2E;
-  --sidebar-item-hover: rgba(255, 255, 255, 0.85);
-  --sidebar-active-bg: rgba(255, 255, 255, 0.85);
-  --sidebar-active-border: #6B4EFF;
+  --bg-page: #1E1B4B;
+  --bg-sidebar: #19163F;
+  --sidebar-border: rgba(255, 255, 255, 0.15);
+  --sidebar-text: #C7D2FE;
+  --sidebar-text-active: #FFFFFF;
+  --sidebar-item-hover: rgba(255, 255, 255, 0.08);
+  --sidebar-active-bg: #4F46E5;
+  --sidebar-active-border: #818CF8;
 
-  --bg-header: rgba(255, 255, 255, 0.55);
-  --header-border: rgba(255, 255, 255, 0.35);
-  --bg-main: transparent;
-  --briefing-bg: rgba(255, 255, 255, 0.75);
+  --bg-header: #19163F;
+  --header-border: rgba(255, 255, 255, 0.15);
+  --bg-main: #1E1B4B;
+  --briefing-bg: #2E2868;
 
-  --text-secondary: #6C647C;
-  --card-dot-color: #6B4EFF;
+  --text-secondary: #A5B4FC;
+  --card-dot-color: #818CF8;
   --btn-copilot-text: #FFFFFF;
 
-  /* SVG maps & charts variables - Glass Light Mode */
-  --map-bg: transparent;
-  --map-continent-fill: rgba(235, 230, 245, 0.7);
-  --map-continent-stroke: rgba(218, 212, 230, 0.8);
-  --map-grid-line: rgba(218, 212, 230, 0.4);
-  --map-side-bg: rgba(255, 255, 255, 0.75);
-  --map-side-border: rgba(255, 255, 255, 0.45);
-  --graph-bg: transparent;
-  --graph-grid-line: rgba(218, 212, 230, 0.4);
+  /* SVG maps & charts variables */
+  --map-bg: #1E1B4B;
+  --map-continent-fill: #312E81;
+  --map-continent-stroke: #4338CA;
+  --map-grid-line: rgba(199, 210, 254, 0.15);
+  --map-side-bg: #2E2868;
+  --map-side-border: rgba(255, 255, 255, 0.15);
+  --graph-bg: #1E1B4B;
+  --graph-grid-line: rgba(199, 210, 254, 0.15);
 
-  /* MITRE cells - Light Mode */
-  --mitre-critical-bg: rgba(254, 226, 226, 0.8);
-  --mitre-critical-text: #991B1B;
-  --mitre-critical-border: #FCA5A5;
-  --mitre-high-bg: rgba(255, 237, 213, 0.8);
-  --mitre-high-text: #9A3412;
-  --mitre-high-border: #FDBA74;
-  --mitre-medium-bg: rgba(254, 243, 199, 0.8);
-  --mitre-medium-text: #92400E;
-  --mitre-medium-border: #FDE68A;
-  --mitre-low-bg: rgba(235, 230, 245, 0.8);
-  --mitre-low-text: #6C647C;
-  --mitre-low-border: rgba(218, 212, 230, 0.8);
-}
-
-/* User-requested Glassmorphic class */
-.glass {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(18px);
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-}
-
-html.light body,
-:root.light body,
-.light body {
-  background: linear-gradient(135deg, #f5f2ff, #ece8ff) !important;
-  background-attachment: fixed !important;
-}
-
-html.light .bg-\[var\(--bg-panel\)\],
-:root.light .bg-\[var\(--bg-panel\)\] {
-  background: rgba(255, 255, 255, 0.65) !important;
-  backdrop-filter: blur(18px) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06) !important;
+  /* MITRE cells */
+  --mitre-critical-bg: rgba(244, 63, 94, 0.25);
+  --mitre-critical-text: #FDA4AF;
+  --mitre-critical-border: #F43F5E;
+  --mitre-high-bg: rgba(251, 146, 60, 0.25);
+  --mitre-high-text: #FDBA74;
+  --mitre-high-border: #FB923C;
+  --mitre-medium-bg: rgba(251, 191, 36, 0.25);
+  --mitre-medium-text: #FDE68A;
+  --mitre-medium-border: #FBBF24;
+  --mitre-low-bg: #312E81;
+  --mitre-low-text: #C7D2FE;
+  --mitre-low-border: #4338CA;
 }
 
 body {
@@ -217,6 +183,11 @@ body {
   padding: 0;
   -webkit-font-smoothing: antialiased;
   transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+::selection {
+  background-color: rgba(99, 102, 241, 0.35);
+  color: #C7D2FE;
 }
 
 code, pre, .font-mono {
@@ -268,6 +239,12 @@ code, pre, .font-mono {
   border-color: var(--border) !important;
 }
 
+/* Subtle background grid pattern requested */
+.bg-soc-grid {
+  background-image: radial-gradient(#1E2E4E 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
 /* Grid lines overlay for SOC radar/graphs */
 .bg-cyber-grid {
   background-size: 24px 24px;
@@ -275,6 +252,7 @@ code, pre, .font-mono {
     linear-gradient(to right, var(--border) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
 }
+
 
 /* Operational standard 1px hairline border panel override */
 .border-glow {

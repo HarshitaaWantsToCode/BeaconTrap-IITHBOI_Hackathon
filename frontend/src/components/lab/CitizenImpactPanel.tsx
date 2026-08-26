@@ -30,27 +30,29 @@ export default function CitizenImpactPanel() {
 
   return (
     <div className="space-y-6 font-mono">
-      <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
-        <div className="flex items-center gap-2">
-          <Globe className="w-5 h-5 text-[var(--accent)]" />
-          <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text-primary)] font-mono">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-[#1E2E4E] pb-3 gap-3">
+        <div className="flex items-center gap-2.5">
+          <Globe className="w-5 h-5 text-cyan-400" />
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-100 font-mono">
             Citizen Safety Center & Public Threat Advisory
           </h3>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 flex-wrap">
           {[
             { code: "en", label: "English" },
             { code: "hi", label: "हिंदी" },
             { code: "te", label: "తెలుగు" },
-            { code: "kn", label: "ಕನ್ನಡ" }
+            { code: "kn", label: "ಕನ್ನಡ" },
+            { code: "ta", label: "தமிழ்" },
+            { code: "ml", label: "മലയാളം" }
           ].map((l) => (
             <button
               key={l.code}
               onClick={() => setLanguage(l.code)}
-              className={`px-3 py-1 text-xs font-mono border rounded-sm transition-all duration-200 cursor-pointer ${
+              className={`px-3 py-1 text-xs font-mono rounded-full border transition-all duration-200 cursor-pointer ${
                 language === l.code
-                  ? "bg-[var(--accent)] text-[var(--btn-copilot-text)] border-[var(--accent)] font-bold"
-                  : "bg-[var(--bg-panel-alt)] border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                  ? "bg-cyan-500 text-slate-950 border-cyan-400 font-bold shadow-[0_0_10px_rgba(0,229,255,0.3)]"
+                  : "bg-[#0A0F1E] border-[#1E2E4E] text-slate-400 hover:text-slate-200 hover:border-slate-700"
               }`}
             >
               {l.label}

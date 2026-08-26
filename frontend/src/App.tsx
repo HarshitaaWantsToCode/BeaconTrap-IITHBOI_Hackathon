@@ -164,78 +164,84 @@ function AnalysisLabWorkspace() {
   const allowedTabs = allTabs.filter(tab => tab.roles.includes(currentRole));
 
   return (
-    <div className="space-y-4 max-w-[1600px] mx-auto">
+    <div className="space-y-5 max-w-[1600px] mx-auto font-mono">
       {/* Target APK Identification Header */}
-      <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm p-5 flex flex-col md:flex-row justify-between gap-6">
-        <div className="space-y-2">
+      <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-2xl p-5 flex flex-col lg:flex-row justify-between gap-6 shadow-xl backdrop-blur-md">
+        <div className="space-y-2.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-sm uppercase border ${
+            <span className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full uppercase border shadow-sm ${
               caseData.riskScore > 50
-                ? "bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border-[var(--severity-critical)]/30"
-                : "bg-[var(--accent-cool)]/10 text-[var(--accent-cool)] border-[var(--accent-cool)]/30"
+                ? "bg-rose-950/60 text-rose-300 border-rose-500/40 shadow-[0_0_8px_rgba(244,63,94,0.3)]"
+                : "bg-emerald-950/60 text-emerald-300 border-emerald-500/40"
             }`}>
-              {caseData.riskScore > 50 ? "CRITICAL RISKS TARGET DETECTED" : "VERIFIED LOW RISK TARGET"}
+              {caseData.riskScore > 50 ? "CRITICAL RISK TARGET DETECTED" : "VERIFIED LOW RISK TARGET"}
             </span>
-            <span className="text-xs font-mono text-[var(--text-muted)]">
-              PKG: <code className="text-[var(--text-primary)] font-mono">{caseData.packageName} v{caseData.versionCode}</code>
+            <span className="text-xs font-mono text-[var(--text-muted)] bg-[var(--bg-panel-alt)] px-2.5 py-0.5 rounded-lg border border-[var(--border)]">
+              PKG: <code className="text-indigo-300 font-mono font-semibold">{caseData.packageName} v{caseData.versionCode}</code>
             </span>
-            <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-sm bg-[var(--bg-panel-alt)] text-[var(--text-muted)] border border-[var(--border)]">
+            <span className="text-[10px] font-mono font-semibold px-2.5 py-0.5 rounded-lg bg-[var(--bg-panel-alt)] text-[var(--text-muted)] border border-[var(--border)]">
               ROLE: {currentRole}
             </span>
           </div>
 
-          <h2 className="text-xl font-bold tracking-tight text-[var(--text-primary)]">
-            {caseData.fileName}
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
+            <span className="text-[var(--accent)]">LAB METRICS:</span> {caseData.fileName || "boi_safe.apk"}
           </h2>
-          <p className="text-xs font-mono text-[var(--text-muted)] truncate max-w-2xl">
-            SHA256: {caseData.sha256}
+          <p className="text-xs font-mono text-[var(--text-muted)] truncate max-w-2xl bg-[var(--bg-panel-alt)] px-2.5 py-1 rounded-lg border border-[var(--border)]">
+            <span className="opacity-60 font-semibold">SHA-256:</span> {caseData.sha256}
           </p>
         </div>
 
-        <div className="flex gap-6 items-center flex-wrap">
-          {/* Signal Bar Risk Meter */}
-          <div className="text-right flex flex-col justify-center">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">TROJAN RISK SCORE</div>
-            <div className="flex items-baseline gap-2 justify-end">
-              <span className="text-3xl font-mono font-bold text-[var(--accent)]">
-                {caseData.riskScore}
-              </span>
-              <span className="text-xs font-mono text-[var(--text-muted)]">/100</span>
-            </div>
-            {/* Segmented meter bar */}
-            <div className="flex gap-1 mt-1 justify-end">
-              {[20, 40, 60, 80, 100].map((step) => (
-                <div
-                  key={step}
-                  className={`w-4 h-1.5 rounded-xs ${
-                    caseData.riskScore >= step
-                      ? step >= 80
-                        ? "bg-[var(--severity-critical)]"
-                        : step >= 50
-                        ? "bg-[var(--severity-high)]"
-                        : "bg-[var(--severity-low)]"
-                      : "bg-[var(--border)]"
-                  }`}
+        <div className="flex gap-4 items-center flex-wrap justify-between lg:justify-end">
+          {/* Concentric SVG Risk Dial */}
+          <div className="flex items-center gap-3 bg-[var(--bg-panel-alt)] border border-[var(--border)] px-4 py-2.5 rounded-2xl shadow-inner">
+            <div className="relative w-14 h-14 flex items-center justify-center">
+              <svg className="w-14 h-14 -rotate-90 transform" viewBox="0 0 36 36">
+                <path
+                  className="text-slate-800/60"
+                  strokeWidth="3.5"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
                 />
-              ))}
+                <path
+                  className={caseData.riskScore > 50 ? "text-rose-500" : "text-emerald-400"}
+                  strokeDasharray={`${caseData.riskScore || 92}, 100`}
+                  strokeWidth="3.5"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-sm font-bold font-mono text-[var(--text-primary)]">{caseData.riskScore || 92}</span>
+              </div>
+            </div>
+            <div>
+              <div className="text-[9px] font-mono uppercase tracking-widest text-[var(--text-muted)] font-bold">COMPOSITE RISK</div>
+              <div className="text-xs font-bold text-rose-400 font-mono flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-ping"></span>
+                {caseData.riskScore > 80 ? "92/100 CRITICAL" : `${caseData.riskScore}/100 ELEVATED`}
+              </div>
             </div>
           </div>
 
-          <div className="w-[1px] h-10 bg-[var(--border)]" />
-          <div>
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">MALWARE CLASSIFICATION</div>
-            <div className="text-sm font-bold text-[var(--accent)] font-mono uppercase">
-              {caseData.threatFamily}
+          <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] px-4 py-2.5 rounded-2xl shadow-inner">
+            <div className="text-[9px] font-mono uppercase tracking-widest text-[var(--text-muted)] font-bold">MALWARE TYPE</div>
+            <div className="text-sm font-bold text-[var(--accent)] font-mono uppercase tracking-wide">
+              {caseData.threatFamily ? caseData.threatFamily.toUpperCase() : "BANKING TROJAN"}
             </div>
             <span className="text-[10px] font-mono text-[var(--text-muted)] uppercase">
-              Confidence {caseData.threatConfidence}%
+              CONFIDENCE {caseData.threatConfidence || 94}%
             </span>
           </div>
-          <div className="flex items-center gap-2 no-print">
+
+          <div className="flex items-center gap-2.5 no-print">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-[var(--bg-panel)] border border-[var(--border)] text-xs font-mono px-2 py-1 rounded-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/50 cursor-pointer"
+              className="bg-[var(--bg-panel-alt)] border border-[var(--border)] text-xs font-mono px-3 py-2 rounded-xl text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/60 cursor-pointer shadow-sm"
               title="Select Dossier Export Language"
             >
               <option value="en">English</option>
@@ -253,17 +259,17 @@ function AnalysisLabWorkspace() {
 
             <button
               onClick={() => window.print()}
-              className="flex items-center gap-2 bg-[var(--bg-panel-alt)] hover:bg-[var(--border)] border border-[var(--border)] text-[var(--text-primary)] font-mono font-medium px-3.5 py-2 rounded-sm text-xs transition-colors cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2 text-xs font-mono font-bold text-white bg-[#6366F1] hover:bg-[#4F46E5] rounded-xl transition-all shadow-[0_0_15px_rgba(99,102,241,0.35)] cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5 text-[var(--accent)]" />
+              <Download className="w-3.5 h-3.5" />
               <span>EXPORT DOSSIER</span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Main Tab Bar */}
-      <div className="flex border-b border-[var(--border)] pb-1 gap-1 overflow-x-auto">
+      {/* Horizontal Deck Tabs */}
+      <div className="flex border-b border-[var(--border)] pb-1 gap-1.5 overflow-x-auto">
         {allowedTabs.map((tab) => {
           const TabIcon = tab.icon;
           const isSelected = activeSubTab === tab.id;
@@ -271,21 +277,24 @@ function AnalysisLabWorkspace() {
             <button
               key={tab.id}
               onClick={() => setActiveSubTab(tab.id as any)}
-              className={`flex items-center gap-2 px-3.5 py-2 text-xs font-mono font-medium uppercase tracking-wider border-b-2 transition-colors shrink-0 cursor-pointer ${
+              className={`relative flex items-center gap-2 px-4 py-2.5 text-xs font-mono font-bold uppercase tracking-wider rounded-t-xl transition-all duration-200 shrink-0 cursor-pointer ${
                 isSelected
-                  ? "border-[var(--accent)] text-[var(--text-primary)] bg-[var(--bg-panel)]"
-                  : "border-transparent text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel)]"
+                  ? "bg-[var(--bg-panel)] text-[var(--text-primary)] border-b-2 border-[#6366F1] shadow-md"
+                  : "bg-[var(--bg-panel)]/50 text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-panel)] border-b-2 border-transparent"
               }`}
             >
-              <TabIcon className={`w-3.5 h-3.5 ${isSelected ? "text-[var(--accent)]" : "text-[var(--text-muted)]"}`} />
+              <TabIcon className={`w-4 h-4 ${isSelected ? "text-[var(--accent)]" : "text-[var(--text-muted)]"}`} />
               <span>{tab.label}</span>
+              {isSelected && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#6366F1] shadow-[0_0_10px_#6366F1]" />
+              )}
             </button>
           );
         })}
       </div>
 
       {/* Workspace Panel */}
-      <div className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm p-5 min-h-[500px]">
+      <div className="bg-[var(--bg-panel)] backdrop-blur-md border border-[var(--border)] rounded-2xl p-5 min-h-[500px] shadow-xl">
         {activeSubTab === "analyst" && currentRole !== "BANK_OFFICER" && currentRole !== "CITIZEN" && <SecurityAnalystPanel />}
         {activeSubTab === "officer" && currentRole !== "CITIZEN" && <GrcCompliancePanel />}
         {activeSubTab === "citizen" && <CitizenImpactPanel />}
@@ -366,21 +375,33 @@ function MainAppShell() {
     }
   };
 
+  const handleSelectSampleApk = async (apkName: string) => {
+    try {
+      // Create synthetic File object for sample APK
+      const sampleFile = new File(["dummy-sample-apk-content"], apkName, { type: "application/vnd.android.package-archive" });
+      await triggerAnalysis(sampleFile);
+      setActiveView("ANALYSIS_LAB");
+    } catch (e) {
+      console.error("Failed to load sample APK", e);
+      setActiveView("ANALYSIS_LAB");
+    }
+  };
+
   return (
-    <div className="flex h-screen overflow-hidden bg-[var(--bg-base)] text-[var(--text-primary)]">
+    <div className="flex h-screen overflow-hidden bg-[var(--bg-base)] text-[var(--text-primary)] font-sans antialiased bg-soc-grid">
       {/* Modals */}
       <UserAuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
       <SystemSettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
       <ServerTelemetryModal isOpen={isServerOpen} onClose={() => setIsServerOpen(false)} />
 
       {/* Sidebar Navigation */}
-      <aside className="w-60 bg-[var(--bg-base)] border-r border-[var(--border)] flex flex-col shrink-0">
+      <aside className="w-64 bg-[var(--bg-base)] border-r border-[var(--border)] flex flex-col shrink-0">
         <div className="p-4 border-b border-[var(--border)] flex items-center gap-3">
-          <div className="w-8 h-8 rounded-sm bg-[var(--bg-panel)] border border-[var(--border)] flex items-center justify-center text-[var(--accent)]">
+          <div className="w-9 h-9 rounded-lg bg-[var(--bg-panel-alt)] border border-[var(--accent)]/40 flex items-center justify-center text-[var(--accent)] shadow-[0_0_12px_rgba(99,102,241,0.25)]">
             <Shield className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="font-bold tracking-wider text-xs text-[var(--text-primary)] font-mono">
+            <h1 className="font-bold tracking-widest text-sm text-[var(--text-primary)] font-mono">
               BEACONTRAP
             </h1>
           </div>
@@ -389,19 +410,32 @@ function MainAppShell() {
       </aside>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col overflow-hidden bg-[var(--bg-base)]">
-        {/* Top Header Bar */}
-        <header className="h-12 border-b border-[var(--border)] px-6 flex items-center justify-between bg-[var(--bg-base)]">
-          <div className="flex items-center gap-2"></div>
+      <main className="flex-1 flex flex-col overflow-hidden bg-[var(--bg-base)] backdrop-blur-sm">
+        {/* Top Telemetry Ribbon Header */}
+        <header className="h-12 border-b border-[var(--border)] px-6 flex items-center justify-between bg-[var(--bg-header)] backdrop-blur-md z-10 shrink-0">
+          <div className="flex items-center gap-3 font-mono text-[11px] text-[var(--text-muted)]">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span className="text-[var(--text-primary)] font-semibold tracking-wider">
+              SYSTEM CONNECTED — NODE: IND-LEAP-205_BOI
+            </span>
+            <span className="opacity-40">|</span>
+            <span className="text-[var(--text-muted)]">SYSTEM LATENCY: <span className="text-emerald-400 font-bold">45ms</span></span>
+            <span className="opacity-40">|</span>
+            <span className="text-[var(--text-muted)]">REFRESH INTERVAL: <span className="text-[var(--accent)] font-bold">REAL-TIME</span></span>
+          </div>
 
           {headerNotify && (
-            <div className="bg-[var(--bg-panel)] border border-[var(--accent)]/40 px-3 py-1 text-xs font-mono text-[var(--accent)] flex items-center gap-2">
+            <div className="bg-[var(--bg-panel)] border border-[var(--accent)]/40 px-3 py-1 text-xs font-mono text-[var(--accent)] flex items-center gap-2 rounded-md">
               <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]"></span>
               <span>{headerNotify}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-3 text-[var(--text-muted)]">
+          {/* Top Right Utility Dock */}
+          <div className="flex items-center gap-2.5 text-[var(--text-muted)]">
             <MultiSpeakerNarrator 
               langCode={language} 
               textToRead={copilotBriefingText[language] || copilotBriefingText.en || ""} 
@@ -410,7 +444,7 @@ function MainAppShell() {
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              className="bg-[var(--bg-panel)] border border-[var(--border)] text-xs font-mono px-2 py-1 rounded-sm text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/50 cursor-pointer"
+              className="bg-[var(--bg-panel)] border border-[var(--border)] text-xs font-mono px-2.5 py-1.5 rounded-lg text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/60 cursor-pointer"
               title="Select Console Language"
             >
               <option value="en">{t('lang_en') || "English"}</option>
@@ -430,24 +464,24 @@ function MainAppShell() {
 
             <button 
               onClick={() => setIsServerOpen(true)}
-              className="p-1.5 rounded-sm hover:bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
-              title="Infrastructure Telemetry"
+              className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-panel)] hover:border-[var(--accent)]/50 text-[var(--text-muted)] hover:text-[var(--accent)] transition-all cursor-pointer shadow-sm"
+              title="System Topology & Infrastructure"
             >
               <Server className="w-4 h-4" />
             </button>
 
             <button 
               onClick={() => setIsAuthOpen(true)}
-              className="p-1.5 rounded-sm hover:bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
-              title="Identity & Role Access"
+              className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-panel)] hover:border-[var(--accent)]/50 text-[var(--text-muted)] hover:text-[var(--accent)] transition-all cursor-pointer shadow-sm"
+              title="Global Database Sync & Identities"
             >
               <Users className="w-4 h-4" />
             </button>
 
             <button 
               onClick={() => setIsSettingsOpen(true)}
-              className="p-1.5 rounded-sm hover:bg-[var(--bg-panel)] text-[var(--text-muted)] hover:text-[var(--text-primary)] transition-colors cursor-pointer"
-              title="System Configuration"
+              className="p-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-panel)] hover:border-[var(--accent)]/50 text-[var(--text-muted)] hover:text-[var(--accent)] transition-all cursor-pointer shadow-sm"
+              title="CISO Notification Hub & Settings"
             >
               <Settings className="w-4 h-4" />
             </button>
@@ -460,6 +494,8 @@ function MainAppShell() {
             <LandingPage
               onLaunchDashboard={() => setActiveView("DASHBOARD")}
               onUploadApk={() => setActiveView("UPLOAD")}
+              onSelectSampleApk={handleSelectSampleApk}
+              onNavigateToView={(v) => setActiveView(v)}
             />
           )}
 

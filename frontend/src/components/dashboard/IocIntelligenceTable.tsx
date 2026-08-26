@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { Search, ExternalLink } from "lucide-react";
-import SocPanel from "./SocPanel";
 import { IocIntelRow } from "@/types/dashboard";
 
 interface IocIntelligenceTableProps {
@@ -24,26 +23,38 @@ export default function IocIntelligenceTable({ iocs }: IocIntelligenceTableProps
   });
 
   return (
-    <SocPanel
-      title="INDICATOR OF COMPROMISE (IOC) DATABASE"
-      subtitle="Extracted forensic indicators & network signature correlation"
-      badge={`${iocs.length} IOCS`}
-      headerRight={
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-[var(--text-muted)]" />
+    <div className="bg-[var(--bg-panel)] backdrop-blur-md border border-[var(--border)] rounded-2xl overflow-hidden shadow-xl">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between px-5 py-3.5 border-b border-[var(--border)] bg-[var(--bg-panel-alt)]/80 gap-3">
+        <div className="flex items-center gap-2.5">
+          <span className="w-2 h-2 rounded-full bg-[var(--accent)] shadow-[0_0_8px_var(--accent)]" />
+          <div>
+            <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--text-primary)]">
+              INDICATOR OF COMPROMISE (IOC) DATABASE
+            </h3>
+            <p className="text-[10px] font-mono text-[var(--text-muted)] mt-0.5">
+              Extracted forensic indicators & network signature correlation
+            </p>
+          </div>
+          <span className="text-[9px] font-mono px-2.5 py-0.5 rounded-full border bg-indigo-950/60 text-indigo-300 border-indigo-500/40 font-bold uppercase tracking-wider">
+            {iocs.length} IOCS
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="relative flex-1 sm:flex-none">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
             <input
               type="text"
-              placeholder="Search IOC value or APK..."
+              placeholder="Search IOC or APK..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm pl-7 pr-2 py-1 text-xs font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)]/50 w-44 transition-colors"
+              className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-xl pl-8 pr-2.5 py-1.5 text-xs font-mono text-[var(--text-primary)] placeholder-[var(--text-muted)]/60 focus:outline-none focus:border-[var(--accent)]/60 w-full sm:w-48 transition-colors"
             />
           </div>
           <select
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
-            className="bg-[var(--bg-panel-alt)] border border-[var(--border)] rounded-sm px-2 py-1 text-xs font-mono text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/50 transition-colors"
+            className="bg-[var(--bg-panel)] border border-[var(--border)] rounded-xl px-2.5 py-1.5 text-xs font-mono text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent)]/60 transition-colors cursor-pointer"
           >
             <option value="ALL">ALL SEVERITIES</option>
             <option value="CRITICAL">CRITICAL</option>
@@ -51,63 +62,80 @@ export default function IocIntelligenceTable({ iocs }: IocIntelligenceTableProps
             <option value="MEDIUM">MEDIUM</option>
           </select>
         </div>
-      }
-      noPadding
-    >
+      </div>
+
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs font-mono">
           <thead>
-            <tr className="border-b border-[var(--border)] bg-[var(--bg-panel-alt)] text-[var(--text-muted)] uppercase tracking-wider text-[11px]">
-              <th className="py-2.5 px-4 font-semibold">TYPE</th>
-              <th className="py-2.5 px-4 font-semibold">INDICATOR VALUE</th>
-              <th className="py-2.5 px-4 font-semibold">SEVERITY</th>
-              <th className="py-2.5 px-4 font-semibold text-right">CONFIDENCE</th>
-              <th className="py-2.5 px-4 font-semibold">THREAT FAMILY</th>
-              <th className="py-2.5 px-4 font-semibold">SOURCE APK</th>
-              <th className="py-2.5 px-4 font-semibold text-right">ACTION</th>
+            <tr className="border-b border-[var(--border)] bg-[var(--bg-panel-alt)]/90 text-[var(--text-muted)] uppercase tracking-widest text-[10px]">
+              <th className="py-3 px-4 font-bold">TYPE</th>
+              <th className="py-3 px-4 font-bold">INDICATOR</th>
+              <th className="py-3 px-4 font-bold">SEVERITY</th>
+              <th className="py-3 px-4 font-bold text-right">CONF.</th>
+              <th className="py-3 px-4 font-bold">THREAT FAMILY</th>
+              <th className="py-3 px-4 font-bold">SOURCE APK</th>
+              <th className="py-3 px-4 font-bold text-right">ACTION</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[var(--border)] bg-[var(--bg-panel)]">
+          <tbody className="divide-y divide-[var(--border)] bg-[var(--bg-panel)]/70">
             {filtered.map((ioc) => {
               const sevUpper = ioc.severity.toUpperCase();
-              let badgeColor = "bg-[var(--severity-low)]/10 text-[var(--severity-low)] border-[var(--severity-low)]/30";
-              if (sevUpper === "CRITICAL") badgeColor = "bg-[var(--severity-critical)]/10 text-[var(--severity-critical)] border-[var(--severity-critical)]/30";
-              else if (sevUpper === "HIGH") badgeColor = "bg-[var(--severity-high)]/10 text-[var(--severity-high)] border-[var(--severity-high)]/30";
-              else if (sevUpper === "MEDIUM") badgeColor = "bg-[var(--severity-medium)]/10 text-[var(--severity-medium)] border-[var(--severity-medium)]/30";
+              let sevTag = (
+                <span className="bg-emerald-950/50 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full text-xs font-mono font-semibold">
+                  {ioc.severity}
+                </span>
+              );
+              if (sevUpper === "CRITICAL") {
+                sevTag = (
+                  <span className="bg-rose-950/50 text-rose-300 border border-rose-500/40 px-2 py-0.5 rounded-full text-xs font-mono font-semibold shadow-[0_0_8px_rgba(244,63,94,0.25)]">
+                    CRITICAL
+                  </span>
+                );
+              } else if (sevUpper === "HIGH") {
+                sevTag = (
+                  <span className="bg-amber-950/50 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full text-xs font-mono font-semibold">
+                    HIGH
+                  </span>
+                );
+              } else if (sevUpper === "MEDIUM") {
+                sevTag = (
+                  <span className="bg-amber-950/40 text-amber-200 border border-amber-500/30 px-2 py-0.5 rounded-full text-xs font-mono font-semibold">
+                    MEDIUM
+                  </span>
+                );
+              }
 
               return (
-                <tr key={ioc.id} className="hover:bg-[var(--bg-panel-alt)] transition-colors">
-                  <td className="py-2.5 px-4 text-[var(--accent)] font-bold">{ioc.type}</td>
-                  <td className="py-2.5 px-4 text-[var(--text-primary)] max-w-[220px] truncate" title={ioc.value}>
-                    <code>{ioc.value}</code>
-                  </td>
-                  <td className="py-2.5 px-4">
-                    <span className={`inline-flex border rounded-sm px-1.5 py-0.5 text-[10px] font-bold uppercase ${badgeColor}`}>
-                      {ioc.severity}
+                <tr key={ioc.id} className="hover:bg-[var(--bg-panel-alt)]/60 transition-colors">
+                  <td className="py-3 px-4">
+                    <span className="text-[10px] font-mono font-bold uppercase text-[var(--text-muted)] bg-[var(--bg-panel-alt)] px-2 py-0.5 rounded-lg border border-[var(--border)]">
+                      {ioc.type}
                     </span>
                   </td>
-                  <td className="py-2.5 px-4 text-[var(--text-primary)] text-right font-mono">{ioc.confidence}%</td>
-                  <td className="py-2.5 px-4 text-[var(--text-primary)] font-mono">{ioc.threatFamily}</td>
-                  <td className="py-2.5 px-4 text-[var(--text-muted)] truncate max-w-[130px]">{ioc.fileName}</td>
-                  <td className="py-2.5 px-4 text-right">
-                    {ioc.caseId !== "SIM" ? (
-                      <a
-                        href={`/case/${ioc.caseId}`}
-                        className="inline-flex items-center gap-1 text-[var(--accent)] hover:underline text-xs font-bold uppercase transition-colors"
-                      >
-                        <ExternalLink className="w-3 h-3" />
-                        INVESTIGATE
-                      </a>
-                    ) : (
-                      <span className="text-[var(--text-muted)] text-xs">SIMULATED</span>
-                    )}
+                  <td className="py-3 px-4 font-mono font-bold text-indigo-300 break-all">{ioc.value}</td>
+                  <td className="py-3 px-4">{sevTag}</td>
+                  <td className="py-3 px-4 text-right font-bold text-[var(--text-primary)]">{ioc.confidence}%</td>
+                  <td className="py-3 px-4 text-[var(--text-muted)] font-medium">{ioc.threatFamily}</td>
+                  <td className="py-3 px-4 text-[var(--text-muted)] truncate max-w-[120px]">{ioc.fileName}</td>
+                  <td className="py-3 px-4 text-right">
+                    <button
+                      onClick={() => {
+                        if (ioc.type === "IP" || ioc.type === "DOMAIN") {
+                          window.open(`https://www.virustotal.com/gui/search/${ioc.value}`, "_blank");
+                        }
+                      }}
+                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold bg-[#6366F1] hover:bg-[#4F46E5] text-white transition-colors cursor-pointer shadow-sm"
+                    >
+                      <span>ANALYZE</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </button>
                   </td>
                 </tr>
               );
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="py-6 text-center text-[var(--text-muted)] font-mono text-xs">
+                <td colSpan={7} className="py-8 text-center text-[var(--text-muted)] font-mono text-xs">
                   No indicators match active search criteria.
                 </td>
               </tr>
@@ -115,6 +143,7 @@ export default function IocIntelligenceTable({ iocs }: IocIntelligenceTableProps
           </tbody>
         </table>
       </div>
-    </SocPanel>
+    </div>
   );
 }
+

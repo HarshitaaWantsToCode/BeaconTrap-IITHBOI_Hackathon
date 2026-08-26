@@ -321,17 +321,17 @@ export default function SecurityAnalystPanel() {
 
       {/* Component Registry & MITRE ATT&CK Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 pt-2">
-        <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-3.5 rounded-sm space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider">
-              Background Services ({services.length})
+        <div className="bg-[var(--bg-panel)] backdrop-blur-md border border-[var(--border)] p-4 rounded-2xl space-y-2.5 shadow-md">
+          <div className="flex justify-between items-center border-b border-[var(--border)] pb-2">
+            <span className="text-xs font-bold uppercase text-[var(--text-primary)] font-mono tracking-wider">
+              BACKGROUND SERVICES ({services.length})
             </span>
           </div>
-          <div className="max-h-40 overflow-y-auto space-y-1 pr-1 font-mono text-[10px]">
+          <div className="max-h-44 overflow-y-auto space-y-1.5 pr-1 font-mono text-[10px]">
             {services.length > 0 ? (
               services.map((s, idx) => (
-                <div key={idx} className="p-1.5 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm text-[var(--text-muted)] truncate">
-                  <code>{s}</code>
+                <div key={idx} className="p-2 bg-[var(--bg-panel-alt)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors rounded-xl text-[var(--text-muted)] truncate">
+                  <code className="text-[var(--accent)]">{s}</code>
                 </div>
               ))
             ) : (
@@ -340,17 +340,17 @@ export default function SecurityAnalystPanel() {
           </div>
         </div>
 
-        <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-3.5 rounded-sm space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider">
-              UI Entrypoints & Activities ({activities.length})
+        <div className="bg-[var(--bg-panel)] backdrop-blur-md border border-[var(--border)] p-4 rounded-2xl space-y-2.5 shadow-md">
+          <div className="flex justify-between items-center border-b border-[var(--border)] pb-2">
+            <span className="text-xs font-bold uppercase text-[var(--text-primary)] font-mono tracking-wider">
+              REGISTERED APP ACTIVITIES ({activities.length})
             </span>
           </div>
-          <div className="max-h-40 overflow-y-auto space-y-1 pr-1 font-mono text-[10px]">
+          <div className="max-h-44 overflow-y-auto space-y-1.5 pr-1 font-mono text-[10px]">
             {activities.length > 0 ? (
               activities.map((act, idx) => (
-                <div key={idx} className="p-1.5 bg-[var(--bg-panel)] border border-[var(--border)] rounded-sm text-[var(--text-muted)] truncate">
-                  <code>{act}</code>
+                <div key={idx} className="p-2 bg-[var(--bg-panel-alt)] border border-[var(--border)] hover:border-[var(--accent)]/40 transition-colors rounded-xl text-[var(--text-muted)] truncate">
+                  <code className="text-[var(--text-primary)]">{act}</code>
                 </div>
               ))
             ) : (
@@ -359,20 +359,22 @@ export default function SecurityAnalystPanel() {
           </div>
         </div>
 
-        <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-3.5 rounded-sm space-y-2">
-          <span className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider block">
-            MITRE ATT&CK Mobile Technique Mapping
-          </span>
-          <div className="space-y-1 max-h-40 overflow-y-auto pr-1">
+        <div className="bg-[var(--bg-panel)] backdrop-blur-md border border-[var(--border)] p-4 rounded-2xl space-y-2.5 shadow-md">
+          <div className="flex justify-between items-center border-b border-[var(--border)] pb-2">
+            <span className="text-xs font-bold uppercase text-[var(--text-primary)] font-mono tracking-wider">
+              MITRE ATT&CK TECHNIQUES
+            </span>
+          </div>
+          <div className="space-y-1.5 max-h-44 overflow-y-auto pr-1">
             {mitreTags.length > 0 ? (
               mitreTags.map((tag) => (
-                <div key={tag.id} className="p-1.5 bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/25 rounded-sm flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-[var(--severity-critical)] uppercase">{tag.id}</span>
-                  <span className="text-[10px] font-mono text-[var(--text-primary)] truncate max-w-[150px]">{tag.name}</span>
+                <div key={tag.id} className="p-2 bg-red-950/40 border border-red-500/30 hover:border-red-500/50 transition-colors rounded-lg flex items-center justify-between shadow-[0_0_6px_rgba(239,68,68,0.15)]">
+                  <span className="text-[10px] font-mono font-bold text-red-400 bg-red-950 border border-red-500/40 px-2 py-0.5 rounded-full uppercase">{tag.id}</span>
+                  <span className="text-[10px] font-mono text-slate-200 truncate max-w-[150px] font-medium">{tag.name}</span>
                 </div>
               ))
             ) : (
-              <span className="text-[var(--text-muted)] text-xs italic">No matching techniques mapped.</span>
+              <span className="text-slate-500 text-xs italic">No matching techniques mapped.</span>
             )}
           </div>
         </div>

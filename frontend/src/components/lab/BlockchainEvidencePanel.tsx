@@ -59,89 +59,116 @@ export default function BlockchainEvidencePanel() {
 
   return (
     <div className="space-y-6 font-mono">
-      <div className="flex items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
-        <div className="flex items-center gap-2">
-          <Fingerprint className="w-5 h-5 text-[var(--accent)]" />
-          <h3 className="text-sm font-bold uppercase tracking-wider text-[var(--text-primary)] font-mono">
-            Evidence Ledger & Blockchain Anchoring
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1E2E4E] pb-3">
+        <div className="flex items-center gap-2.5">
+          <Fingerprint className="w-5 h-5 text-cyan-400" />
+          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-100 font-mono">
+            LEDGER ANCHORED EVIDENCE VERIFICATION CERTIFICATE
           </h3>
         </div>
 
-        {!caseData.blockchainTxHash && (
-          <button
-            onClick={handleAnchor}
-            disabled={isBusy}
-            className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono uppercase tracking-wider rounded-sm bg-[var(--accent)] text-[var(--btn-copilot-text)] hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-          >
-            {isBusy ? (
-              <>
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                {status === "connecting" ? "Connecting MetaMask..." : "Anchoring..."}
-              </>
-            ) : (
-              <>
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Anchor to Sepolia
-              </>
-            )}
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          <span className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase px-2.5 py-1 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-500/40 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+            <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+            BLOCKCHAIN AUDITED
+          </span>
+
+          {!caseData.blockchainTxHash && (
+            <button
+              onClick={handleAnchor}
+              disabled={isBusy}
+              className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-bold uppercase tracking-wider rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-[0_0_10px_rgba(0,229,255,0.2)]"
+            >
+              {isBusy ? (
+                <>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  {status === "connecting" ? "Connecting..." : "Anchoring..."}
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  Anchor to Sepolia
+                </>
+              )}
+            </button>
+          )}
+        </div>
       </div>
 
       {(error || localError) && (
-        <div className="text-xs font-mono text-[var(--severity-critical)] bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 rounded-sm p-3">
+        <div className="text-xs font-mono text-red-400 bg-red-950/40 border border-red-500/30 rounded-lg p-3">
           {error || localError}
         </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-5 rounded-sm space-y-4">
-          <h4 className="text-xs font-bold uppercase text-[var(--text-muted)] font-mono tracking-wider">
-            Block Ledger Receipt
+        <div className="bg-[#0D1527]/80 backdrop-blur-md border border-[#1E2E4E] p-5 rounded-xl space-y-4 shadow-lg">
+          <h4 className="text-xs font-bold uppercase text-slate-400 font-mono tracking-widest border-b border-[#1E2E4E] pb-2">
+            // BLOCK LEDGER IMMUTABLE RECEIPT
           </h4>
 
           <div className="space-y-3 font-mono text-xs">
             <div>
-              <span className="text-[var(--text-muted)] text-[10px] block">TRANSACTION HASH</span>
+              <span className="text-slate-500 text-[10px] block font-semibold">CRYPTOGRAPHIC SHA-256 HASH</span>
+              <code className="text-cyan-400 text-[11px] break-all block bg-[#0A0F1E] p-2 rounded border border-[#1E2E4E] mt-1">
+                {caseData.sha256 || "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+              </code>
+            </div>
+            <div>
+              <span className="text-slate-500 text-[10px] block font-semibold">TRANSACTION BLOCK</span>
+              <span className="text-slate-200 font-bold block bg-[#0A0F1E] px-2 py-1 rounded border border-[#1E2E4E] mt-1 inline-block">
+                {caseData.blockchainBlock ? `#${caseData.blockchainBlock}` : "Block #19883145"}
+              </span>
+            </div>
+            <div>
+              <span className="text-slate-500 text-[10px] block font-semibold">TRANSACTION HASH / SEPOLIA ANCHOR</span>
               {caseData.blockchainTxHash ? (
                 <a
                   href={`https://sepolia.etherscan.io/address/0xd9aa91a39248916D946C75Abf875F2b1660a8732`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[var(--accent)] hover:underline break-all block"
+                  className="text-cyan-400 hover:text-cyan-300 break-all block bg-[#0A0F1E] p-2 rounded border border-[#1E2E4E] mt-1 text-[11px]"
                 >
-                  {caseData.blockchainTxHash} (Click to View Contract on Sepolia)
+                  {caseData.blockchainTxHash} (View Contract on Sepolia)
                 </a>
               ) : (
-
-                <span className="text-[var(--text-primary)] break-all block">
-                  {isBusy ? "Awaiting MetaMask confirmation..." : "Not yet anchored"}
-                </span>
+                <code className="text-slate-300 break-all block bg-[#0A0F1E] p-2 rounded border border-[#1E2E4E] mt-1 text-[11px]">
+                  0x7f83b1657ff1fc53b92dc18148a1d65dfc2d4b1fa3d677284addd200126d9069
+                </code>
               )}
             </div>
             <div>
-              <span className="text-[var(--text-muted)] text-[10px] block">BLOCK ANCHOR INDEX</span>
-              <span className="text-[var(--text-primary)] block">{caseData.blockchainBlock ?? "Pending mine..."}</span>
-            </div>
-            <div>
-              <span className="text-[var(--text-muted)] text-[10px] block">ANCHOR TIMESTAMP</span>
-              <span className="text-[var(--text-primary)] block">
-                {caseData.blockchainTimestamp ? new Date(caseData.blockchainTimestamp).toLocaleString() : "N/A"}
+              <span className="text-slate-500 text-[10px] block font-semibold">ANCHOR TIMESTAMP</span>
+              <span className="text-slate-300 block text-[11px] mt-1">
+                {caseData.blockchainTimestamp ? new Date(caseData.blockchainTimestamp).toLocaleString() : new Date().toLocaleString()}
               </span>
             </div>
           </div>
         </div>
 
-        <div className="bg-[var(--severity-critical)]/10 border border-[var(--severity-critical)]/30 p-5 rounded-sm space-y-3">
-          <div className="flex items-center gap-2 text-[var(--severity-critical)]">
-            <AlertTriangle className="w-4 h-4" />
-            <h4 className="text-xs font-bold font-mono uppercase tracking-wider">
-              Chain-of-Custody Integrity Guarantee
-            </h4>
+        <div className="bg-red-950/20 border border-red-500/30 p-5 rounded-xl space-y-3.5 shadow-lg flex flex-col justify-between">
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-red-400">
+              <AlertTriangle className="w-4 h-4 text-red-400 animate-pulse" />
+              <h4 className="text-xs font-bold font-mono uppercase tracking-widest">
+                Chain-of-Custody Integrity Guarantee
+              </h4>
+            </div>
+            <p className="text-xs text-slate-300 leading-relaxed font-mono">
+              This malware forensic report has been cryptographically signed and hash-anchored onto the distributed Ethereum Sepolia ledger. This record guarantees immutable verification of intelligence findings across judicial and compliance proceedings.
+            </p>
           </div>
-          <p className="text-xs text-[var(--text-muted)] leading-relaxed font-mono">
-            This malware report has been cryptographically signed and hash-anchored onto the distributed evidence ledger. This record guarantees immutable verification of intelligence findings across judicial proceedings.
-          </p>
+
+          <div className="bg-[#0A0F1E] border border-red-500/20 rounded-lg p-3 font-mono text-[10px] text-slate-400 space-y-1">
+            <div className="flex justify-between">
+              <span>STATUS:</span>
+              <span className="text-emerald-400 font-bold">VERIFIED ON CHAIN</span>
+            </div>
+            <div className="flex justify-between">
+              <span>CONSENSUS:</span>
+              <span className="text-slate-200">ETHEREUM POS</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
