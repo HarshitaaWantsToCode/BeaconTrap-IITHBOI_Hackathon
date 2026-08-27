@@ -100,7 +100,7 @@ class LLMRouter:
         elif "Compliance" in prompt:
             return json.dumps({
                 "rbi_violations": ["Master Direction on Cyber Security Framework in Banks - Section 4.2 (Unauthorized OTP Exfiltration)"],
-                "dpdp_violations": ["Digital Personal Data Protection Act 2023 - Section 6 (Unauthorized processing of financial PII)"],
+                "compliance_violations": ["IT Act 2000 - Section 43A & 66D (Unauthorized access & identity spoofing)"],
                 "it_act_violations": ["IT Act 2000 Section 66D (Cheating by personation using computer resource)"],
                 "recommended_actions": ["Revoke SMS/Accessibility permissions", "Report C2 domain to CERT-In / NCIIPC"]
             })

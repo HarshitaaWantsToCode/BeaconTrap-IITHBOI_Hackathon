@@ -139,7 +139,7 @@ export const mockCriticalCaseData: CaseDataPayload = {
   blockchainTimestamp: null,
 
   analystReport: `## Forensic Analysis Report - BOI RAT Trojan\n\n### Executive Summary\nThe sample \`boi_safe.apk\` was detected as a highly critical banking trojan targeting customers of Bank of India. It utilizes advanced accessibility hijacking capabilities combined with silent SMS exfiltration to bypass multi-factor authentication controls.\n\n### Technical Findings\n1. **Overlay attack vector**: The application registers a background service that polls the current package window. Once the official BOI application starts, a custom Android window overlay is rendered containing input forms for username, password, and transaction PIN.\n2. **MFA Interception**: The SMS broadcast receiver is registered with a high priority (999), intercepting transaction codes and suppressing user notifications.`,
-  officerReport: `## GRC Advisory & Directive Action Plan\n\n### Regulatory Impact\n* **Section 8 (DPDP Act, 2023)**: Direct breach of consumer personal data protections due to credential harvesting.\n* **CERT-In cyber-incident compliance**: Immediate registration mandatory.\n\n### Urgent Countermeasures\n1. Issue ISP DNS sinkhole request for \`update-server-v3.net\`.\n2. Push customer warnings on bank mobile channels advising against sideloaded APK installations.`,
+  officerReport: `## GRC Advisory & Directive Action Plan\n\n### Regulatory Impact\n* **IT Act, 2000 & RBI Guidelines**: Direct breach of consumer security protections due to credential harvesting.\n* **CERT-In cyber-incident compliance**: Immediate registration mandatory.\n\n### Urgent Countermeasures\n1. Issue ISP DNS sinkhole request for \`update-server-v3.net\`.\n2. Push customer warnings on bank mobile channels advising against sideloaded APK installations.`,
   multilingualReports: JSON.stringify({
     en: {
       summary: "This malicious application intercepts credentials and SMS to bypass Bank of India Multi-Factor Authentication. It poses a critical threat to user savings.",
@@ -216,7 +216,7 @@ export const mockExecutiveSummaryData: ExecutiveSummaryData = {
   priorityLevel: "Critical Priority",
   estimatedExposure: "High (5,000+ active devices)",
   executiveRiskSummary: "Active campaign distributing sideloaded Android APKs masquerading as official Bank of India safety tools, designed to extract credentials and bypass multi-factor authentication (OTP) systems.",
-  businessImpact: "Significant exposure to UPI fraud losses, regulatory penalties under DPDP Act 2023, and public brand trust degradation.",
+  businessImpact: "Significant exposure to UPI fraud losses, regulatory penalties under RBI cybersecurity directives, and public brand trust degradation.",
   recommendedActions: [
     "Block C2 IP 185.220.101.5 and domain update-server-v3.net at network borders.",
     "File mandatory CERT-In cybersecurity report.",

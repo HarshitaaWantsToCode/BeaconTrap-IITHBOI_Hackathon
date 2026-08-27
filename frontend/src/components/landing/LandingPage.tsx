@@ -140,7 +140,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <span className="text-white/20 hidden sm:inline">|</span>
               <span className="hover:text-white transition-colors cursor-pointer">RBI Cyber Guidelines</span>
               <span className="text-white/20 hidden sm:inline">|</span>
-              <span className="hover:text-white transition-colors cursor-pointer">DPDP Act 2023 Compliant</span>
+              <span className="hover:text-white transition-colors cursor-pointer">CERT-In Compliance Framework</span>
             </div>
             <div className="flex items-center gap-2">
               <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-[#6c4fc4]/40 text-[#9b7fda] border border-[#6c4fc4]/50 font-mono font-semibold">
@@ -259,7 +259,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <Zap className="w-3.5 h-3.5" /> 10-Second Disbursal / Analysis
                   </span>
                   <span className="px-3.5 py-1 rounded-full text-xs font-bold bg-white/10 text-slate-200 border border-white/20 flex items-center gap-1.5">
-                    <Lock className="w-3.5 h-3.5" /> DPDP Act Compliant
+                    <Lock className="w-3.5 h-3.5" /> CERT-In Aligned
                   </span>
                 </div>
 
@@ -908,7 +908,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 <h4 className="text-xs font-black uppercase tracking-widest text-white">Compliance & GRC</h4>
                 <ul className="space-y-2 text-xs text-slate-400 font-medium">
                   <li><a href="#controls" className="hover:text-white transition-colors">RBI Master Directions</a></li>
-                  <li><a href="#controls" className="hover:text-white transition-colors">DPDP Act 2023 Controls</a></li>
+                  <li><a href="#controls" className="hover:text-white transition-colors">CERT-In Directives</a></li>
                   <li><a href="#how-it-works" className="hover:text-white transition-colors">Chain of Custody</a></li>
                   <li><a href="#how-it-works" className="hover:text-white transition-colors">Courtroom PDF Export</a></li>
                 </ul>

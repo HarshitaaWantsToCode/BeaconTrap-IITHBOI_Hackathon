@@ -127,7 +127,7 @@ async def copilot_chat(req: CopilotChatRequest):
         reply = f"**Recommended Incident Response Action Plan**:\n\n" \
                 f"1. **Network Border**: Block communication to C2 IP `185.220.101.5` and domain `update-server-v3.net` at perimeter firewalls.\n" \
                 f"2. **Endpoint Control**: Revoke Accessibility permissions and issue remote wipe/uninstall alerts for infected endpoints.\n" \
-                f"3. **Compliance**: File mandatory cybersecurity notification with CERT-In under DPDP Act 2023 guidelines."
+                f"3. **Compliance**: File mandatory cybersecurity notification with CERT-In under statutory incident reporting guidelines."
         suggested = ["Summarize this case", "Show MITRE ATT&CK breakdown", "How does BeaconTrap score APK risk?"]
 
     else:
@@ -179,7 +179,7 @@ async def copilot_chat(req: CopilotChatRequest):
             reply = f"**MITRE ATT&CK Mobile Matrix for {file_name}**:\n\n* **T1400 (Accessibility Abuse)**: Automates UI interaction and bypasses permission prompts.\n* **T1417 (Input Interception / Overlay Injection)**: Hijacks focus from banking interfaces.\n* **T1475 (Malicious APK Distribution)**: Sideloaded via SMS phishing (Smishing).\n* **T1624 (Receiver Registered)**: Event listener for SMS broadcasts (`android.provider.Telephony.SMS_RECEIVED`).\n* **T1071 (Application Layer Protocol)**: Periodic HTTPS beaconing to C2 servers."
             suggested = ["What countermeasures should we take?", "Explain banking trojan attack patterns", "Summarize this case"]
         elif any(w in msg_lower for w in ["mitigat", "countermeasure", "contain", "respond", "action plan", "remediation", "defense"]):
-            reply = f"**Recommended Incident Response & Containment Protocol**:\n\n1. **Network Layer**: Block outbound egress to C2 nodes and blacklist associated domain names at the enterprise DNS/Firewall.\n2. **Endpoint Actions**: Revoke Accessibility privileges, terminate running processes of `{pkg_name}`, and initiate quarantine/wipe.\n3. **Identity & Auth**: Force password resets, revoke active mobile tokens, and invalidate compromised session cookies.\n4. **Compliance & Reporting**: Generate forensic dossier and file incident report with CERT-In under DPDP Act guidelines."
+            reply = f"**Recommended Incident Response & Containment Protocol**:\n\n1. **Network Layer**: Block outbound egress to C2 nodes and blacklist associated domain names at the enterprise DNS/Firewall.\n2. **Endpoint Actions**: Revoke Accessibility privileges, terminate running processes of `{pkg_name}`, and initiate quarantine/wipe.\n3. **Identity & Auth**: Force password resets, revoke active mobile tokens, and invalidate compromised session cookies.\n4. **Compliance & Reporting**: Generate forensic dossier and file incident report with CERT-In under statutory cybersecurity guidelines."
             suggested = ["Summarize this case", "Show MITRE ATT&CK breakdown", "How does BeaconTrap score APK risk?"]
         elif any(w in msg_lower for w in ["permission", "manifest", "sms", "accessibility", "privilege"]):
             perms_str = ", ".join([f"`{p.split('.')[-1]}`" for p in perms[:5]]) if perms else "`BIND_ACCESSIBILITY_SERVICE`, `RECEIVE_SMS`, `SYSTEM_ALERT_WINDOW`"

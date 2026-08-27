@@ -53,7 +53,7 @@ class ReportTemplates:
     <html>
     <body>
         <h1>REGULATORY COMPLIANCE REVIEW</h1>
-        <p>Obligations under DPDP Act and RBI Guidelines have been audited.</p>
+        <p>Obligations under RBI Guidelines and IT Act have been audited.</p>
     </body>
     </html>
     """

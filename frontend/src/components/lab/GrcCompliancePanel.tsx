@@ -24,7 +24,7 @@ export default function GrcCompliancePanel() {
   const hasAccessibility = permissions.some(p => p.toUpperCase().includes("ACCESSIBILITY"));
 
   const rbiStatus = hasSMS ? "Critical Violation" : "Review Required";
-  const dpdpStatus = hasAccessibility ? "Non-Compliant (Data Breach)" : "Under Review";
+  const certInStatus = hasAccessibility ? "Critical Incident Trigger" : "Under Review";
 
   const complianceScore = Math.max(10, 100 - (caseData.riskScore || 75));
 
@@ -59,7 +59,7 @@ export default function GrcCompliancePanel() {
               Regulatory Compliance Meter
             </h4>
             <p className="text-[11px] text-slate-300 font-mono text-left mb-2">
-              Aggregate rating based on RBI Digital Payments & DPDP Act mandates.
+              Aggregate rating based on RBI Digital Payments & CERT-In mandates.
             </p>
           </div>
 
@@ -177,23 +177,23 @@ export default function GrcCompliancePanel() {
             </div>
           </div>
 
-          {/* DPDP Act Card */}
+          {/* CERT-In Incident Reporting Card */}
           <div className="bg-[var(--bg-panel-alt)] border border-[var(--border)] p-5 rounded-2xl flex flex-col justify-between space-y-3 shadow-md">
             <div>
               <div className="flex justify-between items-start mb-2">
-                <span className="text-xs font-black text-white font-mono">DPDP Act (2023) Compliance</span>
+                <span className="text-xs font-black text-white font-mono">CERT-In Cyber Directions</span>
                 <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-rose-950/60 text-rose-300 font-bold border border-rose-500/40">
-                  {dpdpStatus}
+                  {certInStatus}
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-indigo-300 block mb-2 font-bold">Section 6 & 8 Consent Obligations</span>
+              <span className="text-[10px] font-mono text-indigo-300 block mb-2 font-bold">Mandatory 6-Hour Reporting SLA</span>
               <p className="text-xs text-slate-300 leading-relaxed font-normal">
-                Abuse of accessibility keystroke hooks logs sensitive credential identifiers without explicit customer consent loops, presenting severe personal data processing risks under Section 8.
+                Abuse of accessibility keystroke hooks logs sensitive credential identifiers, presenting severe security hazards and triggering mandatory incident filing within 6 hours.
               </p>
             </div>
             <div className="pt-2.5 border-t border-[var(--border)] flex justify-between text-[10px] font-mono">
               <span className="text-slate-400">Audit Action:</span>
-              <span className="text-rose-400 font-black">DATA EXFIL HAZARD</span>
+              <span className="text-rose-400 font-black">MANDATORY FILING</span>
             </div>
           </div>
 

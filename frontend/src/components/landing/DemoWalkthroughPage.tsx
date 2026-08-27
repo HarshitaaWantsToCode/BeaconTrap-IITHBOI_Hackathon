@@ -156,16 +156,16 @@ export const DemoWalkthroughPage: React.FC<DemoWalkthroughProps> = ({ onGoToLive
                 </h3>
               </div>
               <span className="text-xs font-mono font-black text-indigo-300 bg-indigo-950/60 px-3 py-1 border border-indigo-500/40 rounded-full">
-                RBI / CERT-In / DPDP Act 2023
+                RBI / CERT-In / IT Act 2000
               </span>
             </div>
 
             <div className="p-5 bg-rose-950/40 border border-rose-500/40 rounded-2xl space-y-2 shadow-md">
               <h4 className="text-sm font-black text-rose-300 uppercase font-mono">
-                DPDP Act 2023 — Section 8 Breach Notice
+                CERT-In Security Framework — Critical Incident Notice
               </h4>
               <p className="text-xs text-slate-200 font-sans leading-relaxed">
-                Direct violation of consumer personal data protections due to unauthorized SMS interception and background overlay injection targeting banking credentials.
+                Direct violation of banking security guidelines due to unauthorized SMS interception and background overlay injection targeting banking credentials.
               </p>
             </div>
 

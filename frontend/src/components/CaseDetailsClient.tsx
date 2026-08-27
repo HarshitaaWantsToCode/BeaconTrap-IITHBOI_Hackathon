@@ -301,12 +301,12 @@ export default function CaseDetailsClient({ caseData }: CaseDetailsClientProps) 
       severity: risk >= 80 ? "Critical" : "High"
     };
 
-    const dpdpCompliance = {
-      status: risk >= 60 ? "Non-Compliant (Data Breach)" : "Under Review",
-      clause: "DPDP Act, 2023 (Section 6 & 8 Obligations)",
+    const securityControlsCompliance = {
+      status: risk >= 60 ? "Critical Incident Trigger" : "Under Review",
+      clause: "Cyber Security & Fraud Prevention Framework",
       finding: permissions.includes("android.permission.BIND_ACCESSIBILITY_SERVICE")
-        ? `Accessibility API abuse allows unauthorized keystroke logging and screen harvesting. This constitutes a direct breach of digital personal data protection controls under Section 8 of the DPDP Act 2023.`
-        : `Suspicious data access footprints pose risks of processing customer personal data without explicitly defined consent boundaries.`,
+        ? `Accessibility API abuse allows unauthorized keystroke logging and screen harvesting. This constitutes an immediate security breach of customer authentication boundaries.`
+        : `Suspicious data access footprints pose risks of exfiltrating customer financial identifiers without authorization.`,
       severity: risk >= 80 ? "Critical" : "High"
     };
 
@@ -323,9 +323,9 @@ export default function CaseDetailsClient({ caseData }: CaseDetailsClientProps) 
       status: risk >= 60 ? "Statutory Offence" : "Standard Review",
       clause: "IT Act, 2000 (Section 43A, 66C & 66D)",
       finding: caseData.keywordScore > 10 || family === "Banking Trojan"
-        ? `Deliberate brand spoofing and masquerading as an official banking application violates Section 66D. Facilitates digital identity theft (66C) of bank consumers.`
-        : `Deceptive code segments present potential liabilities for data security failures under Section 43A.`,
-      severity: risk >= 80 ? "High" : "Medium"
+        ? `Use of deceptive bank identity and overlay injection constitutes punishable offences under Section 66D (Cheating by personation) and Section 43A (Failure to protect sensitive data).`
+        : `Binary violates baseline data handling integrity standards under Section 43A.`,
+      severity: risk >= 80 ? "Critical" : "Medium"
     };
 
     // 2. Financial, Legal, and Brand Impact Analysis
@@ -347,7 +347,7 @@ export default function CaseDetailsClient({ caseData }: CaseDetailsClientProps) 
     }
 
     return {
-      regulatoryClauses: [rbiCompliance, dpdpCompliance, certInReporting, itActCompliance],
+      regulatoryClauses: [rbiCompliance, securityControlsCompliance, certInReporting, itActCompliance],
       impacts: {
         financialExposure,
         penaltyRisk,

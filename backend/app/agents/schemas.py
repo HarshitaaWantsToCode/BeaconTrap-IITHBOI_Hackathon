@@ -19,7 +19,7 @@ class MitreSchema(BaseModel):
     evidence: List[str] = Field(description="Observed behavior snippet mappings")
 
 class ComplianceSchema(BaseModel):
-    impacted_regulations: List[str] = Field(description="Clauses violated under RBI, DPDP, IT Acts")
+    impacted_regulations: List[str] = Field(description="Clauses violated under RBI, CERT-In, IT Acts")
     required_notifications: List[str] = Field(description="Mandatory reporting disclosures required")
     compliance_summary: str = Field(description="Summary of regulatory breaches")
 

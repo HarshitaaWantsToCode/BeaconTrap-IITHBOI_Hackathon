@@ -172,7 +172,7 @@ export default function AICopilot() {
                   `* **Classification**: **${threatFam}** (Composite Risk: \`${risk}/100\`)\n` +
                   `* **Primary Attack Vectors**: Trojan overlay injection over banking applications, background SMS/OTP interception, and silent accessibility automation.\n` +
                   `* **Threat Indicators**: Active C2 communication with matched command nodes and malicious domain infrastructure.\n` +
-                  `* **Recommended Containment**: Quarantine application binary digest, block C2 communication at perimeter DNS/Firewall, and notify CERT-In under DPDP Act guidelines.`;
+                  `* **Recommended Containment**: Quarantine application binary digest, block C2 communication at perimeter DNS/Firewall, and notify CERT-In under statutory cybersecurity guidelines.`;
           suggested = ["Show MITRE ATT&CK breakdown", "Explain risk score", "What countermeasures should we take?"];
         } else if (lower.includes("hello") || lower.includes("hi") || lower.includes("hey") || lower.includes("who")) {
           reply = `Hello! I am your **BeaconTrap Security Copilot**. I analyze mobile malware telemetry for \`${fileName}\` (\`${pkgName}\`), explain attack vectors, map behaviors to MITRE ATT&CK, evaluate risk scoring heuristics, and guide incident response protocols.`;
