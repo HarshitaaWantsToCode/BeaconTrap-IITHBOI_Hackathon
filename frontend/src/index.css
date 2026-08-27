@@ -268,16 +268,46 @@ code, pre, .font-mono {
   }
 
   html, body {
+    height: auto !important;
+    min-height: 100% !important;
+    overflow: visible !important;
     background: #ffffff !important;
     color: #111111 !important;
+  }
+
+  /* Reset layout constraints during print */
+  #root,
+  .h-screen,
+  .overflow-hidden,
+  .overflow-y-auto,
+  main,
+  aside,
+  header {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: static !important;
+  }
+
+  /* Hide screen-only interactive UI */
+  aside,
+  header,
+  nav,
+  .no-print,
+  button,
+  select,
+  .aicopilot-root,
+  #copilot-dock {
+    display: none !important;
   }
 
   body * {
     visibility: hidden;
   }
 
-  .print-report-root, .print-report-root * {
-    visibility: visible;
+  .print-report-root,
+  .print-report-root * {
+    visibility: visible !important;
   }
 
   .print-report-root {
@@ -286,6 +316,23 @@ code, pre, .font-mono {
     left: 0 !important;
     top: 0 !important;
     width: 100% !important;
+    min-height: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
     background: #ffffff !important;
+  }
+
+  .print-page {
+    page-break-after: always !important;
+    break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    min-height: 250mm !important;
+    box-sizing: border-box !important;
+  }
+
+  .print-page-last {
+    page-break-after: auto !important;
+    break-after: auto !important;
   }
 }
